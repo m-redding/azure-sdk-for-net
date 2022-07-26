@@ -75,7 +75,7 @@ namespace Azure.Messaging.ServiceBus
         /// Gets the ID to identify this client. This can be used to correlate logs and exceptions.
         /// </summary>
         /// <remarks>Every new client has a unique ID.</remarks>
-        internal string Identifier { get; }
+        public string Identifier { get; }
 
         /// <summary>
         ///   Indicates whether or not this <see cref="ServiceBusReceiver"/> has been closed.
@@ -164,14 +164,14 @@ namespace Azure.Messaging.ServiceBus
                 Argument.AssertNotNullOrWhiteSpace(entityPath, nameof(entityPath));
                 connection.ThrowIfClosed();
 
-                options = options?.Clone() ?? new ServiceBusReceiverOptions();
-                Identifier = DiagnosticUtilities.GenerateIdentifier(entityPath);
+                var clonedOptions = options?.Clone() ?? new ServiceBusReceiverOptions();
+                Identifier = clonedOptions.Identifier ?? DiagnosticUtilities.GenerateIdentifier(entityPath);
                 _connection = connection;
                 _retryPolicy = connection.RetryOptions.ToRetryPolicy();
-                ReceiveMode = options.ReceiveMode;
-                PrefetchCount = options.PrefetchCount;
+                ReceiveMode = clonedOptions.ReceiveMode;
+                PrefetchCount = clonedOptions.PrefetchCount;
 
-                EntityPath = EntityNameFormatter.FormatEntityPath(entityPath, options.SubQueue);
+                EntityPath = EntityNameFormatter.FormatEntityPath(entityPath, clonedOptions.SubQueue);
 
                 IsSessionReceiver = isSessionEntity;
                 _innerReceiver = _connection.CreateTransportReceiver(

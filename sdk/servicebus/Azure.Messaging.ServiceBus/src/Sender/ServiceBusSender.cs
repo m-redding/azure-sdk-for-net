@@ -75,7 +75,8 @@ namespace Azure.Messaging.ServiceBus
         /// Gets the ID to identify this client. This can be used to correlate logs and exceptions.
         /// </summary>
         /// <remarks>Every new client has a unique ID.</remarks>
-        internal string Identifier { get; private set; }
+        ///
+        public string Identifier { get; }
 
         /// <summary>
         ///   The policy to use for determining retry behavior for when an operation fails.
@@ -103,9 +104,11 @@ namespace Azure.Messaging.ServiceBus
         /// </summary>
         /// <param name="entityPath">The entity path to send the message to.</param>
         /// <param name="connection">The connection for the sender.</param>
+        /// <param name="options">The set of options to use when configuring the sender.</param>
         internal ServiceBusSender(
             string entityPath,
-            ServiceBusConnection connection)
+            ServiceBusConnection connection,
+            ServiceBusSenderOptions options)
         {
             Logger.ClientCreateStart(typeof(ServiceBusSender), connection?.FullyQualifiedNamespace, entityPath);
             try
@@ -115,8 +118,10 @@ namespace Azure.Messaging.ServiceBus
                 Argument.AssertNotNullOrWhiteSpace(entityPath, nameof(entityPath));
                 connection.ThrowIfClosed();
 
+                options = options?.Clone() ?? new ServiceBusSenderOptions();
+
                 EntityPath = entityPath;
-                Identifier = DiagnosticUtilities.GenerateIdentifier(EntityPath);
+                Identifier = options.Identifier ?? DiagnosticUtilities.GenerateIdentifier(EntityPath);
                 _connection = connection;
                 _retryPolicy = _connection.RetryOptions.ToRetryPolicy();
                 _innerSender = _connection.CreateTransportSender(
@@ -134,6 +139,18 @@ namespace Azure.Messaging.ServiceBus
         }
 
         /// <summary>
+        ///   Initializes a new instance of the <see cref="ServiceBusSender"/> class.
+        /// </summary>
+        /// <param name="entityPath">The entity path to send the message to.</param>
+        /// <param name="connection">The connection for the sender.</param>
+        internal ServiceBusSender(
+            string entityPath,
+            ServiceBusConnection connection) :
+            this(entityPath, connection, new ServiceBusSenderOptions())
+        {
+        }
+
+        /// <summary>
         ///   Initializes a new instance of the <see cref="ServiceBusSender"/> class for mocking.
         /// </summary>
         ///
@@ -147,7 +164,18 @@ namespace Azure.Messaging.ServiceBus
         /// <param name="client">The client instance to use for the sender.</param>
         /// <param name="queueOrTopicName">The name of the queue or topic to send to.</param>
         protected ServiceBusSender(ServiceBusClient client, string queueOrTopicName) :
-            this(queueOrTopicName, client.Connection)
+            this(queueOrTopicName, client.Connection, new ServiceBusSenderOptions())
+        {
+        }
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="ServiceBusSender"/> class for use with derived types.
+        /// </summary>
+        /// <param name="client">The client instance to use for the sender.</param>
+        /// <param name="queueOrTopicName">The name of the queue or topic to send to.</param>
+        /// <param name="options">The set of options to use when configuring the sender.</param>
+        protected ServiceBusSender(ServiceBusClient client, string queueOrTopicName, ServiceBusSenderOptions options) :
+            this(queueOrTopicName, client.Connection, options)
         {
         }
 

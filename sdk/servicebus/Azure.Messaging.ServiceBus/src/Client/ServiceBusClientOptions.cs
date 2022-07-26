@@ -37,6 +37,13 @@ namespace Azure.Messaging.ServiceBus
         public IWebProxy WebProxy { get; set; }
 
         /// <summary>
+        /// Gets the ID to identify this client. This can be used to correlate logs and exceptions.
+        /// </summary>
+        /// <remarks>Every new client has a unique ID.</remarks>
+        ///
+        public string Identifier { get; set; }
+
+        /// <summary>
         ///   A custom endpoint address that can be used when establishing the connection to the Service Bus
         ///   service.
         /// </summary>
@@ -123,7 +130,8 @@ namespace Azure.Messaging.ServiceBus
                 RetryOptions = RetryOptions.Clone(),
                 EnableCrossEntityTransactions = EnableCrossEntityTransactions,
                 EnableTransportMetrics = EnableTransportMetrics,
-                CustomEndpointAddress = CustomEndpointAddress
+                CustomEndpointAddress = CustomEndpointAddress,
+                Identifier = Identifier
             };
     }
 }
