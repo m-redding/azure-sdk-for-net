@@ -143,6 +143,18 @@ namespace Azure.Messaging.ServiceBus.Core
             CancellationToken cancellationToken = default);
 
         /// <summary>
+        /// TODO.
+        /// </summary>
+        /// <param name="maxMessages"></param>
+        /// <param name="enqueuedTimeUtcOlderThan"></param>
+        /// <param name="cancellationToken"></param>
+        /// <returns></returns>
+        public abstract Task BatchDeleteMessagesAsync(
+            int maxMessages = 1,
+            DateTimeOffset enqueuedTimeUtcOlderThan = default,
+            CancellationToken cancellationToken = default);
+
+        /// <summary>
         /// Moves a message to the dead-letter subqueue.
         /// </summary>
         ///

@@ -1373,6 +1373,70 @@ namespace Azure.Messaging.ServiceBus.Amqp
         }
 
         /// <summary>
+        /// TODO.
+        /// </summary>
+        /// <param name="maxMessages"></param>
+        /// <param name="enqueuedTimeUtcOlderThan"></param>
+        /// <param name="timeout"></param>
+        /// <param name="cancellationToken"></param>
+        /// <returns></returns>
+        private async Task<int> BatchDeleteMessagesAsync(
+            int maxMessages,
+            DateTime enqueuedTimeUtcOlderThan,
+            TimeSpan timeout,
+            CancellationToken cancellationToken)
+        {
+            var stopWatch = ValueStopwatch.StartNew();
+
+            AmqpRequestMessage amqpRequestMessage = AmqpRequestMessage.CreateRequest(
+                    ManagementConstants.Operations.BatchDeleteMessagesOperation,
+                    timeout,
+                    null);
+
+            if (_receiveLink.TryGetOpenedObject(out ReceivingAmqpLink receiveLink))
+            {
+                amqpRequestMessage.AmqpMessage.ApplicationProperties.Map[ManagementConstants.Request.AssociatedLinkName] = receiveLink.Name;
+            }
+
+            amqpRequestMessage.Map[ManagementConstants.Properties.EnqueuedTimeUtc] = enqueuedTimeUtcOlderThan;
+            amqpRequestMessage.Map[ManagementConstants.Properties.MessageCount] = maxMessages;
+
+            if (!string.IsNullOrWhiteSpace(SessionId))
+            {
+                amqpRequestMessage.Map[ManagementConstants.Properties.SessionId] = SessionId;
+            }
+
+            RequestResponseAmqpLink link = await _managementLink.GetOrCreateAsync(
+                timeout.CalculateRemaining(stopWatch.GetElapsedTime()),
+                cancellationToken)
+                .ConfigureAwait(false);
+            cancellationToken.ThrowIfCancellationRequested<TaskCanceledException>();
+
+            using AmqpMessage responseAmqpMessage = await link.RequestAsync(
+                amqpRequestMessage.AmqpMessage,
+                timeout.CalculateRemaining(stopWatch.GetElapsedTime()))
+                .ConfigureAwait(false);
+
+            cancellationToken.ThrowIfCancellationRequested<TaskCanceledException>();
+
+            AmqpResponseMessage amqpResponseMessage = AmqpResponseMessage.CreateResponse(responseAmqpMessage);
+
+            if (amqpResponseMessage.StatusCode == AmqpResponseStatusCode.OK)
+            {
+                var messagesDeleted = amqpResponseMessage.GetValue<int>(ManagementConstants.Properties.MessageCount);
+
+                return messagesDeleted;
+            }
+            else if (amqpResponseMessage.StatusCode == AmqpResponseStatusCode.NoContent ||
+                (amqpResponseMessage.StatusCode == AmqpResponseStatusCode.NotFound && AmqpSymbol.Equals(AmqpClientConstants.MessageNotFoundError, amqpResponseMessage.GetResponseErrorCondition())))
+            {
+                return 0;
+            }
+
+            throw amqpResponseMessage.ToMessagingContractException();
+        }
+
+        /// <summary>
         /// Closes the connection to the transport receiver instance.
         /// </summary>
         ///
