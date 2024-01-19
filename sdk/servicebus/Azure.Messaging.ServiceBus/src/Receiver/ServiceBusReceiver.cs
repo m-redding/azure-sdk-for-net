@@ -667,6 +667,22 @@ namespace Azure.Messaging.ServiceBus
         }
 
         /// <summary>
+        /// Batch delete messages.
+        /// </summary>
+        /// <param name="maxMessages"></param>
+        /// <param name="enqueuedTimeUtcOlderThan"></param>
+        /// <param name="cancellationToken"></param>
+        /// <returns></returns>
+        public virtual async Task<int> BatchDeleteMessagesAsync(int maxMessages = 1,
+            DateTimeOffset enqueuedTimeUtcOlderThan = default,
+            CancellationToken cancellationToken = default)
+        {
+            cancellationToken.ThrowIfCancellationRequested<TaskCanceledException>();
+            await Task.Yield();
+            return 1;
+        }
+
+        /// <summary>
         /// Moves a message to the dead-letter subqueue.
         /// </summary>
         ///
