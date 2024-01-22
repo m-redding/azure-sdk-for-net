@@ -150,8 +150,8 @@ namespace Azure.Messaging.ServiceBus.Core
         /// <param name="cancellationToken"></param>
         /// <returns></returns>
         public abstract Task<int> BatchDeleteMessagesAsync(
-            int maxMessages = 1,
-            DateTimeOffset enqueuedTimeUtcOlderThan = default,
+            int maxMessages,
+            DateTimeOffset enqueuedTimeUtcOlderThan,
             CancellationToken cancellationToken = default);
 
         /// <summary>

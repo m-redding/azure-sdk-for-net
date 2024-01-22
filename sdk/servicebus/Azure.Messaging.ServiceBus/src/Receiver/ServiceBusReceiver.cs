@@ -673,13 +673,39 @@ namespace Azure.Messaging.ServiceBus
         /// <param name="enqueuedTimeUtcOlderThan"></param>
         /// <param name="cancellationToken"></param>
         /// <returns></returns>
-        public virtual async Task<int> BatchDeleteMessagesAsync(int maxMessages = 1,
-            DateTimeOffset enqueuedTimeUtcOlderThan = default,
+        public virtual async Task<int> BatchDeleteMessagesAsync(int maxMessages,
+            DateTimeOffset enqueuedTimeUtcOlderThan,
             CancellationToken cancellationToken = default)
         {
+            Argument.AssertAtLeast(maxMessages, 1, nameof(maxMessages));
+            Argument.AssertNotDisposed(IsDisposed, nameof(ServiceBusReceiver));
+            _connection.ThrowIfClosed();
+
             cancellationToken.ThrowIfCancellationRequested<TaskCanceledException>();
-            await Task.Yield();
-            return 1;
+
+            // logger
+
+            using DiagnosticScope scope = ClientDiagnostics.CreateScope(
+                DiagnosticProperty.BatchDeleteActivityName,
+                ActivityKind.Client,
+                MessagingDiagnosticOperation.Settle);
+
+            scope.Start();
+
+            int numMessagesDeleted;
+            try
+            {
+                numMessagesDeleted = await InnerReceiver.BatchDeleteMessagesAsync(maxMessages, enqueuedTimeUtcOlderThan, cancellationToken).ConfigureAwait(false);
+            }
+            catch (Exception exception)
+            {
+                //Logger.AbandonMessageException(Identifier, exception.ToString(), lockToken);
+                scope.Failed(exception);
+                throw;
+            }
+
+            //Logger.AbandonMessageComplete(Identifier, lockToken);
+            return numMessagesDeleted;
         }
 
         /// <summary>
