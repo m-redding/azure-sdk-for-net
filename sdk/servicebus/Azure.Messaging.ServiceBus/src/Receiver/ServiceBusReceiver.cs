@@ -1040,6 +1040,17 @@ namespace Azure.Messaging.ServiceBus
         }
 
         /// <summary>
+        /// Throws an InvalidOperationException when not in ReceiveDelete mode.
+        /// </summary>
+        private void ThrowIfNotReceiveDeleteMode()
+        {
+            if (ReceiveMode != ServiceBusReceiveMode.ReceiveAndDelete)
+            {
+                throw new InvalidOperationException(Resources.OperationNotSupported);
+            }
+        }
+
+        /// <summary>
         /// Throws an InvalidOperationException when the lock token is empty.
         /// </summary>
         private static void ThrowIfLockTokenIsEmpty(Guid lockToken)

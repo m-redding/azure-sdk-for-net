@@ -1381,14 +1381,12 @@ namespace Azure.Messaging.ServiceBus.Amqp
         /// <returns></returns>
         public override async Task<int> BatchDeleteMessagesAsync(
             int maxMessages,
-            DateTimeOffset enqueuedTimeUtcOlderThan,
-            CancellationToken cancellationToken = default)
-        {
-            return await _retryPolicy.RunOperation(
+            DateTimeOffset enqueuedTimeUtcOlderThan = default,
+            CancellationToken cancellationToken = default) => await _retryPolicy.RunOperation(
                 static async (value, timeout, token) =>
                 {
                     var (receiver, maxMessages, enqueuedTimeUtcOlderThan) = value;
-                    return await receiver.BatchDeleteMessagesAsyncInternal(
+                    return await receiver.BatchDeleteMessagesInternalAsync(
                             maxMessages,
                             enqueuedTimeUtcOlderThan,
                             timeout,
@@ -1398,9 +1396,8 @@ namespace Azure.Messaging.ServiceBus.Amqp
                 (this, maxMessages, enqueuedTimeUtcOlderThan),
                 _connectionScope,
                 cancellationToken).ConfigureAwait(false);
-        }
 
-        internal virtual async Task<int> BatchDeleteMessagesAsyncInternal(
+        private async Task<int> BatchDeleteMessagesInternalAsync(
             int maxMessages,
             DateTimeOffset enqueuedTimeUtcOlderThan,
             TimeSpan timeout,
@@ -1418,8 +1415,8 @@ namespace Azure.Messaging.ServiceBus.Amqp
                 amqpRequestMessage.AmqpMessage.ApplicationProperties.Map[ManagementConstants.Request.AssociatedLinkName] = receiveLink.Name;
             }
 
-            amqpRequestMessage.Map[ManagementConstants.Properties.EnqueuedTimeUtc] = enqueuedTimeUtcOlderThan.UtcTicks;
             amqpRequestMessage.Map[ManagementConstants.Properties.MessageCount] = maxMessages;
+            amqpRequestMessage.Map[ManagementConstants.Properties.EnqueuedTimeUtc] = enqueuedTimeUtcOlderThan.UtcDateTime;
 
             if (!string.IsNullOrWhiteSpace(SessionId))
             {
@@ -1427,12 +1424,14 @@ namespace Azure.Messaging.ServiceBus.Amqp
             }
 
             RequestResponseAmqpLink link = await _managementLink.GetOrCreateAsync(
-                timeout)
+                timeout.CalculateRemaining(stopWatch.GetElapsedTime()),
+                cancellationToken)
                 .ConfigureAwait(false);
             cancellationToken.ThrowIfCancellationRequested<TaskCanceledException>();
 
             using AmqpMessage responseAmqpMessage = await link.RequestAsync(
-                amqpRequestMessage.AmqpMessage, timeout)
+                amqpRequestMessage.AmqpMessage,
+                timeout.CalculateRemaining(stopWatch.GetElapsedTime()))
                 .ConfigureAwait(false);
 
             cancellationToken.ThrowIfCancellationRequested<TaskCanceledException>();
@@ -1441,12 +1440,11 @@ namespace Azure.Messaging.ServiceBus.Amqp
 
             if (amqpResponseMessage.StatusCode == AmqpResponseStatusCode.OK)
             {
-                var messagesDeleted = amqpResponseMessage.GetValue<int>(ManagementConstants.Properties.MessageCount);
-
-                return messagesDeleted;
+                return amqpResponseMessage.GetValue<int>(ManagementConstants.Properties.MessageCount);
             }
-            else if (amqpResponseMessage.StatusCode == AmqpResponseStatusCode.NoContent ||
-                (amqpResponseMessage.StatusCode == AmqpResponseStatusCode.NotFound && AmqpSymbol.Equals(AmqpClientConstants.MessageNotFoundError, amqpResponseMessage.GetResponseErrorCondition())))
+
+            if (amqpResponseMessage.StatusCode == AmqpResponseStatusCode.NoContent ||
+                (amqpResponseMessage.StatusCode == AmqpResponseStatusCode.NotFound && Equals(AmqpClientConstants.MessageNotFoundError, amqpResponseMessage.GetResponseErrorCondition())))
             {
                 return 0;
             }
