@@ -197,6 +197,10 @@ namespace Azure.Messaging.ServiceBus.Diagnostics
         internal const int RunOperationExceptionVerboseEvent = 114;
         internal const int ReceiveMessageCanceledEvent = 115;
 
+        internal const int BatchDeleteMessagesStartEvent = 116;
+        internal const int BatchDeleteMessagesCompleteEvent = 117;
+        internal const int BatchDeleteMessagesExceptionEvent = 118;
+
         #endregion
         // add new event numbers here incrementing from previous
 
@@ -639,6 +643,55 @@ namespace Azure.Messaging.ServiceBus.Diagnostics
         {
             WriteEvent(DeadLetterMessageExceptionEvent, identifier, exception, lockToken);
         }
+        #endregion
+
+        #region Batch delete
+
+        [NonEvent]
+        public virtual void BatchDeleteMessagesStart(string identifier, int maxMessages, DateTimeOffset enqueuedTimeUtcOlderThan)
+        {
+            if (IsEnabled())
+            {
+                BatchDeleteMessagesStartCore(identifier, maxMessages, enqueuedTimeUtcOlderThan.ToString());
+            }
+        }
+
+        [Event(BatchDeleteMessagesStartEvent, Level = EventLevel.Informational, Message = "{0}: BatchDeleteMessagesAsync start. MaxMessages = {1}, EnqueuedTimeUtcOlderThan = {2}")]
+        private void BatchDeleteMessagesStartCore(string identifier, int messageCount, string lockTokens)
+        {
+            WriteEvent(BatchDeleteMessagesStartEvent, identifier, messageCount, lockTokens);
+        }
+
+        [NonEvent]
+        public virtual void BatchDeleteMessagesComplete(string identifier, int messagesDeleted)
+        {
+            if (IsEnabled())
+            {
+                BatchDeleteMessagesCompleteCore(identifier, messagesDeleted);
+            }
+        }
+
+        [Event(BatchDeleteMessagesCompleteEvent, Level = EventLevel.Informational, Message = "{0}: BatchDeleteMessagesAsync done. Deleted '{1}' message(s).")]
+        private void BatchDeleteMessagesCompleteCore(string identifier, int messagesDeleted)
+        {
+            WriteEvent(BatchDeleteMessagesCompleteEvent, identifier, messagesDeleted);
+        }
+
+        [NonEvent]
+        public virtual void BatchDeleteMessagesException(string identifier, string exception)
+        {
+            if (IsEnabled())
+            {
+                BatchDeleteMessagesExceptionCore(identifier, exception);
+            }
+        }
+
+        [Event(BatchDeleteMessagesExceptionEvent, Level = EventLevel.Error, Message = "{0}: BatchDeleteMessagesAsync Exception: {1}.")]
+        private void BatchDeleteMessagesExceptionCore(string identifier, string exception)
+        {
+            WriteEvent(BatchDeleteMessagesExceptionEvent, identifier, exception);
+        }
+
         #endregion
 
         #region Lock renewal

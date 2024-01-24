@@ -885,6 +885,86 @@ namespace Azure.Messaging.ServiceBus.Tests.Diagnostics
         }
 
         [Test]
+        public async Task BatchDeleteMessagesLogsEvents()
+        {
+            var mockLogger = new Mock<ServiceBusEventSource>();
+            var mockTransportReceiver = new Mock<TransportReceiver>();
+            var mockConnection = GetMockConnection(mockTransportReceiver);
+            mockTransportReceiver.Setup(
+                transportReceiver => transportReceiver.BatchDeleteMessagesAsync(
+                    It.IsAny<int>(),
+                    It.IsAny<DateTimeOffset>(),
+                    It.IsAny<CancellationToken>()))
+                .ReturnsAsync(1);
+            var receiver = new ServiceBusReceiver(
+                mockConnection.Object,
+                "queueName",
+                false,
+                new ServiceBusReceiverOptions())
+            {
+                Logger = mockLogger.Object
+            };
+
+            var dateTime = DateTimeOffset.UtcNow;
+            await receiver.BatchDeleteMessagesAsync(1, dateTime);
+
+            mockLogger
+                .Verify(
+                    log => log.BatchDeleteMessagesStart(
+                        receiver.Identifier,
+                        1,
+                        dateTime),
+                Times.Once);
+            mockLogger
+                .Verify(
+                    log => log.BatchDeleteMessagesComplete(
+                        receiver.Identifier,
+                        1),
+                Times.Once);
+        }
+
+        [Test]
+        public void BatchDeleteMessagesExceptionLogsEvents()
+        {
+            var mockLogger = new Mock<ServiceBusEventSource>();
+            var mockTransportReceiver = new Mock<TransportReceiver>();
+            var mockConnection = GetMockConnection(mockTransportReceiver);
+            mockTransportReceiver.Setup(
+                transportReceiver => transportReceiver.BatchDeleteMessagesAsync(
+                    It.IsAny<int>(),
+                    It.IsAny<DateTimeOffset>(),
+                    It.IsAny<CancellationToken>()))
+                .Throws(new Exception());
+            var receiver = new ServiceBusReceiver(
+                mockConnection.Object,
+                "queueName",
+                false,
+                new ServiceBusReceiverOptions())
+            {
+                Logger = mockLogger.Object
+            };
+
+            var time = DateTimeOffset.UtcNow;
+            Assert.That(
+                async () => await receiver.BatchDeleteMessagesAsync(1, time),
+                Throws.InstanceOf<Exception>());
+
+            mockLogger
+                .Verify(
+                    log => log.BatchDeleteMessagesStart(
+                        receiver.Identifier,
+                        1,
+                        time),
+                Times.Once);
+            mockLogger
+                .Verify(
+                    log => log.BatchDeleteMessagesException(
+                        receiver.Identifier,
+                        It.IsAny<string>()),
+                Times.Once);
+        }
+
+        [Test]
         public async Task RenewMessageLockLogsEvents()
         {
             var mockLogger = new Mock<ServiceBusEventSource>();

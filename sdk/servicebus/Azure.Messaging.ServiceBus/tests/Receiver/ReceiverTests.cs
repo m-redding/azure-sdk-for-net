@@ -84,6 +84,19 @@ namespace Azure.Messaging.ServiceBus.Tests.Receiver
         }
 
         [Test]
+        public void BatchDeleteValidatesMaxMessageCount()
+        {
+            var account = Encoding.Default.GetString(ServiceBusTestUtilities.GetRandomBuffer(12));
+            var fullyQualifiedNamespace = new UriBuilder($"{account}.servicebus.windows.net/").Host;
+            var connString = $"Endpoint=sb://{fullyQualifiedNamespace};SharedAccessKeyName=RootManageSharedAccessKey;SharedAccessKey={Encoding.Default.GetString(ServiceBusTestUtilities.GetRandomBuffer(64))}";
+            var client = new ServiceBusClient(connString);
+            var receiver = client.CreateReceiver("queueName");
+            Assert.That(
+                async () => await receiver.BatchDeleteMessagesAsync(0, default),
+                Throws.InstanceOf<ArgumentOutOfRangeException>());
+        }
+
+        [Test]
         public void ReceiveValidatesMaxMessageCount()
         {
             var account = Encoding.Default.GetString(ServiceBusTestUtilities.GetRandomBuffer(12));
@@ -294,6 +307,17 @@ namespace Azure.Messaging.ServiceBus.Tests.Receiver
 
             await client.DisposeAsync();
             Assert.That(async () => await receiver.RenewMessageLockAsync(new ServiceBusReceivedMessage()),
+                Throws.InstanceOf<ObjectDisposedException>().And.Property(nameof(ObjectDisposedException.ObjectName)).EqualTo(nameof(ServiceBusConnection)));
+        }
+
+        [Test]
+        public async Task BatchMessagesValidatesClientIsNotDisposed()
+        {
+            await using var client = new ServiceBusClient("not.real.com", Mock.Of<TokenCredential>());
+            await using var receiver = client.CreateReceiver("fake");
+
+            await client.DisposeAsync();
+            Assert.That(async () => await receiver.BatchDeleteMessagesAsync(1, DateTimeOffset.UtcNow),
                 Throws.InstanceOf<ObjectDisposedException>().And.Property(nameof(ObjectDisposedException.ObjectName)).EqualTo(nameof(ServiceBusConnection)));
         }
 

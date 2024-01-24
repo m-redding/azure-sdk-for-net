@@ -667,9 +667,9 @@ namespace Azure.Messaging.ServiceBus
         }
 
         /// <summary>
-        /// Batch delete messages.
+        /// Deletes a batch of messages from the queue.
         /// </summary>
-        /// <param name="maxMessages"></param>
+        /// <param name="maxMessages">The maximum number of messages to delete.</param>
         /// <param name="enqueuedTimeUtcOlderThan"></param>
         /// <param name="cancellationToken"></param>
         /// <returns></returns>
@@ -683,7 +683,7 @@ namespace Azure.Messaging.ServiceBus
 
             cancellationToken.ThrowIfCancellationRequested<TaskCanceledException>();
 
-            // logger
+            Logger.BatchDeleteMessagesStart(Identifier, 1, enqueuedTimeUtcOlderThan);
 
             using DiagnosticScope scope = ClientDiagnostics.CreateScope(
                 DiagnosticProperty.BatchDeleteActivityName,
@@ -699,12 +699,12 @@ namespace Azure.Messaging.ServiceBus
             }
             catch (Exception exception)
             {
-                //Logger.AbandonMessageException(Identifier, exception.ToString(), lockToken);
+                Logger.BatchDeleteMessagesException(Identifier, exception.ToString());
                 scope.Failed(exception);
                 throw;
             }
 
-            //Logger.AbandonMessageComplete(Identifier, lockToken);
+            Logger.BatchDeleteMessagesComplete(Identifier, numMessagesDeleted);
             return numMessagesDeleted;
         }
 
