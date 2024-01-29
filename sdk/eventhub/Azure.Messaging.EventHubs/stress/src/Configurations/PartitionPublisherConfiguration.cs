@@ -41,7 +41,7 @@ internal class PartitionPublisherConfiguration
     ///   The amount of time to wait between enqueuing <see cref="PublishBatchSize"/> events.
     /// </summary>
     ///
-    public TimeSpan? ProducerPublishingDelay = TimeSpan.FromMilliseconds(400);
+    public TimeSpan? ProducerPublishingDelay = TimeSpan.FromSeconds(2);
 
     // Producer Configuration Values
 
@@ -51,4 +51,9 @@ internal class PartitionPublisherConfiguration
     /// </summary>
     ///
     public TimeSpan SendTimeout = TimeSpan.FromMinutes(3);
+
+    /// <summary>
+    ///   If true, add random lengths of periods of inactivity up to one hour, up to 12 times per 24 hours.
+    /// </summary>
+    public bool IncludeInactivity = false;
 }

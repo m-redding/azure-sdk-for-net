@@ -12,27 +12,7 @@ namespace Azure.Messaging.EventHubs.Stress;
 ///
 internal class BufferedPublisherConfiguration
 {
-    // Test Configuration Values
-
-    /// <summary>
-    ///   The number of events to generate for each call to
-    ///   <see cref="EventHubBufferedProducerClient.EnqueueEventsAsync(IEnumerable{EventData}, EnqueueEventOptions, CancellationToken)" />.
-    /// </summary>
-    ///
-    public int EventEnqueueListSize = 50;
-
-    /// <summary>
-    ///   The maximum size in bytes for the list of events to generate per call to
-    ///   <see cref="EventHubBufferedProducerClient.EnqueueEventsAsync(IEnumerable{EventData}, EnqueueEventOptions, CancellationToken)" />.
-    /// </summary>
-    ///
-    public long MaximumEventListSize = 1_000_000;
-
-    /// <summary>
-    ///   The number of concurrent sends going to the same <see cref="EventHubBufferedProducerClient" />.
-    /// </summary>
-    ///
-    public int ConcurrentSends = 5;
+    // --- EVENT GENERATOR CONFIGURATION VALUES ---
 
     /// <summary>
     ///   The minimum body size in bytes of events to generate when sending to the event hub.
@@ -52,13 +32,7 @@ internal class BufferedPublisherConfiguration
     ///
     public int LargeMessageRandomFactorPercent = 50;
 
-    /// <summary>
-    ///   The amount of time to wait between enqueuing <see cref="EnqueueListSize"/> events.
-    /// </summary>
-    ///
-    public TimeSpan? ProducerPublishingDelay = TimeSpan.FromMilliseconds(400);
-
-    // Buffered Producer Configuration Values
+    // ------ BUFFERED PRODUCER CONFIGURATION VALUES -----
 
     /// <summary>
     ///   The value to use for <see cref="EventHubBufferedProducerClientOptions.MaximumWaitTime" />
@@ -73,4 +47,39 @@ internal class BufferedPublisherConfiguration
     /// </summary>
     ///
     public TimeSpan SendTimeout = TimeSpan.FromMinutes(3);
+
+    // ------ SEND CALL CONFIGURATION VALUES -----
+
+    /// <summary>
+    ///   The maximum size in bytes for the list of events to generate per call to
+    ///   <see cref="EventHubBufferedProducerClient.EnqueueEventsAsync(IEnumerable{EventData}, EnqueueEventOptions, CancellationToken)" />.
+    /// </summary>
+    ///
+    public long MaximumEventListSize = 1_000_000;
+
+    /// <summary>
+    ///   The number of events to generate for each call to
+    ///   <see cref="EventHubBufferedProducerClient.EnqueueEventsAsync(IEnumerable{EventData}, EnqueueEventOptions, CancellationToken)" />.
+    /// </summary>
+    ///
+    public int EventEnqueueListSize = 50;
+
+    // ------ SCENARIO CONFIGURATION VALUES -------
+
+    /// <summary>
+    ///   If true, add random lengths of periods of inactivity up to one hour, up to 12 times per 24 hours.
+    /// </summary>
+    public bool IncludeInactivity = false;
+
+    /// <summary>
+    ///   The number of concurrent sends going to the same <see cref="EventHubBufferedProducerClient" />.
+    /// </summary>
+    ///
+    public int ConcurrentSends = 5;
+
+    /// <summary>
+    ///   The amount of time to wait between enqueuing <see cref="EnqueueListSize"/> events.
+    /// </summary>
+    ///
+    public TimeSpan? ProducerPublishingDelay = TimeSpan.FromMilliseconds(400);
 }

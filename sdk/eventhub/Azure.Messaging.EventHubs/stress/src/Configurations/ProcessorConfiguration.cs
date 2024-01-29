@@ -18,4 +18,9 @@ internal class ProcessorConfiguration
     /// </summary>
     ///
     public TimeSpan ReadTimeout = TimeSpan.FromMinutes(1);
+
+    /// <summary>
+    ///   If true, add random lengths of periods of inactivity up to one hour, up to 12 times per 24 hours.
+    /// </summary>
+    public bool IncludeInactivity = false;
 }

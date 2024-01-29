@@ -78,6 +78,10 @@ internal class PartitionPublisher
             foreach (var partition in _assignedPartitions)
             {
                 producersRunning.Add(RunPartitionSpecificProducerAsync(partition, backgroundCancellationSource.Token));
+
+                // Add a little delay between starting so that all the producers aren't sending at the exact same time every time
+
+                await Task.Delay(TimeSpan.FromMilliseconds(321), cancellationToken).ConfigureAwait(false);
             }
 
             await Task.WhenAll(producersRunning).ConfigureAwait(false);

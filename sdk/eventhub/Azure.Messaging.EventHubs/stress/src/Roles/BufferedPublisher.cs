@@ -116,8 +116,7 @@ internal class BufferedPublisher
                         }));
                     }
                 }
-                // Perform one of the sends in the foreground, which will allow easier detection of a
-                // processor-level issue.
+                // Perform one of the sends in the foreground, which will allow easier detection of issues.
 
                 while (!cancellationToken.IsCancellationRequested)
                 {

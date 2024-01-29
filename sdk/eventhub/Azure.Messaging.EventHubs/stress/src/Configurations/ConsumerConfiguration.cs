@@ -18,4 +18,9 @@ internal class ConsumerConfiguration
     /// </summary>
     ///
     public TimeSpan MaximumWaitTime = TimeSpan.FromSeconds(5);
+
+    /// <summary>
+    ///   If true, add random lengths of periods of inactivity up to one hour, up to 12 times per 24 hours.
+    /// </summary>
+    public bool IncludeInactivity = false;
 }
