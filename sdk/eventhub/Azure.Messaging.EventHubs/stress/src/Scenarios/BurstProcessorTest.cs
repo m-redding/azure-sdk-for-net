@@ -38,7 +38,7 @@ public class BurstProcessorTest : TestScenario
     private ConcurrentDictionary<string, int> _lastReadPartitionSequence { get; } = new ConcurrentDictionary<string, int>();
 
     /// <summary> The array of <see cref="Role"/>s needed to run this test scenario.</summary>
-    public override Role[] Roles { get; } = {Role.PartitionPublisher};
+    public override Role[] Roles { get; } = {Role.PartitionPublisher, Role.Processor};
 
     /// <summary>
     ///  Initializes a new <see cref="ProcessorTest"/> instance.
@@ -191,6 +191,7 @@ public class BurstProcessorTest : TestScenario
     ///
     private Task ProcessErrorHandler(ProcessErrorEventArgs args)
     {
+        Console.WriteLine(args.Exception);
         var exceptionProperties = new Dictionary<string, string>();
         exceptionProperties.Add(Metrics.PartitionId, args.PartitionId);
         MetricsCollection.Client.TrackException(args.Exception, exceptionProperties);

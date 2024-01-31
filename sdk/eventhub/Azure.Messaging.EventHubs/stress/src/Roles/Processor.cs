@@ -98,7 +98,11 @@ internal class Processor
                 Console.WriteLine($"{Identifier} is starting processing...");
 
                 await processor.StartProcessingAsync(cancellationToken).ConfigureAwait(false);
-                await Task.Delay(Timeout.Infinite, cancellationToken).ConfigureAwait(false);
+                while (!cancellationToken.IsCancellationRequested)
+                {
+                    Console.WriteLine("working...");
+                    await Task.Delay(TimeSpan.FromMinutes(5), cancellationToken).ConfigureAwait(false);
+                }
                 Console.WriteLine("Done.");
             }
             catch (TaskCanceledException)
@@ -111,6 +115,7 @@ internal class Processor
                 || ex is StackOverflowException
                 || ex is ThreadAbortException)
             {
+                Console.WriteLine(ex);
                 throw;
             }
             catch (Exception ex)

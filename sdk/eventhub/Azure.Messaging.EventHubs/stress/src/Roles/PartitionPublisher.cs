@@ -89,7 +89,7 @@ internal class PartitionPublisher
 
                 // Add a little delay between starting so that all the producers aren't sending at the exact same time every time
 
-                await Task.Delay(TimeSpan.FromMilliseconds(321), cancellationToken).ConfigureAwait(false);
+                await Task.Delay(TimeSpan.FromSeconds(1), cancellationToken).ConfigureAwait(false);
             }
 
             Console.WriteLine("All partition publishers started.");
