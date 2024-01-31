@@ -98,7 +98,7 @@ public class ConsumerTest : TestScenario
                 return Task.Run(() => partitionPublisher.RunAsync(cancellationToken));
 
             default:
-                throw new NotSupportedException($"Running role { role.ToString() } is not supported by this test scenario.");
+                throw new NotSupportedException($"Running role { role } is not supported by this test scenario.");
         }
     }
 }

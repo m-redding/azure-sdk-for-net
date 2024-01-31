@@ -5,6 +5,7 @@ using System;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Diagnostics;
+using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using Azure.Messaging.EventHubs;
@@ -38,6 +39,12 @@ internal class PartitionPublisher
 
     /// <summary>A dictionary mapping the partitionId to the last sent index number to that partition</summary>
     private ConcurrentDictionary<string, int> _lastSentPerPartition;
+
+    /// <summary>The seed to use for initializing random number generated for a given thread-specific instance.</summary>
+    private static int s_randomSeed = Environment.TickCount;
+
+    /// <summary>The random number generator to use for a specific thread.</summary>
+    private static readonly ThreadLocal<Random> RandomNumberGenerator = new ThreadLocal<Random>(() => new Random(Interlocked.Increment(ref s_randomSeed)), false);
 
     /// <summary>
     ///   Initializes a new <see cref="PartitionPublisher" \> instance.
@@ -77,6 +84,7 @@ internal class PartitionPublisher
 
             foreach (var partition in _assignedPartitions)
             {
+                Console.WriteLine($"Starting Publisher for {partition}.");
                 producersRunning.Add(RunPartitionSpecificProducerAsync(partition, backgroundCancellationSource.Token));
 
                 // Add a little delay between starting so that all the producers aren't sending at the exact same time every time
@@ -84,7 +92,9 @@ internal class PartitionPublisher
                 await Task.Delay(TimeSpan.FromMilliseconds(321), cancellationToken).ConfigureAwait(false);
             }
 
+            Console.WriteLine("All partition publishers started.");
             await Task.WhenAll(producersRunning).ConfigureAwait(false);
+            Console.WriteLine("All partition publishers completed.");
         }
     }
 
@@ -98,6 +108,8 @@ internal class PartitionPublisher
     ///
     private async Task RunPartitionSpecificProducerAsync(string partitionId, CancellationToken cancellationToken)
     {
+        int maxNumBreaks = RandomNumberGenerator.Value.Next(6, 24);
+
         while (!cancellationToken.IsCancellationRequested)
         {
             var options = new EventHubProducerClientOptions
@@ -112,30 +124,44 @@ internal class PartitionPublisher
             {
                 while (!cancellationToken.IsCancellationRequested)
                 {
-                    try
+                    using var invokeInactivityLinkedCts = CancellationTokenSource.CreateLinkedTokenSource(cancellationToken);
+                    if (_publisherconfiguration.IncludeInactivity && maxNumBreaks > 0)
+                    {
+                        int numMinutesActive = RandomNumberGenerator.Value.Next(15, 360);
+                        Console.WriteLine($"Starting publishing for {numMinutesActive} minutes");
+                        invokeInactivityLinkedCts.CancelAfter(TimeSpan.FromMinutes(numMinutesActive));
+                        maxNumBreaks--;
+                    }
+                    while (!invokeInactivityLinkedCts.IsCancellationRequested)
                     {
                         // send
                         await PerformSend(producer, partitionId, cancellationToken).ConfigureAwait(false);
-                        if ((_publisherconfiguration.ProducerPublishingDelay.HasValue) && (_publisherconfiguration.ProducerPublishingDelay.Value > TimeSpan.Zero))
+                        if (_publisherconfiguration.ProducerPublishingDelay.Value > TimeSpan.Zero)
                         {
                             await Task.Delay(_publisherconfiguration.ProducerPublishingDelay.Value, cancellationToken).ConfigureAwait(false);
                         }
                     }
-                    catch (Exception ex)
+                    if (_publisherconfiguration.IncludeInactivity)
                     {
-                        _metrics.Client.GetMetric(Metrics.EventsFailedToPublish).TrackValue(1);
-                        _metrics.Client.TrackException(ex);
+                        if (cancellationToken.IsCancellationRequested)
+                        {
+                            break;
+                        }
+                        int numMinutesInactive = RandomNumberGenerator.Value.Next(15, 120);
+                        Console.WriteLine($"Going inactive for {numMinutesInactive} minutes");
+                        await Task.Delay(TimeSpan.FromMinutes(numMinutesInactive), cancellationToken).ConfigureAwait(false);
                     }
                 }
             }
             catch (Exception ex)
             {
+                Console.WriteLine(ex);
                 _metrics.Client.GetMetric(Metrics.ProducerRestarted).TrackValue(1);
                 _metrics.Client.TrackException(ex);
             }
             finally
             {
-                await producer.CloseAsync().ConfigureAwait(false);
+                await producer.CloseAsync(cancellationToken).ConfigureAwait(false);
             }
         }
     }
@@ -164,7 +190,7 @@ internal class PartitionPublisher
 
         using var batch = await producer.CreateBatchAsync(batchOptions).ConfigureAwait(false);
 
-        var observableBatch = new List<EventData>();
+        //var observableBatch = new List<EventData>();
 
         var events = EventGenerator.CreateEvents(batch.MaximumSizeInBytes,
                                                  _publisherconfiguration.PublishBatchSize,
@@ -175,7 +201,6 @@ internal class PartitionPublisher
         foreach (var currentEvent in events)
         {
             var currentIndexNumber = _lastSentPerPartition.AddOrUpdate(partitionId, -1, (k,v) => v + 1);
-            Console.WriteLine(currentIndexNumber);
             EventTracking.AugmentEvent(currentEvent, _testParameters.Sha256Hash, currentIndexNumber, partitionId);
 
             if (!batch.TryAdd(currentEvent))
@@ -184,8 +209,9 @@ internal class PartitionPublisher
                 break;
             }
 
-            observableBatch.Add(currentEvent);
+            //observableBatch.Add(currentEvent);
         }
+        Console.WriteLine($"Sent {events.Count()} events to partition {partitionId}.");
 
         // Publish the events and report them, capturing any failures specific to the send operation.
 
@@ -208,20 +234,21 @@ internal class PartitionPublisher
         }
         catch (Exception ex)
         {
+            Console.WriteLine(ex);
             var exceptionProperties = new Dictionary<String, String>();
             exceptionProperties.Add("Process", "Send");
 
             _metrics.Client.TrackException(ex, exceptionProperties);
 
-            foreach (var failedEvent in observableBatch)
-            {
-                failedEvent.Properties.TryGetValue(EventTracking.IndexNumberPropertyName, out var failedIndexNumber);
-                var eventProperties = new Dictionary<String, String>();
-                eventProperties.Add(Metrics.PartitionId, partitionId);
-                eventProperties.Add(Metrics.PublisherAssignedIndex, failedIndexNumber.ToString());
+            // foreach (var failedEvent in observableBatch)
+            // {
+            //     failedEvent.Properties.TryGetValue(EventTracking.IndexNumberPropertyName, out var failedIndexNumber);
+            //     var eventProperties = new Dictionary<String, String>();
+            //     eventProperties.Add(Metrics.PartitionId, partitionId);
+            //     eventProperties.Add(Metrics.PublisherAssignedIndex, failedIndexNumber.ToString());
 
-                _metrics.Client.TrackEvent(Metrics.EventsFailedToPublish, eventProperties);
-            }
+            //     _metrics.Client.TrackEvent(Metrics.EventsFailedToPublish, eventProperties);
+            // }
         }
     }
 }

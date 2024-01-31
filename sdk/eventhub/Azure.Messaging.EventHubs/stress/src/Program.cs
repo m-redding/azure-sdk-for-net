@@ -42,7 +42,7 @@ public class Program
         // See if there are environment variables available to use in the .env file
         var environment = new Dictionary<string, string>();
         var environmentFile = Environment.GetEnvironmentVariable("ENV_FILE");
-        if (!(string.IsNullOrEmpty(environmentFile)))
+        if (!string.IsNullOrEmpty(environmentFile))
         {
             environment = EnvironmentReader.LoadFromFile(environmentFile);
         }
@@ -137,6 +137,23 @@ public class Program
                         var consumerTest = new ConsumerTest(testParameters, metrics);
                         testScenarioTasks.Add(consumerTest.RunTestAsync(cancellationSource.Token));
                         break;
+
+                    case TestScenarioName.BurstProcessorTest:
+                        // Get the Event Hub name for this test
+                        environment.TryGetValue(EnvironmentVariables.EventHubProcessorTest, out eventHubName);
+                        testParameters.EventHub = PromptForResources("Event Hub", testName, eventHubName, opts.Interactive);
+
+                        // Get the storage blob name for this test
+                        environment.TryGetValue(EnvironmentVariables.StorageBlobProcessorTest, out storageBlob);
+                        testParameters.BlobContainer = PromptForResources("Storage Blob Name", testName, storageBlob, opts.Interactive);
+
+                        // Get the storage account connection string for this test
+                        environment.TryGetValue(EnvironmentVariables.StorageAccountProcessorTest, out storageConnectionString);
+                        testParameters.StorageConnectionString = PromptForResources("Storage Account Connection String", testName, storageConnectionString, opts.Interactive);
+
+                        var burstProcessorTest = new BurstProcessorTest(testParameters, metrics);
+                        testScenarioTasks.Add(burstProcessorTest.RunTestAsync(cancellationSource.Token));
+                        break;
                 }
             }
 
@@ -156,6 +173,7 @@ public class Program
         }
         catch (TaskCanceledException)
         {
+            Console.WriteLine("Task is canceled.");
             // Run is complete
         }
         catch (Exception ex) when
@@ -167,6 +185,7 @@ public class Program
         }
         catch (Exception ex)
         {
+            Console.WriteLine(ex);
             metrics.Client.TrackException(ex);
         }
         finally
@@ -192,6 +211,7 @@ public class Program
         "EventProducerTest" or "EventProd" => TestScenarioName.EventProducerTest,
         "ProcessorTest" or "Processor" => TestScenarioName.ProcessorTest,
         "ConsumerTest" or "Consumer" => TestScenarioName.ConsumerTest,
+        "BurstProcessorTest" or "BurstProc" => TestScenarioName.BurstProcessorTest,
         _ => throw new ArgumentNullException(),
     };
 

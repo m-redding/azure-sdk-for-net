@@ -41,7 +41,7 @@ internal class PartitionPublisherConfiguration
     ///   The amount of time to wait between enqueuing <see cref="PublishBatchSize"/> events.
     /// </summary>
     ///
-    public TimeSpan? ProducerPublishingDelay = TimeSpan.FromSeconds(2);
+    public TimeSpan? ProducerPublishingDelay = TimeSpan.FromSeconds(5);
 
     // Producer Configuration Values
 

@@ -199,6 +199,7 @@ public static class EventTracking
                                   ConcurrentDictionary<string, int> lastReadPartitionSequence,
                                   ConcurrentDictionary<string, byte> readEvents)
     {
+        Console.WriteLine("Checking event.");
         // Id Checks
         var hasId = eventData.Properties.TryGetValue(IdPropertyName, out var eventIdProperty);
         var eventId = eventIdProperty?.ToString();
@@ -223,11 +224,13 @@ public static class EventTracking
         {
             metrics.Client.GetMetric(Metrics.EventReceivedFromWrongPartition).TrackValue(1);
 
-            var eventProperties = new Dictionary<string,string>();
-            eventProperties.Add(Metrics.PublisherAssignedId, eventId.ToString());
-            eventProperties.Add(Metrics.EventBody, eventData.EventBody.ToString());
-            eventProperties.Add(Metrics.PartitionId, partitionReceivedFrom.ToString());
-            eventProperties.Add(Metrics.IntendedPartitionId, publisherSetPartitionProperty?.ToString());
+            var eventProperties = new Dictionary<string, string>
+            {
+                { Metrics.PublisherAssignedId, eventId.ToString() },
+                { Metrics.EventBody, eventData.EventBody.ToString() },
+                { Metrics.PartitionId, partitionReceivedFrom.ToString() },
+                { Metrics.IntendedPartitionId, publisherSetPartitionProperty?.ToString() }
+            };
             metrics.Client.TrackEvent(Metrics.EventReceivedFromWrongPartition, eventProperties);
         }
 
@@ -236,9 +239,11 @@ public static class EventTracking
 
         if (!hasIndex)
         {
-            var eventProperties = new Dictionary<string,string>();
-            eventProperties.Add(Metrics.PublisherAssignedId, eventId.ToString());
-            eventProperties.Add(Metrics.EventBody, eventData.EventBody.ToString());
+            var eventProperties = new Dictionary<string, string>
+            {
+                { Metrics.PublisherAssignedId, eventId.ToString() },
+                { Metrics.EventBody, eventData.EventBody.ToString() }
+            };
             metrics.Client.TrackEvent(Metrics.UnknownEventsProcessed, eventProperties);
             return -1;
         }
@@ -250,10 +255,12 @@ public static class EventTracking
         {
             metrics.Client.GetMetric(Metrics.MissingOrOutOfOrderEvent).TrackValue(1);
 
-            var eventProperties = new Dictionary<string,string>();
-            eventProperties.Add(Metrics.PublisherAssignedId, eventId.ToString());
-            eventProperties.Add(Metrics.PublisherAssignedIndex, indexNumber.ToString());
-            eventProperties.Add(Metrics.EventBody, eventData.EventBody.ToString());
+            var eventProperties = new Dictionary<string, string>
+            {
+                { Metrics.PublisherAssignedId, eventId.ToString() },
+                { Metrics.PublisherAssignedIndex, indexNumber.ToString() },
+                { Metrics.EventBody, eventData.EventBody.ToString() }
+            };
             metrics.Client.TrackEvent(Metrics.MissingOrOutOfOrderEvent, eventProperties);
         }
 
@@ -266,10 +273,12 @@ public static class EventTracking
 
         if (expectedEventBodyHash != receivedEventBodyHash)
         {
-            var eventProperties = new Dictionary<string,string>();
-            eventProperties.Add(Metrics.PublisherAssignedId, eventId.ToString());
-            eventProperties.Add(Metrics.PublisherAssignedIndex, indexNumber.ToString());
-            eventProperties.Add(Metrics.EventBody, eventData.EventBody.ToString());
+            var eventProperties = new Dictionary<string, string>
+            {
+                { Metrics.PublisherAssignedId, eventId.ToString() },
+                { Metrics.PublisherAssignedIndex, indexNumber.ToString() },
+                { Metrics.EventBody, eventData.EventBody.ToString() }
+            };
             metrics.Client.TrackEvent(Metrics.InvalidBodies, eventProperties);
             return -1;
         }

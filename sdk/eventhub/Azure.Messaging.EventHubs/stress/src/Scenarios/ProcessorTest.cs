@@ -20,7 +20,7 @@ namespace Azure.Messaging.EventHubs.Stress;
 public class ProcessorTest : TestScenario
 {
     /// <summary> The name of this test.</summary>
-    public override string Name { get; } = "ConsumerTest";
+    public override string Name { get; } = "ProcessorTest";
 
     /// <summary>The identifier of the <see cref="Processor"/> used by this instance.</summary>
     private string _identifier;

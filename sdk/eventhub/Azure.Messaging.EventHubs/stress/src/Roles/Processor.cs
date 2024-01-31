@@ -95,11 +95,15 @@ internal class Processor
                 processor.ProcessEventAsync += processEventHandler;
                 processor.ProcessErrorAsync += processErrorHandler;
 
+                Console.WriteLine($"{Identifier} is starting processing...");
+
                 await processor.StartProcessingAsync(cancellationToken).ConfigureAwait(false);
                 await Task.Delay(Timeout.Infinite, cancellationToken).ConfigureAwait(false);
+                Console.WriteLine("Done.");
             }
             catch (TaskCanceledException)
             {
+                Console.WriteLine("TaskCanceled.");
                 // No action needed.
             }
             catch (Exception ex) when
@@ -111,6 +115,7 @@ internal class Processor
             }
             catch (Exception ex)
             {
+                Console.WriteLine(ex);
                 _metrics.Client.GetMetric(Metrics.ProcessorRestarted).TrackValue(1);
                 _metrics.Client.TrackException(ex);
             }

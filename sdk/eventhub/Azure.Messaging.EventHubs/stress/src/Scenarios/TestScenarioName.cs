@@ -13,5 +13,6 @@ public enum TestScenarioName
     BurstBufferedProducerTest,
     EventProducerTest,
     ProcessorTest,
-    ConsumerTest
+    ConsumerTest,
+    BurstProcessorTest
 }

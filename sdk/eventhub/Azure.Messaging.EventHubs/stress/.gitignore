@@ -1,5 +1,5 @@
 stress-test-resources.json
-charts
+charts/
 .vscode
 *.suo
 *.user
