@@ -143,11 +143,13 @@ namespace Azure.Messaging.ServiceBus.Core
             CancellationToken cancellationToken = default);
 
         /// <summary>
-        /// TODO.
+        /// Deletes up to <paramref name="maxMessages"/> number of messages from the service bus queue. Only messages that
+        /// were added to the queue prior to <paramref name="enqueuedTimeUtcOlderThan"/> will be deleted. The actual number
+        /// of deleted messages may be less if there are fewer eligible messages in the queue.
         /// </summary>
-        /// <param name="maxMessages"></param>
-        /// <param name="enqueuedTimeUtcOlderThan"></param>
-        /// <param name="cancellationToken"></param>
+        /// <param name="maxMessages">The maximum number of messages to delete.</param>
+        /// <param name="enqueuedTimeUtcOlderThan">A <see cref="DateTimeOffset"/> representing the cutoff time for deletion. Only messages that were enqueued before this time will be deleted.</param>
+        /// <param name="cancellationToken">An optional <see cref="CancellationToken"/> instance to signal the request to cancel the operation.</param>
         /// <returns></returns>
         public abstract Task<int> BatchDeleteMessagesAsync(
             int maxMessages,
