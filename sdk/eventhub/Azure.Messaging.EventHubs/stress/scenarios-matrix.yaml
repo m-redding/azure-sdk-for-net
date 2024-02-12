@@ -19,13 +19,13 @@ matrix:
     #   scenarioName: "BurstBuffProd"
     #   image: Dockerfile
     #   imageBuildDir: "../../../.."
-    # processor:
-    #   scenarioName: "Processor"
-    #   parallel: 3
-    #   image: Dockerfile
-    #   imageBuildDir: "../../../.."
-    burstproc:
-      scenarioName: "BurstProc"
+    processor:
+      scenarioName: "Processor"
       parallel: 4
       image: Dockerfile
       imageBuildDir: "../../../.."
+    # burstproc:
+    #   scenarioName: "BurstProc"
+    #   parallel: 4
+    #   image: Dockerfile
+    #   imageBuildDir: "../../../.."

@@ -72,6 +72,7 @@ internal class Consumer
     ///
     public async Task RunAsync(CancellationToken cancellationToken)
     {
+        using var azureEventListener = new AzureEventSourceListener((args, level) => metrics.Client.TrackTrace($"EventWritten: {args.ToString()} Level: {level}."), EventLevel.Warning);
         var consumerTasks = new Dictionary<string, Task>();
         var partitionIds = await _testParameters.GetEventHubPartitionsAsync();
 

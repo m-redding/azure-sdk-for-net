@@ -1,8 +1,8 @@
 scenarios:
 - parallel: 1
-  Scenario: sendproc
-  scenarioName: SendProc
-  imageBuildDir: ../../../..
   image: Dockerfile
+  scenarioName: SendProc
+  Scenario: sendproc
+  imageBuildDir: ../../../..
   imageTag: stresspgs7b6dif73rup6.azurecr.io/mredding/servicebus-net-stress/dockerfile:mredding
 

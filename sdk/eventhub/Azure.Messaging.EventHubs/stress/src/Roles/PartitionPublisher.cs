@@ -76,6 +76,7 @@ internal class PartitionPublisher
     ///
     public async Task RunAsync(CancellationToken cancellationToken)
     {
+        using var azureEventListener = new AzureEventSourceListener((args, level) => metrics.Client.TrackTrace($"EventWritten: {args.ToString()} Level: {level}."), EventLevel.Warning);
         var producersRunning = new List<Task>();
 
         while (!cancellationToken.IsCancellationRequested)

@@ -72,6 +72,7 @@ internal class Processor
                                Func<ProcessErrorEventArgs, Task> processErrorHandler,
                                CancellationToken cancellationToken)
     {
+        using var azureEventListener = new AzureEventSourceListener((args, level) => metrics.Client.TrackTrace($"EventWritten: {args.ToString()} Level: {level}."), EventLevel.Warning);
         while (!cancellationToken.IsCancellationRequested)
         {
             var options = new EventProcessorClientOptions

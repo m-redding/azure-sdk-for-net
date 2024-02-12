@@ -1,8 +1,8 @@
 scenarios:
 - parallel: 4
-  Scenario: burstproc
-  scenarioName: BurstProc
-  imageBuildDir: ../../../..
   image: Dockerfile
+  scenarioName: Processor
+  Scenario: processor
+  imageBuildDir: ../../../..
   imageTag: stresspgs7b6dif73rup6.azurecr.io/mredding/eventhub-net-stress/dockerfile:mredding
 

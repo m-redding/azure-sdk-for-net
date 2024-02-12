@@ -56,6 +56,7 @@ internal class BufferedPublisher
     public async Task RunAsync(CancellationToken cancellationToken)
     {
         var enqueueTasks = new List<Task>();
+        using var azureEventListener = new AzureEventSourceListener((args, level) => metrics.Client.TrackTrace($"EventWritten: {args.ToString()} Level: {level}."), EventLevel.Warning);
 
         while (!cancellationToken.IsCancellationRequested)
         {
