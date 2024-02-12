@@ -151,7 +151,7 @@ namespace Azure.Messaging.ServiceBus.Core
         /// <param name="enqueuedTimeUtcOlderThan">A <see cref="DateTimeOffset"/> representing the cutoff time for deletion. Only messages that were enqueued before this time will be deleted.</param>
         /// <param name="cancellationToken">An optional <see cref="CancellationToken"/> instance to signal the request to cancel the operation.</param>
         /// <returns></returns>
-        public abstract Task<int> BatchDeleteMessagesAsync(
+        public abstract Task<int> DeleteMessagesAsync(
             int maxMessages,
             DateTimeOffset enqueuedTimeUtcOlderThan,
             CancellationToken cancellationToken = default);

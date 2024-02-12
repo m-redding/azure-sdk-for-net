@@ -36,7 +36,7 @@ namespace Azure.Messaging.ServiceBus.Amqp
             public const string EnumerateRulesOperation = Microsoft + ":enumerate-rules";
             public const string ScheduleMessageOperation = Microsoft + ":schedule-message";
             public const string CancelScheduledMessageOperation = Microsoft + ":cancel-scheduled-message";
-            public const string BatchDeleteMessagesOperation = Microsoft + ":batch-delete-messages";
+            public const string DeleteMessagesOperation = Microsoft + ":batch-delete-messages";
         }
 
         public static class Properties

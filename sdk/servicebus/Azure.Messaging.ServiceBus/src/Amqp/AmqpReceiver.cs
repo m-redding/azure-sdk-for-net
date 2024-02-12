@@ -1383,14 +1383,14 @@ namespace Azure.Messaging.ServiceBus.Amqp
         /// <param name="enqueuedTimeUtcOlderThan">A <see cref="DateTimeOffset"/> representing the cutoff time for deletion. Only messages that were enqueued before this time will be deleted.</param>
         /// <param name="cancellationToken">An optional <see cref="CancellationToken"/> instance to signal the request to cancel the operation.</param>
         /// <returns></returns>
-        public override async Task<int> BatchDeleteMessagesAsync(
+        public override async Task<int> DeleteMessagesAsync(
             int maxMessages,
             DateTimeOffset enqueuedTimeUtcOlderThan = default,
             CancellationToken cancellationToken = default) => await _retryPolicy.RunOperation(
                 static async (value, timeout, token) =>
                 {
                     var (receiver, maxMessages, enqueuedTimeUtcOlderThan) = value;
-                    return await receiver.BatchDeleteMessagesInternalAsync(
+                    return await receiver.DeleteMessagesInternalAsync(
                             maxMessages,
                             enqueuedTimeUtcOlderThan,
                             timeout,
@@ -1401,7 +1401,7 @@ namespace Azure.Messaging.ServiceBus.Amqp
                 _connectionScope,
                 cancellationToken).ConfigureAwait(false);
 
-        private async Task<int> BatchDeleteMessagesInternalAsync(
+        private async Task<int> DeleteMessagesInternalAsync(
             int maxMessages,
             DateTimeOffset enqueuedTimeUtcOlderThan,
             TimeSpan timeout,
@@ -1410,7 +1410,7 @@ namespace Azure.Messaging.ServiceBus.Amqp
             var stopWatch = ValueStopwatch.StartNew();
 
             AmqpRequestMessage amqpRequestMessage = AmqpRequestMessage.CreateRequest(
-                    ManagementConstants.Operations.BatchDeleteMessagesOperation,
+                    ManagementConstants.Operations.DeleteMessagesOperation,
                     timeout,
                     null);
 

@@ -885,13 +885,13 @@ namespace Azure.Messaging.ServiceBus.Tests.Diagnostics
         }
 
         [Test]
-        public async Task BatchDeleteMessagesLogsEvents()
+        public async Task DeleteMessagesLogsEvents()
         {
             var mockLogger = new Mock<ServiceBusEventSource>();
             var mockTransportReceiver = new Mock<TransportReceiver>();
             var mockConnection = GetMockConnection(mockTransportReceiver);
             mockTransportReceiver.Setup(
-                transportReceiver => transportReceiver.BatchDeleteMessagesAsync(
+                transportReceiver => transportReceiver.DeleteMessagesAsync(
                     It.IsAny<int>(),
                     It.IsAny<DateTimeOffset>(),
                     It.IsAny<CancellationToken>()))
@@ -906,31 +906,31 @@ namespace Azure.Messaging.ServiceBus.Tests.Diagnostics
             };
 
             var dateTime = DateTimeOffset.UtcNow;
-            await receiver.BatchDeleteMessagesAsync(1, dateTime);
+            await receiver.DeleteMessagesAsync(1, dateTime);
 
             mockLogger
                 .Verify(
-                    log => log.BatchDeleteMessagesStart(
+                    log => log.DeleteMessagesStart(
                         receiver.Identifier,
                         1,
                         dateTime),
                 Times.Once);
             mockLogger
                 .Verify(
-                    log => log.BatchDeleteMessagesComplete(
+                    log => log.DeleteMessagesComplete(
                         receiver.Identifier,
                         1),
                 Times.Once);
         }
 
         [Test]
-        public void BatchDeleteMessagesExceptionLogsEvents()
+        public void DeleteMessagesExceptionLogsEvents()
         {
             var mockLogger = new Mock<ServiceBusEventSource>();
             var mockTransportReceiver = new Mock<TransportReceiver>();
             var mockConnection = GetMockConnection(mockTransportReceiver);
             mockTransportReceiver.Setup(
-                transportReceiver => transportReceiver.BatchDeleteMessagesAsync(
+                transportReceiver => transportReceiver.DeleteMessagesAsync(
                     It.IsAny<int>(),
                     It.IsAny<DateTimeOffset>(),
                     It.IsAny<CancellationToken>()))
@@ -946,19 +946,19 @@ namespace Azure.Messaging.ServiceBus.Tests.Diagnostics
 
             var time = DateTimeOffset.UtcNow;
             Assert.That(
-                async () => await receiver.BatchDeleteMessagesAsync(1, time),
+                async () => await receiver.DeleteMessagesAsync(1, time),
                 Throws.InstanceOf<Exception>());
 
             mockLogger
                 .Verify(
-                    log => log.BatchDeleteMessagesStart(
+                    log => log.DeleteMessagesStart(
                         receiver.Identifier,
                         1,
                         time),
                 Times.Once);
             mockLogger
                 .Verify(
-                    log => log.BatchDeleteMessagesException(
+                    log => log.DeleteMessagesException(
                         receiver.Identifier,
                         It.IsAny<string>()),
                 Times.Once);

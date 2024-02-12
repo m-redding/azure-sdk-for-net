@@ -76,9 +76,9 @@ namespace Azure.Messaging.ServiceBus.Diagnostics
         public static string DeferActivityName { get; } = "ServiceBusReceiver.Defer";
 
         /// <summary>
-        ///   The activity name associated with the batch delete operation.
+        ///   The activity name associated with the delete operation.
         /// </summary>
-        public static string BatchDeleteActivityName { get; } = "ServiceBusReceiver.BatchDelete";
+        public static string DeleteActivityName { get; } = "ServiceBusReceiver.Delete";
 
         /// <summary>
         ///   The activity name associated with the renew message lock operation.

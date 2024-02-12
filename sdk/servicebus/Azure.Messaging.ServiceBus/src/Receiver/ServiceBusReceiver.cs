@@ -675,7 +675,7 @@ namespace Azure.Messaging.ServiceBus
         /// <param name="enqueuedTimeUtcOlderThan">A <see cref="DateTimeOffset"/> representing the cutoff time for deletion. Only messages that were enqueued before this time will be deleted.</param>
         /// <param name="cancellationToken">An optional <see cref="CancellationToken"/> instance to signal the request to cancel the operation.</param>
         /// <returns></returns>
-        public virtual async Task<int> BatchDeleteMessagesAsync(int maxMessages,
+        public virtual async Task<int> DeleteMessagesAsync(int maxMessages,
             DateTimeOffset enqueuedTimeUtcOlderThan,
             CancellationToken cancellationToken = default)
         {
@@ -685,10 +685,10 @@ namespace Azure.Messaging.ServiceBus
 
             cancellationToken.ThrowIfCancellationRequested<TaskCanceledException>();
 
-            Logger.BatchDeleteMessagesStart(Identifier, 1, enqueuedTimeUtcOlderThan);
+            Logger.DeleteMessagesStart(Identifier, 1, enqueuedTimeUtcOlderThan);
 
             using DiagnosticScope scope = ClientDiagnostics.CreateScope(
-                DiagnosticProperty.BatchDeleteActivityName,
+                DiagnosticProperty.DeleteActivityName,
                 ActivityKind.Client,
                 MessagingDiagnosticOperation.Settle);
 
@@ -697,16 +697,16 @@ namespace Azure.Messaging.ServiceBus
             int numMessagesDeleted;
             try
             {
-                numMessagesDeleted = await InnerReceiver.BatchDeleteMessagesAsync(maxMessages, enqueuedTimeUtcOlderThan, cancellationToken).ConfigureAwait(false);
+                numMessagesDeleted = await InnerReceiver.DeleteMessagesAsync(maxMessages, enqueuedTimeUtcOlderThan, cancellationToken).ConfigureAwait(false);
             }
             catch (Exception exception)
             {
-                Logger.BatchDeleteMessagesException(Identifier, exception.ToString());
+                Logger.DeleteMessagesException(Identifier, exception.ToString());
                 scope.Failed(exception);
                 throw;
             }
 
-            Logger.BatchDeleteMessagesComplete(Identifier, numMessagesDeleted);
+            Logger.DeleteMessagesComplete(Identifier, numMessagesDeleted);
             return numMessagesDeleted;
         }
 
@@ -1036,17 +1036,6 @@ namespace Azure.Messaging.ServiceBus
         private void ThrowIfNotPeekLockMode()
         {
             if (ReceiveMode != ServiceBusReceiveMode.PeekLock)
-            {
-                throw new InvalidOperationException(Resources.OperationNotSupported);
-            }
-        }
-
-        /// <summary>
-        /// Throws an InvalidOperationException when not in ReceiveDelete mode.
-        /// </summary>
-        private void ThrowIfNotReceiveDeleteMode()
-        {
-            if (ReceiveMode != ServiceBusReceiveMode.ReceiveAndDelete)
             {
                 throw new InvalidOperationException(Resources.OperationNotSupported);
             }

@@ -336,7 +336,7 @@ namespace Azure.Messaging.ServiceBus.Tests.Receiver
         }
 
         [Test]
-        public async Task BatchDeleteMessagesInPeekLockMode()
+        public async Task DeleteMessagesInPeekLockMode()
         {
             await using (var scope = await ServiceBusScope.CreateWithQueue(enablePartitioning: false, enableSession: true))
             {
@@ -355,7 +355,7 @@ namespace Azure.Messaging.ServiceBus.Tests.Receiver
                     sessionId);
 
                 var time = (DateTimeOffset.UtcNow).AddSeconds(1); // UtcNow sometimes gets resolved as the same time as messages sent
-                var deletedMessages = await receiver.BatchDeleteMessagesAsync(messageCount, time);
+                var deletedMessages = await receiver.DeleteMessagesAsync(messageCount, time);
                 Assert.AreEqual(messageCount, deletedMessages);
 
                 var peekedMessage = receiver.PeekMessageAsync();
@@ -364,7 +364,7 @@ namespace Azure.Messaging.ServiceBus.Tests.Receiver
         }
 
         [Test]
-        public async Task BatchDeleteMessagesInReceiveDeleteMode()
+        public async Task DeleteMessagesInReceiveDeleteMode()
         {
             await using (var scope = await ServiceBusScope.CreateWithQueue(enablePartitioning: false, enableSession: true))
             {
@@ -389,7 +389,7 @@ namespace Azure.Messaging.ServiceBus.Tests.Receiver
                     clientOptions);
 
                 var time = (DateTimeOffset.UtcNow).AddSeconds(1); // UtcNow sometimes gets resolved as the same time as messages sent
-                var deletedMessages = await receiver.BatchDeleteMessagesAsync(messageCount, time);
+                var deletedMessages = await receiver.DeleteMessagesAsync(messageCount, time);
                 Assert.AreEqual(messageCount, deletedMessages);
 
                 var peekedMessage = receiver.PeekMessageAsync();
