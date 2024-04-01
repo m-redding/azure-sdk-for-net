@@ -20,6 +20,7 @@ public class ClientPipelineOptions
     private bool _frozen;
 
     private PipelinePolicy? _retryPolicy;
+    private PipelinePolicy? _loggingPolicy;
     private PipelineTransport? _transport;
     private TimeSpan? _timeout;
 
@@ -41,6 +42,25 @@ public class ClientPipelineOptions
             AssertNotFrozen();
 
             _retryPolicy = value;
+        }
+    }
+
+    /// <summary>
+    /// Gets or sets the <see cref="PipelinePolicy"/> to be used by the
+    /// <see cref="ClientPipeline"/> for handling logging logic.
+    /// </summary>
+    /// <remarks>
+    /// In most cases, this property will be set to an instance of
+    /// <see cref="ClientLoggingPolicy"/>.
+    /// </remarks>
+    public PipelinePolicy? LoggingPolicy
+    {
+        get => _loggingPolicy;
+        set
+        {
+            AssertNotFrozen();
+
+            _loggingPolicy = value;
         }
     }
 
