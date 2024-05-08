@@ -57,6 +57,11 @@ namespace Azure.Messaging.EventHubs
         {
             // Build the filter expression, in the order of significance.
 
+            if (!string.IsNullOrEmpty(eventPosition.GlobalOffset))
+            {
+                return $"{ OffsetName } {(eventPosition.IsInclusive ? ">=" : ">")} {eventPosition.GlobalOffset}";
+            }
+
             if (!string.IsNullOrEmpty(eventPosition.SequenceNumber))
             {
                 return $"{ SequenceNumberName } {(eventPosition.IsInclusive ? ">=" : ">")} {eventPosition.SequenceNumber}";
@@ -66,10 +71,10 @@ namespace Azure.Messaging.EventHubs
             // new SDK populates the EventData offset property with the amqp message sequence number. This allows for backwards
             // compatibility to avoid breaking existing code that uses only offset properties.
 
-            if (!string.IsNullOrEmpty(eventPosition.Offset))
-            {
-                return $"{ SequenceNumberName } { (eventPosition.IsInclusive ? ">=" : ">") } { eventPosition.Offset }";
-            }
+            // TODO - uncomment if (!string.IsNullOrEmpty(eventPosition.Offset))
+            //{
+            //    return $"{ SequenceNumberName } { (eventPosition.IsInclusive ? ">=" : ">") } { eventPosition.Offset }";
+            //}
 
             if (eventPosition.EnqueuedTime.HasValue)
             {
