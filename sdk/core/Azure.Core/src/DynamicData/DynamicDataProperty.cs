@@ -2,6 +2,7 @@
 // Licensed under the MIT License.
 
 using System.Collections.Generic;
+using System.Diagnostics.CodeAnalysis;
 using System.Dynamic;
 using System.Linq.Expressions;
 
@@ -39,6 +40,8 @@ namespace Azure.Core.Serialization
             {
             }
 
+            [RequiresUnreferencedCode("")]
+            [RequiresDynamicCode("")]
             public override IEnumerable<string> GetDynamicMemberNames()
             {
                 return _memberNames;
