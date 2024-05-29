@@ -63,6 +63,8 @@ namespace Azure
         /// <summary>
         /// Return the content of the BinaryData as a dynamic type.  Please see https://aka.ms/azsdk/net/dynamiccontent for details.
         /// </summary>
+        [RequiresUnreferencedCode("")]
+        [RequiresDynamicCode("")]
         public static dynamic ToDynamicFromJson(this BinaryData utf8Json)
         {
             DynamicDataOptions options = new DynamicDataOptions();
@@ -80,6 +82,8 @@ namespace Azure
         /// see <see href="https://learn.microsoft.com/dotnet/standard/base-types/standard-date-and-time-format-strings">https://learn.microsoft.com/dotnet/standard/base-types/standard-date-and-time-format-strings#table-of-format-specifiers</see> for other well known values.
         /// </paramref>
         /// </summary>
+        [RequiresUnreferencedCode("")]
+        [RequiresDynamicCode("")]
         public static dynamic ToDynamicFromJson(this BinaryData utf8Json, JsonPropertyNames propertyNameFormat, string dateTimeFormat = DynamicData.RoundTripFormat)
         {
             DynamicDataOptions options = new DynamicDataOptions()

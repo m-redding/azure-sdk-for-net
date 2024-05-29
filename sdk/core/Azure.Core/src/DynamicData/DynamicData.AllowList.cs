@@ -175,7 +175,7 @@ namespace Azure.Core.Serialization
                 return true;
             }
 
-            private static bool IsAllowedAnonymousValue<[DynamicallyAccessedMembers(DynamicallyAccessedMemberTypes.PublicConstructors | DynamicallyAccessedMemberTypes.NonPublicConstructors)] T>(Type type, T value)
+            private static bool IsAllowedAnonymousValue<[DynamicallyAccessedMembers(DynamicallyAccessedMemberTypes.PublicConstructors | DynamicallyAccessedMemberTypes.NonPublicConstructors)] T>([DynamicallyAccessedMembers(DynamicallyAccessedMemberTypes.PublicProperties)] Type type, T value)
             {
                 if (!IsAnonymousType(type))
                 {
