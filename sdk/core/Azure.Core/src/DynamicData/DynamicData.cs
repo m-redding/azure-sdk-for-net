@@ -22,10 +22,8 @@ namespace Azure.Core.Serialization
     /// This and related types are not intended to be mocked.
     /// </summary>
     [DebuggerDisplay("{DebuggerDisplay,nq}")]
-#if !NET5_0 // RequiresUnreferencedCode in net5.0 doesn't have AttributeTargets.Class as a target, but it was added in net6.0
     [RequiresUnreferencedCode(MutableJsonDocument.SerializationRequiresUnreferencedCodeClass)]
     [RequiresDynamicCode(MutableJsonDocument.SerializationRequiresUnreferencedCodeClass)]
-#endif
     [JsonConverter(typeof(DynamicDataJsonConverter))]
     public sealed partial class DynamicData : IDisposable
     {
@@ -479,9 +477,7 @@ namespace Azure.Core.Serialization
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         private string DebuggerDisplay => _element.DebuggerDisplay;
 
-#if !NET5_0 // RequiresUnreferencedCode in net5.0 doesn't have AttributeTargets.Class as a target, but it was added in net6.0
         [RequiresUnreferencedCode(ClassIsIncompatibleWithTrimming)]
-#endif
         [RequiresDynamicCode(ClassIsIncompatibleWithTrimming)]
         private class DynamicDataJsonConverter : JsonConverter<DynamicData>
         {

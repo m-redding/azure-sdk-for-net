@@ -40,8 +40,6 @@ namespace Azure.Core.Serialization
             {
             }
 
-            [RequiresUnreferencedCode("")]
-            [RequiresDynamicCode("")]
             public override IEnumerable<string> GetDynamicMemberNames()
             {
                 return _memberNames;

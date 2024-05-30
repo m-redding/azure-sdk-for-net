@@ -3,6 +3,7 @@
 
 using System;
 using System.Collections.Generic;
+using System.Diagnostics.CodeAnalysis;
 using System.Text.Json;
 using System.Text.Json.Serialization;
 using Azure.Core;
@@ -22,6 +23,8 @@ namespace Azure.Messaging
         /// <exception cref="ArgumentNullException">
         /// <paramref name="source"/> or <paramref name="type"/> was null.
         /// </exception>
+        [RequiresUnreferencedCode("")]
+        [RequiresDynamicCode("")]
         public CloudEvent(string source, string type, object? jsonSerializableData, Type? dataSerializationType = default)
         {
             if (jsonSerializableData is BinaryData)

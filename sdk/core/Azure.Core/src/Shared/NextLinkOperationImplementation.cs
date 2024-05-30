@@ -6,6 +6,7 @@
 using System;
 using System.ClientModel.Primitives;
 using System.Collections.Generic;
+using System.Diagnostics.CodeAnalysis;
 using System.IO;
 using System.Linq;
 using System.Net;
@@ -100,18 +101,18 @@ namespace Azure.Core
             // TODO: Once we remove NextLinkOperationImplementation from internal shared and make it internal to Azure.Core only, we can access the internal members from RehydrationToken directly
             var lroDetails = ModelReaderWriter.Write(rehydrationToken!, ModelReaderWriterOptions.Json).ToObjectFromJson<Dictionary<string, string>>();
 
-            var initialUri = GetContentFromRehydrationToken(lroDetails, "initialUri");
+            var initialUri = GetContentFromRehydrationToken(lroDetails!, "initialUri");
             if (!Uri.TryCreate(initialUri, UriKind.Absolute, out var startRequestUri))
             {
                 throw new ArgumentException($"\"initialUri\" property on \"rehydrationToken\" is an invalid Uri", nameof(rehydrationToken));
             }
 
-            string nextRequestUri = GetContentFromRehydrationToken(lroDetails, "nextRequestUri");
-            string requestMethodStr = GetContentFromRehydrationToken(lroDetails, "requestMethod");
+            string nextRequestUri = GetContentFromRehydrationToken(lroDetails!, "nextRequestUri");
+            string requestMethodStr = GetContentFromRehydrationToken(lroDetails!, "requestMethod");
             RequestMethod requestMethod = new RequestMethod(requestMethodStr);
-            string lastKnownLocation = GetContentFromRehydrationToken(lroDetails, "lastKnownLocation");
+            string lastKnownLocation = GetContentFromRehydrationToken(lroDetails!, "lastKnownLocation");
 
-            string finalStateViaStr = GetContentFromRehydrationToken(lroDetails, "finalStateVia");
+            string finalStateViaStr = GetContentFromRehydrationToken(lroDetails!, "finalStateVia");
             OperationFinalStateVia finalStateVia;
             if (Enum.IsDefined(typeof(OperationFinalStateVia), finalStateViaStr))
             {
@@ -122,7 +123,7 @@ namespace Azure.Core
                 finalStateVia = OperationFinalStateVia.Location;
             }
 
-            string headerSourceStr = GetContentFromRehydrationToken(lroDetails, "headerSource");
+            string headerSourceStr = GetContentFromRehydrationToken(lroDetails!, "headerSource");
             HeaderSource headerSource;
             if (Enum.IsDefined(typeof(HeaderSource), headerSourceStr))
             {
