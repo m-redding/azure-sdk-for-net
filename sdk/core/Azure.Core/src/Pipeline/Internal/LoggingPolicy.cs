@@ -24,7 +24,7 @@ namespace Azure.Core.Pipeline
             AzureEventSourceListener.TraitValue
         };
 
-        public LoggingPolicy(bool isEnabled, bool logContent, int maxLength, string[] allowedHeaderNames, string[] allowedQueryParameters, string? assemblyName)
+        public LoggingPolicy(bool logContent, int maxLength, string[] allowedHeaderNames, string[] allowedQueryParameters, string? assemblyName)
         {
             LoggingOptions loggingOptions = new()
             {
@@ -32,7 +32,7 @@ namespace Azure.Core.Pipeline
                 IsLoggingContentEnabled = logContent,
                 LoggedClientAssemblyName = assemblyName,
                 RequestIdHeaderName = "x-ms-client-request-id",
-                IsLoggingEnabled = isEnabled
+                IsLoggingEnabled = true
             };
 
             // Don't use the client model sanitization defaults because:

@@ -18,6 +18,7 @@ namespace Azure.Core.Diagnostics
         private const int RequestRedirectEvent = 20;
         private const int RequestRedirectBlockedEvent = 21;
         private const int RequestRedirectCountExceededEvent = 22;
+        private const int PipelineTransportOptionsNotAppliedEvent = 23;
 
         private AzureCoreEventSource() : base(EventSourceName) { }
 
@@ -55,6 +56,21 @@ namespace Azure.Core.Diagnostics
         public void RequestRedirectCountExceeded(string requestId, string from, string to)
         {
             WriteEvent(RequestRedirectCountExceededEvent, requestId, from, to);
+        }
+
+        [NonEvent]
+        public void PipelineTransportOptionsNotApplied(Type optionsType)
+        {
+            if (IsEnabled(EventLevel.Informational, EventKeywords.None))
+            {
+                PipelineTransportOptionsNotApplied(optionsType.FullName ?? string.Empty);
+            }
+        }
+
+        [Event(PipelineTransportOptionsNotAppliedEvent, Level = EventLevel.Informational, Message = "The client requires transport configuration but it was not applied because custom transport was provided. Type: {0}")]
+        public void PipelineTransportOptionsNotApplied(string optionsType)
+        {
+            WriteEvent(PipelineTransportOptionsNotAppliedEvent, optionsType);
         }
 
         [NonEvent]
