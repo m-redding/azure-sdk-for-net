@@ -254,10 +254,6 @@ namespace Azure.Core.Pipeline
                     return;
                 }
 
-                // This logic can move into System.ClientModel's ClientRetryPolicy
-                // once we enable EventSource logging there.
-                AzureCoreEventSource.Singleton.RequestRetrying(httpMessage.Request.ClientRequestId, httpMessage.RetryNumber, elapsed);
-
                 // Reset stopwatch values
                 message.SetProperty(typeof(BeforeTimestamp), null);
                 message.SetProperty(typeof(ElapsedTime), null);
