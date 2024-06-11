@@ -22,7 +22,7 @@ namespace Azure.Core.Pipeline
         /// <summary>
         /// Creates a new instance of the <see cref="RedirectPolicy"/> class.
         /// </summary>
-        /// <param name="allowAutoRedirect">Determinds whether redirects will be handled by this policy. Rather than passing false, consider using the static <see cref="Shared"/> instance instead which defaults to false.</param>
+        /// <param name="allowAutoRedirect">Determines whether redirects will be handled by this policy. Rather than passing false, consider using the static <see cref="Shared"/> instance instead which defaults to false.</param>
         internal RedirectPolicy(bool allowAutoRedirect)
         {
             _allowAutoRedirects = allowAutoRedirect;
