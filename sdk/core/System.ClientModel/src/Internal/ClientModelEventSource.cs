@@ -28,52 +28,17 @@ internal sealed class ClientModelEventSource : EventSource
     private const int ErrorResponseContentTextBlockEvent = 16;
     private const int RequestContentTextEvent = 17;
     private const int ExceptionResponseEvent = 18;
-    private const int BackgroundRefreshFailedEvent = 19;
-    private const int RequestRedirectEvent = 20;
-    private const int RequestRedirectBlockedEvent = 21;
-    private const int RequestRedirectCountExceededEvent = 22;
-    private const int PipelineTransportOptionsNotAppliedEvent = 23;
+    private const int PipelineTransportOptionsNotAppliedEvent = 23; // TODO
 
-    private ClientModelEventSource(string eventSourceName, string[]? traits) : base(eventSourceName, EventSourceSettings.Default, traits) { }
+    private ClientModelEventSource(string eventSourceName) : base(eventSourceName, EventSourceSettings.Default) { }
 
-    public static ClientModelEventSource Create(string eventSourceName, string[]? traits) => new(eventSourceName, traits);
-
-    [Event(BackgroundRefreshFailedEvent, Level = EventLevel.Informational, Message = "Background token refresh [{0}] failed with exception {1}")]
-    public void BackgroundRefreshFailed(string? requestId, string exception)
-    {
-        WriteEvent(BackgroundRefreshFailedEvent, requestId, exception);
-    }
-
-    [NonEvent]
-    public void Request(PipelineRequest request, string? requestId, string? assemblyName, PipelineMessageSanitizer sanitizer)
-    {
-        if (IsEnabled(EventLevel.Informational, EventKeywords.None))
-        {
-            Request(requestId, request.Method.ToString(), sanitizer.SanitizeUrl(request.Uri!.AbsoluteUri), FormatHeaders(request.Headers, sanitizer), assemblyName);
-        }
-    }
+    public static ClientModelEventSource Create(string eventSourceName) => new(eventSourceName);
 
     [Event(RequestEvent, Level = EventLevel.Informational, Message = "Request [{0}] {1} {2}\r\n{3}client assembly: {4}")]
     [UnconditionalSuppressMessage("ReflectionAnalysis", "IL2026", Justification = "WriteEvent is used with primitive types.")]
     public void Request(string? requestId, string method, string uri, string headers, string? clientAssembly)
     {
         WriteEvent(RequestEvent, requestId, method, uri, headers, clientAssembly);
-    }
-
-    [NonEvent]
-    public void RequestContent(string? requestId, byte[] content, Encoding? textEncoding)
-    {
-        if (IsEnabled(EventLevel.Verbose, EventKeywords.None))
-        {
-            if (textEncoding is not null)
-            {
-                RequestContentText(requestId, textEncoding.GetString(content));
-            }
-            else
-            {
-                RequestContent(requestId, content);
-            }
-        }
     }
 
     [Event(RequestContentEvent, Level = EventLevel.Verbose, Message = "Request [{0}] content: {1}")]
@@ -260,34 +225,6 @@ internal sealed class ClientModelEventSource : EventSource
     }
 
     [NonEvent]
-    public void RequestRedirect(PipelineRequest request, string requestId, Uri redirectUri, PipelineResponse response)
-    {
-        if (IsEnabled(EventLevel.Verbose, EventKeywords.None))
-        {
-            RequestRedirect(requestId, request.Uri!.AbsoluteUri, redirectUri.AbsoluteUri, response.Status);
-        }
-    }
-
-    [Event(RequestRedirectEvent, Level = EventLevel.Verbose, Message = "Request [{0}] Redirecting from {1} to {2} in response to status code {3}")]
-    [UnconditionalSuppressMessage("ReflectionAnalysis", "IL2026", Justification = "WriteEvent is used with primitive types.")]
-    public void RequestRedirect(string? requestId, string from, string to, int status)
-    {
-        WriteEvent(RequestRedirectEvent, requestId, from, to, status);
-    }
-
-    [Event(RequestRedirectBlockedEvent, Level = EventLevel.Warning, Message = "Request [{0}] Insecure HTTPS to HTTP redirect from {1} to {2} was blocked.")]
-    public void RequestRedirectBlocked(string? requestId, string from, string to)
-    {
-        WriteEvent(RequestRedirectBlockedEvent, requestId, from, to);
-    }
-
-    [Event(RequestRedirectCountExceededEvent, Level = EventLevel.Warning, Message = "Request [{0}] Exceeded max number of redirects. Redirect from {1} to {2} blocked.")]
-    public void RequestRedirectCountExceeded(string? requestId, string from, string to)
-    {
-        WriteEvent(RequestRedirectCountExceededEvent, requestId, from, to);
-    }
-
-    [NonEvent]
     public void PipelineTransportOptionsNotApplied(Type optionsType)
     {
         if (IsEnabled(EventLevel.Informational, EventKeywords.None))
@@ -302,7 +239,6 @@ internal sealed class ClientModelEventSource : EventSource
         WriteEvent(PipelineTransportOptionsNotAppliedEvent, optionsType);
     }
 
-    [NonEvent]
     private static string FormatHeaders(IEnumerable<KeyValuePair<string, string>> headers, PipelineMessageSanitizer sanitizer)
     {
         var stringBuilder = new StringBuilder();

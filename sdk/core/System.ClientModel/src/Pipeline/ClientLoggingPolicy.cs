@@ -13,6 +13,7 @@ using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Linq;
+using Microsoft.Extensions.Logging;
 
 namespace System.ClientModel.Primitives;
 
@@ -22,9 +23,8 @@ namespace System.ClientModel.Primitives;
 public class ClientLoggingPolicy : PipelinePolicy
 {
     private const double RequestTooLongTime = 3.0; // sec
-    private const string DefaultEventSourceName = "System.ClientModel";
 
-    private static readonly ConcurrentDictionary<string, ClientModelEventSource> s_singletonEventSources = new();
+    internal static readonly ClientModelEventSource EventSourceSingleton = ClientModelEventSource.Create("System.ClientModel");
 
     private readonly bool _logContent;
     private readonly int _maxLength;
@@ -32,14 +32,13 @@ public class ClientLoggingPolicy : PipelinePolicy
     private readonly string? _clientRequestIdHeaderName;
     private readonly bool _isLoggingEnabled;
     private readonly PipelineMessageSanitizer _sanitizer;
+    private ILogger? _logger;
 
     /// <summary>
     /// TODO.
     /// </summary>
-    /// <param name="logName"></param>
-    /// <param name="logTraits"></param>
     /// <param name="options"></param>
-    protected ClientLoggingPolicy(string logName, string[]? logTraits = default, LoggingOptions? options = default)
+    public ClientLoggingPolicy(LoggingOptions? options = default)
     {
         LoggingOptions loggingOptions = options ?? new LoggingOptions();
         _logContent = loggingOptions.IsLoggingContentEnabled;
@@ -48,23 +47,7 @@ public class ClientLoggingPolicy : PipelinePolicy
         _clientRequestIdHeaderName = loggingOptions.RequestIdHeaderName;
         _isLoggingEnabled = loggingOptions.IsLoggingEnabled;
         _sanitizer = new PipelineMessageSanitizer(loggingOptions.AllowedQueryParameters.ToArray(), loggingOptions.AllowedHeaderNames.ToArray());
-
-        string logNameToUse = logName ?? DefaultEventSourceName;
-        EventSourceSingleton = s_singletonEventSources.GetOrAdd(logNameToUse, _ => ClientModelEventSource.Create(logNameToUse, logTraits));
     }
-
-    /// <summary>
-    /// TODO.
-    /// </summary>
-    /// <param name="options"></param>
-    public ClientLoggingPolicy(LoggingOptions? options = default) : this(DefaultEventSourceName, null, options)
-    {
-    }
-
-    /// <summary>
-    /// TODO
-    /// </summary>
-    internal ClientModelEventSource EventSourceSingleton { get; }
 
     /// <inheritdoc/>
     public override void Process(PipelineMessage message, IReadOnlyList<PipelinePolicy> pipeline, int currentIndex) =>
@@ -76,7 +59,10 @@ public class ClientLoggingPolicy : PipelinePolicy
 
     private async ValueTask ProcessSyncOrAsync(PipelineMessage message, IReadOnlyList<PipelinePolicy> pipeline, int currentIndex, bool async)
     {
-        if (!_isLoggingEnabled || !EventSourceSingleton.IsEnabled())
+        bool eventSourceIsEnabled = EventSourceSingleton.IsEnabled();
+        bool loggerIsEnabled = _logger != null;
+
+        if (!_isLoggingEnabled || !(eventSourceIsEnabled || loggerIsEnabled))
         {
             if (async)
             {
@@ -148,14 +134,36 @@ public class ClientLoggingPolicy : PipelinePolicy
         return clientRequestId;
     }
 
-    private void LogRequest(PipelineRequest request, string? requestId)
+    private void LogRequest(PipelineRequest request, string requestId)
     {
-        EventSourceSingleton.Request(request, requestId, _assemblyName, _sanitizer);
+        bool eventSourceIsEnabled = EventSourceSingleton.IsEnabled(EventLevel.Informational, EventKeywords.None);
+        bool loggerIsEnabled = _logger != null && _logger.IsEnabled(LogLevel.Information);
+
+        if (!ShouldLog() // avoid sanitization cost
+        {
+            return;
+        }
+
+        string uri = _sanitizer.SanitizeUrl(request.Uri!.AbsoluteUri);
+        string headers = FormatHeaders(request.Headers, _sanitizer);
+
+        if (loggerIsEnabled)
+        {
+            ClientModelLogMessages.Request(_logger!, requestId, request.Method, uri, headers, _assemblyName); // _logger is checked above
+        }
+        if (eventSourceIsEnabled)
+        {
+            EventSourceSingleton.Request(requestId, request.Method, uri, FormatHeaders(request.Headers, _sanitizer), _assemblyName);
+        }
     }
 
-    private async Task LogRequestContent(PipelineRequest request, string? requestId, bool async, CancellationToken cancellationToken)
+    private async Task LogRequestContent(PipelineRequest request, string requestId, bool async, CancellationToken cancellationToken)
     {
-        if (!_logContent || request.Content == null || !EventSourceSingleton.IsEnabled(EventLevel.Informational, EventKeywords.All))
+        bool eventSourceIsEnabled = EventSourceSingleton.IsEnabled(EventLevel.Verbose, EventKeywords.None);
+        bool loggerIsEnabled = _logger != null && _logger.IsEnabled(LogLevel.Information);
+
+        // if content logging is turned off, there is no content, or both logger and event source are disabled
+        if (!_logContent || request.Content == null || !(eventSourceIsEnabled || loggerIsEnabled))
         {
             return; // nothing to log
         }
@@ -180,13 +188,44 @@ public class ClientLoggingPolicy : PipelinePolicy
             ContentTypeUtilities.TryGetTextEncoding(contentType, out requestTextEncoding);
         }
 
-        // Log to event source
-        EventSourceSingleton.RequestContent(requestId, bytes, requestTextEncoding);
+        // Log text event
+        if (requestTextEncoding != null)
+        {
+            string content = requestTextEncoding.GetString(bytes);
+            if (eventSourceIsEnabled)
+            {
+                EventSourceSingleton.RequestContentText(requestId, content);
+            }
+            if (loggerIsEnabled)
+            {
+                ClientModelLogMessages.RequestContentText(_logger!, requestId, content); // _logger is checked above
+            }
+        }
+        else // Log bytes
+        {
+            if (eventSourceIsEnabled)
+            {
+                EventSourceSingleton.RequestContent(requestId, bytes);
+            }
+            if (loggerIsEnabled)
+            {
+                ClientModelLogMessages.RequestContent(_logger!, requestId, bytes);
+            }
+        }
     }
 
-    private void LogResponse(PipelineResponse response, string? responseId, double elapsed)
+    private void LogResponse(PipelineResponse response, string responseId, double elapsed)
     {
-        bool isError = response.IsError;
+        bool eventSourceIsEnabled = EventSourceSingleton.IsEnabled();
+        bool loggerIsEnabled = _logger != null && _logger.IsEnabled(LogLevel.Information);
+
+        if (!(eventSourceIsEnabled || loggerIsEnabled)) // avoid sanitization cost
+        {
+            return;
+        }
+
+        
+
         if (isError)
         {
             EventSourceSingleton.ErrorResponse(response, responseId, _sanitizer, elapsed);
@@ -195,6 +234,11 @@ public class ClientLoggingPolicy : PipelinePolicy
         {
             EventSourceSingleton.Response(response, responseId, _sanitizer, elapsed);
         }
+    }
+
+    private void LogErrorResponse(PipelineResponse response, string responseId, double elapsed)
+    {
+
     }
 
     private void LogResponseContent(PipelineResponse response, string? responseId, bool contentBuffered, bool async, CancellationToken cancellationToken)
@@ -262,6 +306,19 @@ public class ClientLoggingPolicy : PipelinePolicy
         }
         keyValuePairs.TryGetValue(_clientRequestIdHeaderName!, out var clientRequestId);
         return clientRequestId;
+    }
+
+    private static string FormatHeaders(IEnumerable<KeyValuePair<string, string>> headers, PipelineMessageSanitizer sanitizer)
+    {
+        var stringBuilder = new StringBuilder();
+        foreach (var header in headers)
+        {
+            stringBuilder.Append(header.Key);
+            stringBuilder.Append(':');
+            stringBuilder.Append(sanitizer.SanitizeHeader(header.Key, header.Value));
+            stringBuilder.Append(Environment.NewLine);
+        }
+        return stringBuilder.ToString();
     }
 
     #region MaxLengthStream
