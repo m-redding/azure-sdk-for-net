@@ -3,6 +3,7 @@
 
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using Microsoft.Extensions.Logging;
 
 namespace System.ClientModel.Primitives;
 
@@ -48,6 +49,7 @@ public class LoggingOptions
     private IList<string> _allowedQueryParameters = new List<string>(s_defaultAllowedQueryParameters);
     private string? _clientAssembly;
     private string? _requestIdHeaderName;
+    private ILoggerFactory? _loggerFactory;
 
     /// <summary>
     /// Get or sets value indicating whether HTTP pipeline logging is enabled.
@@ -60,6 +62,20 @@ public class LoggingOptions
             AssertNotFrozen();
 
             _isLoggingEnabled = value;
+        }
+    }
+
+    /// <summary>
+    /// TODO.
+    /// </summary>
+    public ILoggerFactory? LoggerFactory
+    {
+        get => _loggerFactory;
+        set
+        {
+            AssertNotFrozen();
+
+            _loggerFactory = value;
         }
     }
 
