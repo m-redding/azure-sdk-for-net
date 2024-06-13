@@ -139,7 +139,7 @@ public class ClientLoggingPolicy : PipelinePolicy
         bool eventSourceIsEnabled = EventSourceSingleton.IsEnabled(EventLevel.Informational, EventKeywords.None);
         bool loggerIsEnabled = _logger != null && _logger.IsEnabled(LogLevel.Information);
 
-        if (!ShouldLog() // avoid sanitization cost
+        if (!(eventSourceIsEnabled || loggerIsEnabled)) // avoid sanitization cost
         {
             return;
         }
