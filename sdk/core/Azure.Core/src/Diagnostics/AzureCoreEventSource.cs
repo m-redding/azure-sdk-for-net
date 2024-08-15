@@ -7,7 +7,6 @@ using System.Diagnostics.Tracing;
 using System.Diagnostics.CodeAnalysis;
 using System.Text;
 using System.ClientModel.Primitives;
-using System.Net.Cache;
 
 namespace Azure.Core.Diagnostics
 {
