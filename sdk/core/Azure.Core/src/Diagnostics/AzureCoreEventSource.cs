@@ -6,6 +6,7 @@ using System.Collections.Generic;
 using System.Diagnostics.Tracing;
 using System.Diagnostics.CodeAnalysis;
 using System.Text;
+using System.ClientModel.Primitives;
 
 namespace Azure.Core.Diagnostics
 {
@@ -36,6 +37,8 @@ namespace Azure.Core.Diagnostics
         private const int RequestRedirectCountExceededEvent = 22;
         private const int PipelineTransportOptionsNotAppliedEvent = 23;
 
+        private const string ClientRequestIdHeader = "x-ms-client-request-id";
+
         private AzureCoreEventSource() : base(EventSourceName) { }
 
         public static AzureCoreEventSource Singleton { get; } = new AzureCoreEventSource();
@@ -47,11 +50,12 @@ namespace Azure.Core.Diagnostics
         }
 
         [NonEvent]
-        public void Request(Request request, string? assemblyName, HttpMessageSanitizer sanitizer)
+        public void Request(PipelineRequest request, string? assemblyName, HttpMessageSanitizer sanitizer)
         {
             if (IsEnabled(EventLevel.Informational, EventKeywords.None))
             {
-                Request(request.ClientRequestId, request.Method.ToString(), sanitizer.SanitizeUrl(request.Uri.ToString()), FormatHeaders(request.Headers, sanitizer), assemblyName);
+                Request? rq = request as Request;
+                Request(rq?.ClientRequestId ?? string.Empty, request.Method.ToString(), sanitizer.SanitizeUrl(request.Uri!.AbsoluteUri), FormatHeaders(request.Headers, sanitizer), assemblyName);
             }
         }
 
@@ -63,17 +67,18 @@ namespace Azure.Core.Diagnostics
         }
 
         [NonEvent]
-        public void RequestContent(string requestId, byte[] content, Encoding? textEncoding)
+        public void RequestContent(PipelineRequest request, byte[] content, Encoding? textEncoding)
         {
             if (IsEnabled(EventLevel.Verbose, EventKeywords.None))
             {
+                Request? rq = request as Request;
                 if (textEncoding is not null)
                 {
-                    RequestContentText(requestId, textEncoding.GetString(content));
+                    RequestContentText(rq?.ClientRequestId ?? string.Empty, textEncoding.GetString(content));
                 }
                 else
                 {
-                    RequestContent(requestId, content);
+                    RequestContent(rq?.ClientRequestId ?? string.Empty, content);
                 }
             }
         }
@@ -92,11 +97,12 @@ namespace Azure.Core.Diagnostics
         }
 
         [NonEvent]
-        public void Response(Response response, HttpMessageSanitizer sanitizer, double elapsed)
+        public void Response(PipelineResponse response, HttpMessageSanitizer sanitizer, double elapsed)
         {
             if (IsEnabled(EventLevel.Informational, EventKeywords.None))
             {
-                Response(response.ClientRequestId, response.Status, response.ReasonPhrase, FormatHeaders(response.Headers, sanitizer), elapsed);
+                Response? rsp = response as Response;
+                Response(rsp?.ClientRequestId ?? string.Empty, response.Status, response.ReasonPhrase, FormatHeaders(response.Headers, sanitizer), elapsed);
             }
         }
 
@@ -108,17 +114,18 @@ namespace Azure.Core.Diagnostics
         }
 
         [NonEvent]
-        public void ResponseContent(string requestId, byte[] content, Encoding? textEncoding)
+        public void ResponseContent(PipelineResponse response, byte[] content, Encoding? textEncoding)
         {
             if (IsEnabled(EventLevel.Verbose, EventKeywords.None))
             {
+                Response? rsp = response as Response;
                 if (textEncoding is not null)
                 {
-                    ResponseContentText(requestId, textEncoding.GetString(content));
+                    ResponseContentText(rsp?.ClientRequestId ?? string.Empty, textEncoding.GetString(content));
                 }
                 else
                 {
-                    ResponseContent(requestId, content);
+                    ResponseContent(rsp?.ClientRequestId ?? string.Empty, content);
                 }
             }
         }
@@ -137,17 +144,18 @@ namespace Azure.Core.Diagnostics
         }
 
         [NonEvent]
-        public void ResponseContentBlock(string requestId, int blockNumber, byte[] content, Encoding? textEncoding)
+        public void ResponseContentBlock(PipelineResponse response, int blockNumber, byte[] content, Encoding? textEncoding)
         {
             if (IsEnabled(EventLevel.Verbose, EventKeywords.None))
             {
+                Response? rsp = response as Response;
                 if (textEncoding is not null)
                 {
-                    ResponseContentTextBlock(requestId, blockNumber, textEncoding.GetString(content));
+                    ResponseContentTextBlock(rsp?.ClientRequestId ?? string.Empty, blockNumber, textEncoding.GetString(content));
                 }
                 else
                 {
-                    ResponseContentBlock(requestId, blockNumber, content);
+                    ResponseContentBlock(rsp?.ClientRequestId ?? string.Empty, blockNumber, content);
                 }
             }
         }
@@ -167,11 +175,12 @@ namespace Azure.Core.Diagnostics
         }
 
         [NonEvent]
-        public void ErrorResponse(Response response, HttpMessageSanitizer sanitizer, double elapsed)
+        public void ErrorResponse(PipelineResponse response, HttpMessageSanitizer sanitizer, double elapsed)
         {
             if (IsEnabled(EventLevel.Warning, EventKeywords.None))
             {
-                ErrorResponse(response.ClientRequestId, response.Status, response.ReasonPhrase, FormatHeaders(response.Headers, sanitizer), elapsed);
+                Response? rsp = response as Response;
+                ErrorResponse(rsp?.ClientRequestId ?? string.Empty, response.Status, response.ReasonPhrase, FormatHeaders(response.Headers, sanitizer), elapsed);
             }
         }
 
@@ -183,17 +192,18 @@ namespace Azure.Core.Diagnostics
         }
 
         [NonEvent]
-        public void ErrorResponseContent(string requestId, byte[] content, Encoding? textEncoding)
+        public void ErrorResponseContent(PipelineResponse response, byte[] content, Encoding? textEncoding)
         {
             if (IsEnabled(EventLevel.Informational, EventKeywords.None))
             {
+                Response? rsp = response as Response;
                 if (textEncoding is not null)
                 {
-                    ErrorResponseContentText(requestId, textEncoding.GetString(content));
+                    ErrorResponseContentText(rsp?.ClientRequestId ?? string.Empty, textEncoding.GetString(content));
                 }
                 else
                 {
-                    ErrorResponseContent(requestId, content);
+                    ErrorResponseContent(rsp?.ClientRequestId ?? string.Empty, content);
                 }
             }
         }
@@ -212,17 +222,18 @@ namespace Azure.Core.Diagnostics
         }
 
         [NonEvent]
-        public void ErrorResponseContentBlock(string requestId, int blockNumber, byte[] content, Encoding? textEncoding)
+        public void ErrorResponseContentBlock(PipelineResponse response, int blockNumber, byte[] content, Encoding? textEncoding)
         {
             if (IsEnabled(EventLevel.Informational, EventKeywords.None))
             {
+                Response? rsp = response as Response;
                 if (textEncoding is not null)
                 {
-                    ErrorResponseContentTextBlock(requestId, blockNumber, textEncoding.GetString(content));
+                    ErrorResponseContentTextBlock(rsp?.ClientRequestId ?? string.Empty, blockNumber, textEncoding.GetString(content));
                 }
                 else
                 {
-                    ErrorResponseContentBlock(requestId, blockNumber, content);
+                    ErrorResponseContentBlock(rsp?.ClientRequestId ?? string.Empty, blockNumber, content);
                 }
             }
         }
@@ -305,14 +316,14 @@ namespace Azure.Core.Diagnostics
         }
 
         [NonEvent]
-        private static string FormatHeaders(IEnumerable<HttpHeader> headers, HttpMessageSanitizer sanitizer)
+        private static string FormatHeaders(IEnumerable<KeyValuePair<string, string>> headers, HttpMessageSanitizer sanitizer)
         {
             var stringBuilder = new StringBuilder();
-            foreach (HttpHeader header in headers)
+            foreach (var header in headers)
             {
-                stringBuilder.Append(header.Name);
+                stringBuilder.Append(header.Key);
                 stringBuilder.Append(':');
-                stringBuilder.Append(sanitizer.SanitizeHeader(header.Name, header.Value));
+                stringBuilder.Append(sanitizer.SanitizeHeader(header.Key, header.Value));
                 stringBuilder.Append(Environment.NewLine);
             }
             return stringBuilder.ToString();

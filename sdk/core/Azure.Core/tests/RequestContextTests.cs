@@ -236,7 +236,7 @@ namespace Azure.Core.Tests
             var mockTransport = new MockTransport(response);
 
             var classifier = new StatusCodeClassifier(stackalloc ushort[] { 200, 204, 304 });
-            var pipeline = new HttpPipeline(mockTransport, new[] { new LoggingPolicy(logContent: true, int.MaxValue, HttpMessageSanitizer.Default, "Test SDK") });
+            var pipeline = new HttpPipeline(mockTransport, new[] { new LoggingPolicy(logContent: true, int.MaxValue, Array.Empty<string>(), Array.Empty<string>(), "Test SDK") });
 
             #region Snippet:Change404Category
             var context = new RequestContext();
