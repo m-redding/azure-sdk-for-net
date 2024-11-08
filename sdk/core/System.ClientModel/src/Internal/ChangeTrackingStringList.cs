@@ -3,12 +3,13 @@
 
 using System.Collections;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 
 namespace System.ClientModel.Internal;
 
 internal class ChangeTrackingStringList : IList<string>
 {
-    private readonly IList<string> _list;
+    private IList<string> _list;
 
     private bool _tracking;
 
@@ -26,10 +27,16 @@ internal class ChangeTrackingStringList : IList<string>
         _tracking = false;
     }
 
+    public bool HasChanged { get; private set; }
+
     public void StartTracking() => _tracking = true;
+
     public void StopTracking() => _tracking = false;
 
-    public bool HasChanged { get; private set; }
+    public void Freeze()
+    {
+        _list = new ReadOnlyCollection<string>(_list);
+    }
 
     #region IList implementation
 

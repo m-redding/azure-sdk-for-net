@@ -21,19 +21,18 @@ public class ClientLoggingOptions
     private bool? _enableMessageLogging;
     private bool? _enableMessageContentLogging;
     private int? _messageContentSizeLimit;
+
     private ILoggerFactory? _loggerFactory;
+
     private PipelineMessageSanitizer? _sanitizer;
-    private bool? _allowedHeaderNamesHasChanged;
-    private bool? _allowedQueryParametersHasChanged;
-    private IList<string>? _allowedHeaderNames;
-    private IList<string>? _allowedQueryParameters;
+
+    private ChangeTrackingStringList? _allowedHeaderNames;
+    private ChangeTrackingStringList? _allowedQueryParameters;
 
     internal const bool DefaultEnableLogging = true;
     internal const bool DefaultEnableMessageContentLogging = false;
-
-    internal const double RequestTooLongSeconds = 3.0; // sec
     internal const int DefaultMessageContentSizeLimit = 4 * 1024;
-    internal static string[] DefaultAllowedHeaderNames { get; } = new[] {
+    private static string[] DefaultAllowedHeaderNames { get; } = new[] {
             "traceparent",
             "Accept",
             "Cache-Control",
@@ -55,10 +54,9 @@ public class ClientLoggingOptions
             "Transfer-Encoding",
             "User-Agent",
             "WWW-Authenticate" };
-
-    internal static string[] DefaultAllowedQueryParameters { get; } = new[] { "api-version" };
-
+    private static string[] DefaultAllowedQueryParameters { get; } = new[] { "api-version" };
     internal static PipelineMessageSanitizer DefaultSanitizer { get; } = new(DefaultAllowedHeaderNames, DefaultAllowedQueryParameters);
+    internal const double RequestTooLongSeconds = 3.0; // sec
 
     /// <summary>
     /// Gets or sets the implementation of <see cref="ILoggerFactory"/> to use to
@@ -144,18 +142,23 @@ public class ClientLoggingOptions
     /// </summary>
     /// <value>Defaults to a list of common header names that do not
     /// typically hold sensitive information.</value>
-    public IList<string> AllowedHeaderNames // TODO
+    public IList<string> AllowedHeaderNames
     {
         get
         {
-            if (!_frozen)
+            if (_allowedHeaderNames is null)
             {
-                return _allowedHeaderNames ??= new ChangeTrackingStringList(DefaultAllowedHeaderNames);
+                // This list constructor copies the elements of the array
+                // into the list, so we don't need to worry about the
+                // default values being modified.  We cannot get here if the
+                // options are frozen, because we assign the field a value
+                // in the Freeze method.
+                ChangeTrackingStringList changeTrackingList = new(DefaultAllowedHeaderNames);
+                changeTrackingList.StartTracking();
+                _allowedHeaderNames = changeTrackingList;
             }
-            else
-            {
-                return _allowedHeaderNames ??= new ReadOnlyCollection<string>(DefaultAllowedHeaderNames);
-            }
+
+            return _allowedHeaderNames;
         }
     }
 
@@ -164,18 +167,18 @@ public class ClientLoggingOptions
     /// </summary>
     /// <value>Defaults to a list of common query parameters that do not
     /// typically hold sensitive information.</value>
-    public IList<string> AllowedQueryParameters // TODO
+    public IList<string> AllowedQueryParameters
     {
         get
         {
-            if (!_frozen)
+            if (_allowedQueryParameters is null)
             {
-                return _allowedQueryParameters ??= new ChangeTrackingStringList(DefaultAllowedQueryParameters);
+                ChangeTrackingStringList changeTrackingList = new(DefaultAllowedHeaderNames);
+                changeTrackingList.StartTracking();
+                _allowedQueryParameters = changeTrackingList;
             }
-            else
-            {
-                return _allowedQueryParameters ??= new ReadOnlyCollection<string>(DefaultAllowedQueryParameters);
-            }
+
+            return _allowedQueryParameters;
         }
     }
 
@@ -187,22 +190,12 @@ public class ClientLoggingOptions
     public virtual void Freeze()
     {
         _frozen = true;
-        if (_allowedHeaderNames is not null)
-        {
-            ChangeTrackingStringList? headersChangeTracking = _allowedHeaderNames as ChangeTrackingStringList;
 
-            // Set the property to readonly before checking HasChanged
-            _allowedHeaderNames = new ReadOnlyCollection<string>(_allowedHeaderNames);
-            _allowedHeaderNamesHasChanged = headersChangeTracking?.HasChanged;
-        }
-        if (_allowedQueryParameters is not null)
-        {
-            ChangeTrackingStringList? queryParamsChangeTracking = _allowedQueryParameters as ChangeTrackingStringList;
+        _allowedHeaderNames ??= new(DefaultAllowedHeaderNames);
+        _allowedHeaderNames.Freeze();
 
-            // Set the property to readonly before checking HasChanged
-            _allowedQueryParameters = new ReadOnlyCollection<string>(_allowedQueryParameters);
-            _allowedQueryParametersHasChanged = queryParamsChangeTracking?.HasChanged;
-        }
+        _allowedQueryParameters ??= new(DefaultAllowedQueryParameters);
+        _allowedQueryParameters.Freeze();
     }
 
     /// <summary>
@@ -264,9 +257,15 @@ public class ClientLoggingOptions
             && _enableMessageLogging == null
             && _enableMessageContentLogging == null
             && _loggerFactory == null
-            && _allowedHeaderNamesHasChanged != true // false or null
-            && _allowedQueryParametersHasChanged != true; // false or null
+            && HeaderListIsDefault
+            && QueryParameterListIsDefault;
     }
+
+    private bool HeaderListIsDefault =>
+        _allowedHeaderNames == null || !_allowedHeaderNames.HasChanged;
+
+    private bool QueryParameterListIsDefault =>
+        _allowedQueryParameters == null || !_allowedQueryParameters.HasChanged;
 
     internal bool ShouldUseDefaultPipelineTransport()
     {
