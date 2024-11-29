@@ -5,7 +5,10 @@ using System.ClientModel.Internal;
 using System.Collections;
 using System.Collections.Generic;
 using System.Diagnostics;
+using System.Linq;
 using System.Threading.Tasks;
+using Microsoft.Extensions.Logging;
+using Microsoft.Extensions.Logging.Abstractions;
 
 namespace System.ClientModel.Primitives;
 
@@ -101,6 +104,8 @@ public sealed partial class ClientPipeline
         Argument.AssertNotNull(options, nameof(options));
 
         options.Freeze();
+        ClientLoggingOptions? loggingOptions = options.ClientLoggingOptions;
+        loggingOptions?.ValidateOptions();
 
         // Add length of client-specific policies.
         int pipelineLength = perCallPolicies.Length + perTryPolicies.Length + beforeTransportPolicies.Length;
@@ -111,6 +116,11 @@ public sealed partial class ClientPipeline
         pipelineLength += options.BeforeTransportPolicies?.Length ?? 0;
 
         pipelineLength++; // for retry policy
+
+        if (loggingOptions == null || loggingOptions.ShouldAddMessageLoggingPolicy())
+        {
+            pipelineLength++; // for message logging policy
+        }
         pipelineLength++; // for transport
 
         PipelinePolicy[] policies = new PipelinePolicy[pipelineLength];
@@ -130,7 +140,14 @@ public sealed partial class ClientPipeline
         int perCallIndex = index;
 
         // Add retry policy.
-        policies[index++] = options.RetryPolicy ?? ClientRetryPolicy.Default;
+        if (loggingOptions == null || loggingOptions.ShouldUseDefaultRetryPolicy())
+        {
+            policies[index++] = options.RetryPolicy ?? new ClientRetryPolicy();
+        }
+        else
+        {
+            policies[index++] = options.RetryPolicy ?? ClientRetryPolicy.Default;
+        }
 
         // Per try policies come after the retry policy.
         perTryPolicies.CopyTo(policies.AsSpan(index));
@@ -143,6 +160,20 @@ public sealed partial class ClientPipeline
         }
 
         int perTryIndex = index;
+
+        // Add logging policy just before the transport.
+
+        if (loggingOptions == null || loggingOptions.ShouldAddMessageLoggingPolicy())
+        {
+            if (loggingOptions == null || loggingOptions.ShouldUseDefaultMessageLoggingPolicy())
+            {
+                policies[index++] = options.MessageLoggingPolicy ?? MessageLoggingPolicy.Default;
+            }
+            else
+            {
+                policies[index++] = options.MessageLoggingPolicy ?? new MessageLoggingPolicy(options.ClientLoggingOptions);
+            }
+        }
 
         // Before transport policies come before the transport.
         beforeTransportPolicies.CopyTo(policies.AsSpan(index));
@@ -157,7 +188,14 @@ public sealed partial class ClientPipeline
         int beforeTransportIndex = index;
 
         // Add the transport.
-        policies[index++] = options.Transport ?? HttpClientPipelineTransport.Shared;
+        if (loggingOptions == null || loggingOptions.ShouldUseDefaultPipelineTransport())
+        {
+            policies[index++] = options.Transport ?? HttpClientPipelineTransport.Shared;
+        }
+        else
+        {
+            policies[index++] = options.Transport ?? new HttpClientPipelineTransport(null, loggingOptions.EnableLogging ?? ClientLoggingOptions.DefaultEnableLogging, loggingOptions.LoggerFactory);
+        }
 
         return new ClientPipeline(policies,
             options.NetworkTimeout ?? DefaultNetworkTimeout,
