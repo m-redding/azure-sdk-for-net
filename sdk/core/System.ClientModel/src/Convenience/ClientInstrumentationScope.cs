@@ -9,7 +9,9 @@ using System.Text;
 namespace System.ClientModel.Primitives;
 
 /// <summary>
-/// TODO
+/// A common abstraction for instrumenting client libraries with
+/// Open Telemetry distributed tracing using <see cref="System.Diagnostics.Activity"/>
+/// and <see cref="System.Diagnostics.ActivitySource"/>.
 /// </summary>
 public class ClientInstrumentationScope : IDisposable
 {
@@ -58,7 +60,7 @@ public class ClientInstrumentationScope : IDisposable
     }
 
     /// <summary>
-    /// TODO
+    /// Marks the scope as failed.
     /// </summary>
     /// <param name="exception"></param>
     public void Failed(Exception exception)
@@ -67,7 +69,7 @@ public class ClientInstrumentationScope : IDisposable
     }
 
     /// <summary>
-    /// TODO
+    /// If this scope has been started, stops it.
     /// </summary>
     public void Dispose()
     {

@@ -18,24 +18,23 @@ public class ClientInstrumentationSource
     private static ConcurrentDictionary<string, ActivitySource> _activitySources = new();
 
     /// <summary>
-    /// TODO.
+    /// Creates an instance of <see cref="ClientInstrumentationSource"/>.
     /// </summary>
-    /// <param name="clientFullName"></param>
-    /// <param name="enableDistributedTracing"></param>
-    /// <param name="isStable"></param>
+    /// <param name="clientFullName">The full name of the client, including the namespace.</param>
+    /// <param name="enableDistributedTracing">Whether distributed tracing is enabled in the client.</param>
+    /// <param name="isStable">If the Open Telemetry distributed tracing is stable in the client.</param>
     public ClientInstrumentationSource(string clientFullName, bool enableDistributedTracing = true, bool isStable = false)
     {
         _activitySourceName = isStable ? clientFullName : $"Experimental.{clientFullName}";
     }
 
     /// <summary>
-    /// TODO.
+    /// Creates an instance of <see cref="ClientInstrumentationScope"/> and starts it.
     /// </summary>
-    /// <param name="name"></param>
-    /// <param name="kind"></param>
-    /// <param name="context"></param>
-    /// <param name="tags"></param>
-    /// <returns></returns>
+    /// <param name="name">The name to use for the scope, this will be used when creating the <see cref="Activity"/>.</param>
+    /// <param name="kind">The <see cref="ActivityKind"/> to use for the scope, this will be used when creating the <see cref="Activity"/></param>
+    /// <param name="context">The <see cref="ActivityContext"/> to use for the scope, this will be used when creating the <see cref="Activity"/>.</param>
+    /// <param name="tags">The tags to use for the scope, this will be used when creating the <see cref="Activity"/>.</param>
     public ClientInstrumentationScope? CreateAndStartScope(string name, ActivityKind kind = ActivityKind.Internal, ActivityContext context = default, IEnumerable<KeyValuePair<string, object?>>? tags = null)
     {
         _activitySources.TryGetValue(_activitySourceName, out var activitySource);
