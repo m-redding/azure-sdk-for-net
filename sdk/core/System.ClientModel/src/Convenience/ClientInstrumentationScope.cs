@@ -4,6 +4,7 @@
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
+using System.Diagnostics.Metrics;
 using System.Text;
 
 namespace System.ClientModel.Primitives;
@@ -13,6 +14,7 @@ namespace System.ClientModel.Primitives;
 /// </summary>
 public class ClientInstrumentationScope : IDisposable
 {
+    // Tracing
     private const string ScmScopeLabel = "scm.sdk.scope";
     private static readonly object ScmScopeValue = bool.TrueString;
 
@@ -24,10 +26,16 @@ public class ClientInstrumentationScope : IDisposable
 
     private Activity? _activity;
     private Activity? _sampledOutActivity;
+    private bool _isInnerScope;
 
-    internal ClientInstrumentationScope(ActivitySource activitySource, string name, ActivityKind kind, ActivityContext context, IEnumerable<KeyValuePair<string, object?>>? tags)
+    // Metrics
+    private Stopwatch? _duration;
+    private Histogram<double> _durationCounter;
+
+    internal ClientInstrumentationScope(ActivitySource activitySource, Histogram<double> durationCounter, string name, ActivityKind kind, ActivityContext context, IEnumerable<KeyValuePair<string, object?>>? tags)
     {
         _activitySource = activitySource;
+        _durationCounter = durationCounter;
         _name = name;
         _kind = kind;
         _context = context;
@@ -36,10 +44,13 @@ public class ClientInstrumentationScope : IDisposable
 
     internal void Start()
     {
+        _duration = Stopwatch.StartNew();
+
         // If this is an inner span (e.g. a protocol method), suppress it
         bool isInnerSpan = ScmScopeValue.Equals(Activity.Current?.GetCustomProperty(ScmScopeLabel));
         if (isInnerSpan)
         {
+            _isInnerScope = true;
             return;
         }
 
@@ -57,6 +68,14 @@ public class ClientInstrumentationScope : IDisposable
         }
     }
 
+    internal void Stop()
+    {
+        if (!_isInnerScope)
+        {
+            _durationCounter.Record(_duration!.Elapsed.TotalSeconds);
+        }
+    }
+
     /// <summary>
     /// TODO
     /// </summary>
@@ -71,6 +90,8 @@ public class ClientInstrumentationScope : IDisposable
     /// </summary>
     public void Dispose()
     {
+        Stop();
+
         _activity?.Dispose();
         _sampledOutActivity?.Dispose();
         _activity = null;
