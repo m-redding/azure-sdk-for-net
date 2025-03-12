@@ -110,6 +110,17 @@ namespace System.ClientModel.Primitives
         Default = 0,
         NoThrow = 1,
     }
+    public partial class ClientInstrumentationScope : System.IDisposable
+    {
+        internal ClientInstrumentationScope() { }
+        public void Dispose() { }
+        public void Failed(System.Exception exception) { }
+    }
+    public partial class ClientInstrumentationSource
+    {
+        public ClientInstrumentationSource(string clientFullName, bool enableDistributedTracing = true, bool isStable = false) { }
+        public System.ClientModel.Primitives.ClientInstrumentationScope? CreateAndStartScope(string name, System.Diagnostics.ActivityKind kind = System.Diagnostics.ActivityKind.Internal, System.Diagnostics.ActivityContext context = default(System.Diagnostics.ActivityContext), System.Collections.Generic.IEnumerable<System.Collections.Generic.KeyValuePair<string, object?>>? tags = null) { throw null; }
+    }
     public partial class ClientLoggingOptions
     {
         public ClientLoggingOptions() { }
@@ -136,6 +147,7 @@ namespace System.ClientModel.Primitives
     {
         public ClientPipelineOptions() { }
         public System.ClientModel.Primitives.ClientLoggingOptions? ClientLoggingOptions { get { throw null; } set { } }
+        public bool? EnableDistributedTracing { get { throw null; } set { } }
         public System.ClientModel.Primitives.PipelinePolicy? MessageLoggingPolicy { get { throw null; } set { } }
         public System.TimeSpan? NetworkTimeout { get { throw null; } set { } }
         public System.ClientModel.Primitives.PipelinePolicy? RetryPolicy { get { throw null; } set { } }
