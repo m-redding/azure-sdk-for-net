@@ -4,6 +4,7 @@
 using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Diagnostics;
+using System.Diagnostics.Metrics;
 
 namespace System.ClientModel.Primitives;
 
@@ -14,8 +15,15 @@ namespace System.ClientModel.Primitives;
 /// </summary>
 public class ClientInstrumentationSource
 {
-    private readonly string _activitySourceName;
+    private readonly string _telemetryName;
+
+    // Tracing
     private static ConcurrentDictionary<string, ActivitySource> _activitySources = new();
+
+    // Metrics
+    private readonly string _durationMetricName;
+    private static ConcurrentDictionary<string, Meter> _meters = new();
+    private readonly ConcurrentDictionary<string, Histogram<double>> _durationCounters = new();
 
     /// <summary>
     /// Creates an instance of <see cref="ClientInstrumentationSource"/>.
@@ -25,7 +33,8 @@ public class ClientInstrumentationSource
     /// <param name="isStable">If the Open Telemetry distributed tracing is stable in the client.</param>
     public ClientInstrumentationSource(string clientFullName, bool enableDistributedTracing = true, bool isStable = false)
     {
-        _activitySourceName = isStable ? clientFullName : $"Experimental.{clientFullName}";
+        _telemetryName = isStable ? clientFullName : $"Experimental.{clientFullName}";
+        _durationMetricName = $"{_telemetryName.ToLower()}.duration";
     }
 
     /// <summary>
@@ -37,13 +46,31 @@ public class ClientInstrumentationSource
     /// <param name="tags">The tags to use for the scope, this will be used when creating the <see cref="Activity"/>.</param>
     public ClientInstrumentationScope? CreateAndStartScope(string name, ActivityKind kind = ActivityKind.Internal, ActivityContext context = default, IEnumerable<KeyValuePair<string, object?>>? tags = null)
     {
-        _activitySources.TryGetValue(_activitySourceName, out var activitySource);
+        // Tracing
+        _activitySources.TryGetValue(_telemetryName, out var activitySource);
         if (activitySource == null)
         {
-            activitySource = new ActivitySource(_activitySourceName);
-            _activitySources.TryAdd(_activitySourceName, activitySource);
+            activitySource = new ActivitySource(_telemetryName);
+            _activitySources.TryAdd(_telemetryName, activitySource);
         }
 
-        return new ClientInstrumentationScope(activitySource, name, kind, context, tags);
+        // Metrics
+        _durationCounters.TryGetValue(_durationMetricName, out var durationCounter);
+        if (durationCounter == null)
+        {
+            _meters.TryGetValue(_telemetryName, out var meter);
+            if (meter == null)
+            {
+                meter = new Meter(_telemetryName);
+                _meters.TryAdd(_telemetryName, meter);
+            }
+            durationCounter = meter.CreateHistogram<double>(_durationMetricName);
+            _durationCounters.TryAdd(_durationMetricName, durationCounter);
+        }
+
+        ClientInstrumentationScope scope = new(activitySource, durationCounter, name, kind, context, tags);
+        scope.Start();
+
+        return scope;
     }
 }
