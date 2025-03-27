@@ -14,7 +14,6 @@
   <ItemGroup>
     <PackageReference Include="Azure.Core" />
     <PackageReference Include="Azure.MixedReality.Authentication" />
-    <PackageReference Include="System.Text.Encodings.Web" />
   </ItemGroup>
   
   <!-- Shared source from Azure.Core and Azure.MixedReality.Authentication -->
