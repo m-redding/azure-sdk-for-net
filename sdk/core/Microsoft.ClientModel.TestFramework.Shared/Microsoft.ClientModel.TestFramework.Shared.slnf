@@ -1,0 +1,9 @@
+{
+  "solution": {
+    "path": "Microsoft.ClientModel.TestFramework.Shared.sln",
+    "projects": [
+      "src\\Microsoft.ClientModel.TestFramework.Shared.shproj",
+      "tests\\Microsoft.ClientModel.TestFramework.Shared.Tests.csproj"
+    ]
+  }
+}

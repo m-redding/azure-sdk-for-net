@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Project Sdk="Microsoft.NET.Sdk">
+  <PropertyGroup Label="Globals">
+    <ProjectGuid>A7B8C3D4-E5F6-4321-9876-543210FEDCBA</ProjectGuid>
+    <MinimumVisualStudioVersion>14.0</MinimumVisualStudioVersion>
+    <AllowUnsafeBlocks>false</AllowUnsafeBlocks>
+  </PropertyGroup>
+
+  <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
+  <Import Project="$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v$(VisualStudioVersion)\CodeSharing\Microsoft.CodeSharing.Common.Default.props" />
+  <Import Project="$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v$(VisualStudioVersion)\CodeSharing\Microsoft.CodeSharing.Common.props" />
+  <Import Project="$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v$(VisualStudioVersion)\CodeSharing\Microsoft.CodeSharing.CSharp.targets" />
+
+  <!-- Import shared source groups -->
+  <Import Project="Microsoft.ClientModel.TestFramework.Shared.Attributes.projitems" Label="Attributes" />
+  <Import Project="Microsoft.ClientModel.TestFramework.Shared.Core.projitems" Label="Core" />
+  <Import Project="Microsoft.ClientModel.TestFramework.Shared.Utilities.projitems" Label="Utilities" />
+  <Import Project="Microsoft.ClientModel.TestFramework.Shared.Recording.projitems" Label="Recording" />
+</Project>
