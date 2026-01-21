@@ -14,19 +14,13 @@ For the fastest workflow, use the `Run-NUnit4Migration-Full.ps1` script with git
 
 ### Setup
 
-1. **Create a branch with migration scripts** (if not already done):
+1. **Create a worktree for each migration batch**:
    ```powershell
-   git checkout -b nunit4-scripts
-   # Commit all migration scripts
-   ```
-
-2. **Create a worktree for each migration batch**:
-   ```powershell
-   git worktree add ..\azure-sdk-nunit4-batch1 -b nunit4-migration-batch1 nunit4-scripts
+   git worktree add ..\azure-sdk-nunit4-batch1 -b nunit4-migration-batch1 nunitmigration3
    cd ..\azure-sdk-nunit4-batch1
    ```
 
-3. **Edit the service list** in `eng/scripts/Run-NUnit4Migration-Full.ps1`:
+2. **Edit the service list** in `eng/scripts/Run-NUnit4Migration-Full.ps1`:
    ```powershell
    $serviceDirectories = @(
        "core",
@@ -35,14 +29,14 @@ For the fastest workflow, use the `Run-NUnit4Migration-Full.ps1` script with git
    )
    ```
 
-4. **Run the full migration** (in a separate terminal):
+3. **Run the full migration** (in a separate terminal):
    ```powershell
    .\eng\scripts\Run-NUnit4Migration-Full.ps1
    ```
 
-5. **Continue working** in your main workspace while migration runs
+4. **Continue working** in your main workspace while migration runs
 
-6. **Review and finalize** when complete:
+5. **Review and finalize** when complete:
    ```powershell
    # Review the output and test results
    git log
