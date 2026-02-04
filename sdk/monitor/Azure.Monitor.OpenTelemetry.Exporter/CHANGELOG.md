@@ -1,12 +1,16 @@
 # Release History
 
-## 1.6.0-beta.3 (Unreleased)
+## 1.7.0-beta.1 (Unreleased)
 
 ### Features Added
 
 ### Breaking Changes
 
 ### Bugs Fixed
+
+### Other Changes
+
+## 1.6.0 (2026-01-28)
 
 ### Other Changes
 
@@ -54,7 +58,7 @@
 
 ## 1.6.0-beta.1 (2025-12-03)
 
-### Bugs Fixed
+### Features Added
 * Added Microsoft override attributes to preserve exact Application Insights
   semantics when exporting telemetry data.
   ([#54023](https://github.com/Azure/azure-sdk-for-net/pull/54023))
