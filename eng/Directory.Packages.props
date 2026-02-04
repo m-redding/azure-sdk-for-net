@@ -538,6 +538,14 @@
     <PackageVersion Update="Azure.ResourceManager.Logic" Version="1.2.0-beta.1" />
   </ItemGroup>
 
+  <!-- Analyzers projects needs different versions of code analysis package -->
+  <ItemGroup Condition="$(MSBuildProjectName.StartsWith('Azure.SdkAnalyzers.Tests'))">
+    <PackageVersion Update="Microsoft.CodeAnalysis.CSharp" Version="4.8.0" />
+  </ItemGroup>
+  <ItemGroup Condition="$(MSBuildProjectName.StartsWith('Azure.SdkAnalyzers.Perf'))">
+    <PackageVersion Update="Microsoft.CodeAnalysis.CSharp" Version="4.14.0" />
+  </ItemGroup>
+
   <ItemGroup Condition="'$(TargetFramework)'=='netstandard2.0'">
     <PackageDownload Update="NETStandard.Library.Ref" Version="[2.1.0]" />
   </ItemGroup>
