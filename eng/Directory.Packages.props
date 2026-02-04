@@ -186,52 +186,6 @@
   <!--      these are approved only for the scoped projects           -->
   <!-- ============================================================== -->
 
-  <ItemGroup Condition="$(MSBuildProjectName.StartsWith('Azure.AI.AgentServer'))">
-    <PackageVersion Include="Azure.Monitor.OpenTelemetry.AspNetCore" Version="1.3.0"/>
-    <PackageVersion Include="Microsoft.Agents.AI" Version="1.0.0-preview.251104.1" />
-    <PackageVersion Include="ModelContextProtocol" Version="0.4.0-preview.3" />
-    <PackageVersion Include="OpenTelemetry.Exporter.OpenTelemetryProtocol" Version="1.12.0"/>
-  </ItemGroup>
-
-  <ItemGroup Condition="$(MSBuildProjectName.StartsWith('Azure.AI.OpenAI'))">
-    <PackageVersion Include="OpenAI" Version="2.8.0" />
-  </ItemGroup>
-
-  <ItemGroup Condition="$(MSBuildProjectName.Contains('Azure.AI.Agents.Persistent'))">
-    <PackageVersion Include="Microsoft.Extensions.AI.Abstractions" Version="10.1.1"/>
-  </ItemGroup>
-
-  <ItemGroup Condition="$(MSBuildProjectName.StartsWith('Azure.AI.Personalizer'))">
-    <PackageVersion Include="RL.Net" Version="0.2.0" />
-  </ItemGroup>
-
-  <ItemGroup Condition="'$(IsClientLibrary)' == 'true' and '$(IsTestProject)' != 'true' and $(MSBuildProjectName.StartsWith('Azure.Developer.Playwright'))">
-    <PackageVersion Include="MSTest.TestFramework" Version="$(MSTestVersion)" />
-    <PackageVersion Include="NUnit" Version="$(NUnitVersion)" />
-  </ItemGroup>
-
-  <ItemGroup Condition="$(MSBuildProjectName.StartsWith('Azure.Monitor.OpenTelemetry'))">
-    <PackageVersion Include="Microsoft.Extensions.Telemetry" Version="10.1.0" />
-    <PackageVersion Include="OpenTelemetry.Extensions.Hosting" Version="1.14.0" />
-    <PackageVersion Include="OpenTelemetry.Instrumentation.AspNetCore" Version="1.14.0" />
-    <PackageVersion Include="OpenTelemetry.PersistentStorage.FileSystem" Version="1.0.2" />
-  </ItemGroup>
-  <ItemGroup Condition = "$(MSBuildProjectName.StartsWith('Azure.Monitor.OpenTelemetry'))
-      and '$(IsTestProject)' != 'true'
-      and '$(IsTestSupportProject)' != 'true'
-      and '$(IsPerfProject)' != 'true'
-      and '$(IsStressProject)' != 'true'
-      and '$(IsSamplesProject)' != 'true'">
-    <PackageVersion Include="OpenTelemetry" Version="$(OpenTelemetryVersion)"/>
-    <PackageVersion Include="OpenTelemetry.Instrumentation.Http" Version="$(OpenTelemetryInstrumentationHttpVersion)" />
-  </ItemGroup>
-
-  <ItemGroup Condition="$(MSBuildProjectName.Contains('Azure.Projects'))">
-    <PackageVersion Include="Azure.Data.AppConfiguration" Version="1.6.0"/>
-    <PackageVersion Include="Azure.Provisioning.AppConfiguration" Version="1.0.0"/>
-    <PackageVersion Include="Azure.Provisioning.Deployment" Version="1.0.0-beta.2"/>
-  </ItemGroup>
-
   <!-- Packages used by the TypeSpec generators -->
   <ItemGroup Condition="'$(IsGeneratorLibrary)' == 'true'">
     <PackageVersion Include="Azure.Generator" Version="[$(AzureGeneratorVersion)]" />
@@ -246,6 +200,7 @@
     <PackageVersion Include="Microsoft.Azure.WebJobs.Host.Storage" Version="5.0.1" />
     <PackageVersion Include="Microsoft.Azure.SignalR.Management" Version="1.32.0" />
   </ItemGroup>
+
   <ItemGroup Condition ="'$(IsClientLibrary)' == 'true'
       and $(MSBuildProjectName.StartsWith('Microsoft.'))
       and '$(IsTestProject)' != 'true'
@@ -489,73 +444,8 @@
     <PackageVersion Include="Microsoft.Rest.ClientRuntime.Azure.Authentication" Version="$(MicrosoftRestClientRuntimeAzureAuthenticationVersion)" />
   </ItemGroup>
 
-  <!--
-    MSTest is approved only for use with Playwright. Azure SDK test projects should
-    use NUnit.
-  -->
-  <ItemGroup Condition="
-    ('$(IsTestProject)' == 'true' or '$(IsTestSupportProject)' == 'true')
-      and ($(MSBuildProjectName.StartsWith('Azure.Developer.Playwright.MSTest')))"
-  >
-    <PackageVersion Include="MSTest.TestFramework" Version="$(MSTestVersion)" />
-  </ItemGroup>
-
-  <!-- Source Generation for System.ClientModel requires a specific set of analysis rules -->
-  <ItemGroup Condition="$(IsTestProject) == 'true' and $(MSBuildProjectName.StartsWith('System.ClientModel.SourceGeneration.Tests'))">
-    <PackageVersion Update="Microsoft.CodeAnalysis.CSharp" Version ="4.12.0" />
-  </ItemGroup>
-
-  <!-- The unbranded test framework is the first to use NUnit 4; the repository will migrate fully in the near future -->
-  <ItemGroup Condition="$(MSBuildProjectName.StartsWith('Microsoft.ClientModel.TestFramework'))
-      and '$(IsTestProject)' != 'true'">
-    <PackageVersion Include="Castle.Core" Version="$(CastleCoreVersion)" />
-    <PackageVersion Include="NUnit" Version="4.4.0" />
-  </ItemGroup>
-  <ItemGroup Condition="$(MSBuildProjectName.StartsWith('Microsoft.ClientModel.TestFramework')) 
-      and '$(IsTestProject)' == 'true'">
-    <PackageVersion Update="NUnit3TestAdapter" Version="5.1.0" />
-    <PackageVersion Update="Microsoft.NET.Test.Sdk" Version="17.13.0" />
-  </ItemGroup>
-
-  <!-- Azure.Test.Perf needs older Azure.Core for maximum compatibility with test projects -->
-  <ItemGroup Condition="$(MSBuildProjectName.StartsWith('Azure.Test.Perf'))">
-    <PackageVersion Update="Azure.Core" Version="1.40.0" />
-  </ItemGroup>
-
-  <!-- Azure.Core.TestFramework needs pinned AutoRest version (workaround for pipeline conflicts) -->
-  <ItemGroup Condition="$(MSBuildProjectName.StartsWith('Azure.Core.TestFramework'))">
-    <PackageVersion Update="Microsoft.Azure.AutoRest.CSharp" Version="3.0.0-beta.20231107.1" />
-  </ItemGroup>
-
-  <!-- Tables.Tests needs legacy WebJobs.Extensions.Storage for T1 testing -->
-  <ItemGroup Condition="$(MSBuildProjectName.StartsWith('Microsoft.Azure.WebJobs.Extensions.Tables.Tests'))">
-    <PackageVersion Include="Microsoft.Azure.WebJobs.Extensions.Storage" Version="4.0.5" />
-  </ItemGroup>
-
-  <!-- SecurityCenter.Tests needs beta versions of IotHub and Logic -->
-  <ItemGroup Condition="$(MSBuildProjectName.StartsWith('Azure.ResourceManager.SecurityCenter'))">
-    <PackageVersion Update="Azure.ResourceManager.IotHub" Version="1.2.0-beta.1" />
-    <PackageVersion Update="Azure.ResourceManager.Logic" Version="1.2.0-beta.1" />
-  </ItemGroup>
-
-  <!-- Analyzers projects needs different versions of code analysis package -->
-  <ItemGroup Condition="$(MSBuildProjectName.StartsWith('Azure.SdkAnalyzers.Tests'))">
-    <PackageVersion Update="Microsoft.CodeAnalysis.CSharp" Version="4.8.0" />
-  </ItemGroup>
-  <ItemGroup Condition="$(MSBuildProjectName.StartsWith('Azure.SdkAnalyzers.Perf'))">
-    <PackageVersion Update="Microsoft.CodeAnalysis.CSharp" Version="4.14.0" />
-  </ItemGroup>
-
-  <!-- Microsoft.Azure.SignalR.Management requires 1.0.15 for netstandard2.0 (see issue #51460) -->
-  <ItemGroup Condition="$(MSBuildProjectName.StartsWith('Microsoft.Azure.WebJobs.Extensions.SignalRService'))">
-    <PackageVersion Update="Microsoft.AspNetCore.Http.Connections" Version="1.0.15" />
-  </ItemGroup>
-
   <ItemGroup Condition="'$(TargetFramework)'=='netstandard2.0'">
     <PackageDownload Update="NETStandard.Library.Ref" Version="[2.1.0]" />
   </ItemGroup>
-
-  <!-- ALL TRACK 1 AND LEGACY PACKAGE VERSIONS ARE IN PACKAGES.LEGACY.PROPS-->
-  <Import Project="$(MSBuildThisFileDirectory)Packages.Legacy.props" />
 
 </Project>

@@ -1,0 +1,12 @@
+<Project>
+<!--
+    MSTest is approved only for use with Playwright. Azure SDK test projects should
+    use NUnit.
+  -->
+  <ItemGroup Condition="
+    ('$(IsTestProject)' == 'true' or '$(IsTestSupportProject)' == 'true')
+      and ($(MSBuildProjectName.StartsWith('Azure.Developer.Playwright.MSTest')))"
+  >
+    <PackageVersion Include="MSTest.TestFramework" Version="$(MSTestVersion)" />
+  </ItemGroup>
+</Project>
