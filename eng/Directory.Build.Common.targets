@@ -446,6 +446,48 @@
   </Target>
 
   <!--
+    DirectoryPackagesPropsPath Override Validation
+    
+    When packages need special-cased package version overrides, they can set
+    DirectoryPackagesPropsPath to point to a custom .props file. This target
+    enforces that such overrides:
+    1. MUST be located under the eng/PackageVersionOverrides folder
+    2. MUST have a filename that contains the package name (for traceability)
+    
+    Example of valid configuration in a package's Directory.Build.props:
+      <DirectoryPackagesPropsPath>$(RepoRoot)\eng\PackageVersionOverrides\Azure.MyPackage.Packages.Props</DirectoryPackagesPropsPath>
+  -->
+  <Target Name="ValidateDirectoryPackagesPropsPath" BeforeTargets="Restore;Build;CollectPackageReferences">
+    <PropertyGroup>
+      <!-- Normalize the path for comparison -->
+      <_NormalizedDirectoryPackagesPropsPath>$([System.IO.Path]::GetFullPath('$(DirectoryPackagesPropsPath)'))</_NormalizedDirectoryPackagesPropsPath>
+      <_DirectoryPackagesPropsFileName>$([System.IO.Path]::GetFileName('$(DirectoryPackagesPropsPath)'))</_DirectoryPackagesPropsFileName>
+      <_DefaultDirectoryPackagesPropsPath>$([System.IO.Path]::GetFullPath('$(RepoRoot)/eng/Directory.Packages.props'))</_DefaultDirectoryPackagesPropsPath>
+      <_PackageVersionOverridesFolder>$([System.IO.Path]::GetFullPath('$(RepoRoot)/eng/PackageVersionOverrides'))</_PackageVersionOverridesFolder>
+      <_IsUsingCustomDirectoryPackagesProps>false</_IsUsingCustomDirectoryPackagesProps>
+      <_IsUsingCustomDirectoryPackagesProps Condition="'$(_NormalizedDirectoryPackagesPropsPath)' != '$(_DefaultDirectoryPackagesPropsPath)'">true</_IsUsingCustomDirectoryPackagesProps>
+      <_IsInPackageVersionOverridesFolder>false</_IsInPackageVersionOverridesFolder>
+      <_IsInPackageVersionOverridesFolder Condition="$(_NormalizedDirectoryPackagesPropsPath.StartsWith('$(_PackageVersionOverridesFolder)'))">true</_IsInPackageVersionOverridesFolder>
+      <!-- Extract the package name from the project path (folder name containing the .csproj) -->
+      <_PackageName>$(MSBuildProjectName)</_PackageName>
+      <_FileNameContainsPackageName>false</_FileNameContainsPackageName>
+      <_FileNameContainsPackageName Condition="$(_DirectoryPackagesPropsFileName.Contains('$(_PackageName)'))">true</_FileNameContainsPackageName>
+    </PropertyGroup>
+
+    <!-- Validate: Custom DirectoryPackagesPropsPath must be under eng/PackageVersionOverrides -->
+    <Error 
+      Condition="'$(_IsUsingCustomDirectoryPackagesProps)' == 'true' and '$(_IsInPackageVersionOverridesFolder)' != 'true'" 
+      Text="DirectoryPackagesPropsPath must point to a file under eng/PackageVersionOverrides. Current path: '$(DirectoryPackagesPropsPath)'. Expected location: eng/PackageVersionOverrides/{PackageName}.Packages.Props"
+      Code="AZSDK0002" />
+    
+    <!-- Validate: The override filename must contain the package name -->
+    <Error 
+      Condition="'$(_IsUsingCustomDirectoryPackagesProps)' == 'true' and '$(_FileNameContainsPackageName)' != 'true'" 
+      Text="DirectoryPackagesPropsPath filename must contain the package name for traceability. Package: '$(_PackageName)', File: '$(_DirectoryPackagesPropsFileName)'. Expected pattern: {PackageName}.Packages.Props"
+      Code="AZSDK0003" />
+  </Target>
+
+  <!--
     Central Package Management Enforcement
     
     These targets prevent projects from bypassing central package version management
