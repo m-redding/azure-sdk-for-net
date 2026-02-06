@@ -1,4 +1,6 @@
 <Project>
+  <Import Project="$([MSBuild]::GetDirectoryNameOfFileAbove($(MSBuildThisFileDirectory).., Directory.Build.props))\eng\Directory.Packages.Props" />
+
   <!-- Microsoft.Azure.SignalR.Management requires 1.0.15 for netstandard2.0 (see issue #51460) -->
   <ItemGroup Condition="$(MSBuildProjectName.StartsWith('Microsoft.Azure.WebJobs.Extensions.SignalRService'))">
     <PackageVersion Update="Microsoft.AspNetCore.Http.Connections" Version="1.0.15" />

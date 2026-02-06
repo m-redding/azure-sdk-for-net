@@ -1,4 +1,6 @@
 <Project>
+  <Import Project="$([MSBuild]::GetDirectoryNameOfFileAbove($(MSBuildThisFileDirectory).., Directory.Build.props))\eng\Directory.Packages.Props" />
+
   <ItemGroup Condition="$(MSBuildProjectName.StartsWith('Azure.Monitor.OpenTelemetry'))">
     <PackageVersion Include="Microsoft.Extensions.Telemetry" Version="10.1.0" />
     <PackageVersion Include="OpenTelemetry.Extensions.Hosting" Version="1.14.0" />

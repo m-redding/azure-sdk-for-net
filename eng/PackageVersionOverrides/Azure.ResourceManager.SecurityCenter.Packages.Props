@@ -1,4 +1,6 @@
 <Project>
+  <Import Project="$([MSBuild]::GetDirectoryNameOfFileAbove($(MSBuildThisFileDirectory).., Directory.Build.props))\eng\Directory.Packages.Props" />
+
   <!-- SecurityCenter.Tests needs beta versions of IotHub and Logic -->
   <ItemGroup Condition="$(MSBuildProjectName.StartsWith('Azure.ResourceManager.SecurityCenter'))">
     <PackageVersion Update="Azure.ResourceManager.IotHub" Version="1.2.0-beta.1" />

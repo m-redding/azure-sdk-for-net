@@ -1,4 +1,6 @@
 <Project>
+  <Import Project="$([MSBuild]::GetDirectoryNameOfFileAbove($(MSBuildThisFileDirectory).., Directory.Build.props))\eng\Directory.Packages.Props" />
+
   <ItemGroup Condition="$(MSBuildProjectName.Contains('Azure.AI.Agents.Persistent'))">
     <PackageVersion Include="Microsoft.Extensions.AI.Abstractions" Version="10.1.1"/>
   </ItemGroup>

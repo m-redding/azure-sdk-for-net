@@ -1,4 +1,6 @@
 <Project>
+  <Import Project="$([MSBuild]::GetDirectoryNameOfFileAbove($(MSBuildThisFileDirectory).., Directory.Build.props))\eng\Directory.Packages.Props" />
+
   <ItemGroup Condition="$(MSBuildProjectName.StartsWith('Azure.AI.Personalizer'))">
     <PackageVersion Include="RL.Net" Version="0.2.0" />
   </ItemGroup>

@@ -1,5 +1,6 @@
 <Project>
-<!--
+  <Import Project="$([MSBuild]::GetDirectoryNameOfFileAbove($(MSBuildThisFileDirectory).., Directory.Build.props))\eng\Directory.Packages.Props" />
+  <!--
     MSTest is approved only for use with Playwright. Azure SDK test projects should
     use NUnit.
   -->
