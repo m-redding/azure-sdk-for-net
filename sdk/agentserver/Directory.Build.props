@@ -14,4 +14,8 @@
     <EnableBannedApiAnalyzers>false</EnableBannedApiAnalyzers>
     <AotCompatOptOut>true</AotCompatOptOut>
   </PropertyGroup>
+
+  <PropertyGroup>
+    <DirectoryPackagesPropsPath>$([MSBuild]::GetDirectoryNameOfFileAbove($(MSBuildThisFileDirectory).., Directory.Build.props))\eng\PackageVersionOverrides\Azure.AI.AgentServer.Packages.Props</DirectoryPackagesPropsPath>
+  </PropertyGroup>
 </Project>
