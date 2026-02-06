@@ -1,0 +1,19 @@
+<Project>
+  <Import Project="$([MSBuild]::GetDirectoryNameOfFileAbove($(MSBuildThisFileDirectory).., Directory.Build.props))\eng\Directory.Packages.Props" />
+
+  <ItemGroup Condition="$(MSBuildProjectName.StartsWith('Azure.Monitor.OpenTelemetry'))">
+    <PackageVersion Include="Microsoft.Extensions.Telemetry" Version="10.1.0" />
+    <PackageVersion Include="OpenTelemetry.Extensions.Hosting" Version="1.14.0" />
+    <PackageVersion Include="OpenTelemetry.Instrumentation.AspNetCore" Version="1.14.0" />
+    <PackageVersion Include="OpenTelemetry.PersistentStorage.FileSystem" Version="1.0.2" />
+  </ItemGroup>
+  <ItemGroup Condition = "$(MSBuildProjectName.StartsWith('Azure.Monitor.OpenTelemetry.LiveMetrics'))
+      and '$(IsTestProject)' != 'true'
+      and '$(IsTestSupportProject)' != 'true'
+      and '$(IsPerfProject)' != 'true'
+      and '$(IsStressProject)' != 'true'
+      and '$(IsSamplesProject)' != 'true'">
+    <PackageVersion Include="OpenTelemetry" Version="$(OpenTelemetryVersion)"/>
+    <PackageVersion Include="OpenTelemetry.Instrumentation.Http" Version="$(OpenTelemetryInstrumentationHttpVersion)" />
+  </ItemGroup>
+</Project>

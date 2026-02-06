@@ -1,0 +1,5 @@
+<!-- TODO this isn't rightjust illustrative - need to add import /proper formatting -->
+
+<PropertyGroup>
+    <DirectoryPackagesPropsPath>$([MSBuild]::GetDirectoryNameOfFileAbove($(MSBuildThisFileDirectory).., Directory.Build.props))\eng\PackageVersionOverrides\Azure.Test.Perf.Packages.Props</DirectoryPackagesPropsPath>
+  </PropertyGroup>

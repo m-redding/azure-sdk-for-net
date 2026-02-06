@@ -7,7 +7,7 @@
     <PackageVersion Include="OpenTelemetry.Instrumentation.AspNetCore" Version="1.14.0" />
     <PackageVersion Include="OpenTelemetry.PersistentStorage.FileSystem" Version="1.0.2" />
   </ItemGroup>
-  <ItemGroup Condition = "$(MSBuildProjectName.StartsWith('Azure.Monitor.OpenTelemetry'))
+  <ItemGroup Condition = "$(MSBuildProjectName.StartsWith('Azure.Monitor.OpenTelemetry.Exporter'))
       and '$(IsTestProject)' != 'true'
       and '$(IsTestSupportProject)' != 'true'
       and '$(IsPerfProject)' != 'true'

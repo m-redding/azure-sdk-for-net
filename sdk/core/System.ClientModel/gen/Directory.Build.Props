@@ -1,0 +1,5 @@
+<!-- TODO this is just illustrative of the idea -->
+
+<PropertyGroup>
+    <DirectoryPackagesPropsPath>$([MSBuild]::GetDirectoryNameOfFileAbove($(MSBuildThisFileDirectory).., Directory.Build.props))\eng\PackageVersionOverrides\System.ClientModel.SourceGeneration.Packages.Props</DirectoryPackagesPropsPath>
+  </PropertyGroup>
