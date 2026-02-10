@@ -1,5 +1,5 @@
 <Project>
-  <Import Project="$([MSBuild]::GetDirectoryNameOfFileAbove($(MSBuildThisFileDirectory).., Directory.Build.props))\eng\Directory.Packages.Props" />
+  <Import Project="$(MSBuildThisFileDirectory)..\Directory.Packages.props" />
 
   <!--
     Some modern Azure.* test/sample projects depend on legacy Track 1 packages
@@ -7,7 +7,7 @@
     FluentAssertions is approved only for legacy use. Azure SDK test projects should
     use NUnit assertions.
   -->
-  <ItemGroup Condition="$(MSBuildProjectName.StartsWith('Azure.IoT.TimeSeriesInsights.Tests.csproj'))">
+  <ItemGroup Condition="$(MSBuildProjectName.StartsWith('Azure.IoT.TimeSeriesInsights.Tests'))">
     <PackageVersion Include="FluentAssertions" Version="5.10.3" />
     <PackageVersion Include="Microsoft.Rest.ClientRuntime" Version="$(MicrosoftRestClientRuntimeVersion)" />
     <PackageVersion Include="Microsoft.Rest.ClientRuntime.Azure.Authentication" Version="$(MicrosoftRestClientRuntimeAzureAuthenticationVersion)" />

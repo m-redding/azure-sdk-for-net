@@ -1,5 +1,5 @@
 <Project>
-  <Import Project="$([MSBuild]::GetDirectoryNameOfFileAbove($(MSBuildThisFileDirectory).., Directory.Build.props))\eng\Directory.Packages.Props" />
+  <Import Project="$(MSBuildThisFileDirectory)..\Directory.Packages.props" />
 
   <!-- Analyzers projects needs different versions of code analysis package -->
   <ItemGroup Condition="$(MSBuildProjectName.StartsWith('Azure.SdkAnalyzers.Tests'))">

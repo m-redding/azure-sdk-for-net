@@ -1,5 +1,5 @@
 <Project>
-  <Import Project="$([MSBuild]::GetDirectoryNameOfFileAbove($(MSBuildThisFileDirectory).., Directory.Build.props))\eng\Directory.Packages.Props" />
+  <Import Project="$(MSBuildThisFileDirectory)..\Directory.Packages.props" />
 
     <!--
     Microsoft.Azure.Batch walks the line between T1 and T2, using some updated references

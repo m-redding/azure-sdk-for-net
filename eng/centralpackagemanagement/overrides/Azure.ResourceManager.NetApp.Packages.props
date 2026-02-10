@@ -1,5 +1,5 @@
 <Project>
-  <Import Project="$([MSBuild]::GetDirectoryNameOfFileAbove($(MSBuildThisFileDirectory).., Directory.Build.props))\eng\Directory.Packages.Props" />
+  <Import Project="$(MSBuildThisFileDirectory)..\Directory.Packages.props" />
 
   <!--
     FluentAssertions is approved only for legacy use. Azure SDK test projects should

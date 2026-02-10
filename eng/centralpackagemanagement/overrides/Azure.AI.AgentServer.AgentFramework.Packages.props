@@ -1,5 +1,5 @@
 <Project>
-  <Import Project="$([MSBuild]::GetDirectoryNameOfFileAbove($(MSBuildThisFileDirectory).., Directory.Build.props))\eng\Directory.Packages.Props" />
+  <Import Project="$(MSBuildThisFileDirectory)..\Directory.Packages.props" />
 
   <ItemGroup Condition="$(MSBuildProjectName.StartsWith('Azure.AI.AgentServer.AgentFramework'))">
     <PackageVersion Include="Microsoft.Agents.AI" Version="1.0.0-preview.251104.1" />

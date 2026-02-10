@@ -1,4 +1,4 @@
-﻿<Project ToolsVersion="15.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+<Project ToolsVersion="15.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
 
   <PropertyGroup>
     <IsClientLibrary>true</IsClientLibrary>
@@ -13,7 +13,7 @@
   </PropertyGroup>
 
   <PropertyGroup>
-    <DirectoryPackagesPropsPath>$([MSBuild]::GetDirectoryNameOfFileAbove($(MSBuildThisFileDirectory).., Directory.Build.props))\eng\centralpackagemanagement\overrides\Azure.Monitor.OpenTelemetry.Exporter.Packages.props</DirectoryPackagesPropsPath>
+    <DirectoryPackagesPropsPath>$(RepoRoot)eng\centralpackagemanagement\overrides\Azure.Monitor.OpenTelemetry.Exporter.Packages.props</DirectoryPackagesPropsPath>
   </PropertyGroup>
 
 </Project>

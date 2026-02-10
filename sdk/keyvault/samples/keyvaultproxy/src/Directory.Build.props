@@ -5,6 +5,6 @@
   <Import Project="$([MSBuild]::GetDirectoryNameOfFileAbove($(MSBuildThisFileDirectory).., Directory.Build.props))\Directory.Build.props" />
 
   <PropertyGroup>
-    <DirectoryPackagesPropsPath>$([MSBuild]::GetDirectoryNameOfFileAbove($(MSBuildThisFileDirectory).., Directory.Build.props))\eng\centralpackagemanagement\overrides\AzureSamples.Security.KeyVault.Proxy.Packages.props</DirectoryPackagesPropsPath>
+    <DirectoryPackagesPropsPath>$(RepoRoot)eng\centralpackagemanagement\overrides\AzureSamples.Security.KeyVault.Proxy.Packages.props</DirectoryPackagesPropsPath>
   </PropertyGroup>
 </Project>

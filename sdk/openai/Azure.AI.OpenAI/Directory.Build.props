@@ -1,4 +1,4 @@
-﻿<Project ToolsVersion="15.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+<Project ToolsVersion="15.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <PropertyGroup>
     <AzureOpenAILibraryVersion>2.2.0</AzureOpenAILibraryVersion>
     <!--
@@ -22,6 +22,6 @@
   <Import Project="$([MSBuild]::GetDirectoryNameOfFileAbove($(MSBuildThisFileDirectory).., Directory.Build.props))\Directory.Build.props" />
 
   <PropertyGroup>
-    <DirectoryPackagesPropsPath>$([MSBuild]::GetDirectoryNameOfFileAbove($(MSBuildThisFileDirectory).., Directory.Build.props))\eng\centralpackagemanagement\overrides\Azure.AI.OpenAI.Packages.props</DirectoryPackagesPropsPath>
+    <DirectoryPackagesPropsPath>$(RepoRoot)eng\centralpackagemanagement\overrides\Azure.AI.OpenAI.Packages.props</DirectoryPackagesPropsPath>
   </PropertyGroup>
 </Project>

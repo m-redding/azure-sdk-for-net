@@ -1,4 +1,5 @@
 ﻿<Project ToolsVersion="15.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <!-- Central Package Management -->
   <PropertyGroup>
     <RepoRoot>$(MSBuildThisFileDirectory)</RepoRoot>
     <RepoEngPath>$(MSBuildThisFileDirectory)eng</RepoEngPath>
@@ -40,4 +41,8 @@
   </PropertyGroup>
 
   <Import Project="$(RepoEngPath)\Directory.Build.Common.props" Condition="'$(ImportRepoCommonSettings)' == 'true'" />
+
+  <PropertyGroup>
+    <DirectoryPackagesPropsPath>$(MSBuildThisFileDirectory)eng\centralpackagemanagement\Directory.Packages.props</DirectoryPackagesPropsPath>
+  </PropertyGroup>
 </Project>

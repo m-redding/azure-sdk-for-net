@@ -1,4 +1,9 @@
 <Project>
+  <PropertyGroup>
+    <ManagePackageVersionsCentrally>true</ManagePackageVersionsCentrally>
+    <CentralPackageVersionOverrideEnabled>false</CentralPackageVersionOverrideEnabled>
+  </PropertyGroup>
+
   <!-- ============================================================== -->
   <!--                    SHARED VERSION STAMPS                       -->
   <!--                                                                -->
@@ -229,7 +234,6 @@
     <PackageVersion Include="Microsoft.CodeAnalysis.NetAnalyzers" Version="10.0.101" PrivateAssets="All" />
     <PackageVersion Include="Microsoft.DotNet.ApiCompat" Version="5.0.0-beta.20467.1" PrivateAssets="All" />
     <PackageVersion Include="Microsoft.DotNet.GenAPI" Version="5.0.0-beta.19552.1" PrivateAssets="All" />
-    <PackageVersion Include="Microsoft.NETFramework.ReferenceAssemblies" Version="1.0.2" PrivateAssets="All" />
     <PackageVersion Include="Microsoft.SourceLink.GitHub" Version="8.0.0" PrivateAssets="All" />
     <!--
       Note: SauceControl.InheritDoc 2.0.x causes NuGet restore loops in Visual Studio with multi-targeting projects.
@@ -257,5 +261,5 @@
   <Import Project="$(MSBuildThisFileDirectory)Directory.Tests.Packages.props" />
 
   <!-- Import legacy packages package versions -->
-  <Import Project="$(MSBuildThisFileDirectory)Directory.Packages.Legacy.props" />
+  <Import Project="$(MSBuildThisFileDirectory)Directory.Legacy.Packages.props" />
 </Project>

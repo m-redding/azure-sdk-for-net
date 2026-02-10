@@ -1,5 +1,5 @@
 <Project>
-  <Import Project="$([MSBuild]::GetDirectoryNameOfFileAbove($(MSBuildThisFileDirectory).., Directory.Build.props))\eng\Directory.Packages.Props" />
+  <Import Project="$(MSBuildThisFileDirectory)..\Directory.Packages.props" />
 
   <!-- Source Generation for System.ClientModel requires a specific set of analysis rules -->
   <ItemGroup Condition="$(IsTestProject) == 'true' and $(MSBuildProjectName.StartsWith('System.ClientModel.SourceGeneration.Tests'))">

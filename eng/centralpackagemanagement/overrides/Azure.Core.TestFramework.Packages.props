@@ -1,5 +1,5 @@
 <Project>
-  <Import Project="$([MSBuild]::GetDirectoryNameOfFileAbove($(MSBuildThisFileDirectory).., Directory.Build.props))\eng\Directory.Packages.Props" />
+  <Import Project="$(MSBuildThisFileDirectory)..\Directory.Packages.props" />
 
   <!-- Azure.Core.TestFramework needs pinned AutoRest version (workaround for pipeline conflicts) -->
   <ItemGroup Condition="$(MSBuildProjectName.StartsWith('Azure.Core.TestFramework'))">

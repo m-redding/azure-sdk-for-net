@@ -2,6 +2,6 @@
   <Import Project="$([MSBuild]::GetPathOfFileAbove('Directory.Build.props', '$(MSBuildThisFileDirectory)../'))" />
 
   <PropertyGroup>
-    <DirectoryPackagesPropsPath>$([MSBuild]::GetDirectoryNameOfFileAbove($(MSBuildThisFileDirectory).., Directory.Build.props))\eng\centralpackagemanagement\overrides\Azure.SdkAnalyzers.Packages.props</DirectoryPackagesPropsPath>
+    <DirectoryPackagesPropsPath>$(RepoRoot)eng\centralpackagemanagement\overrides\Azure.SdkAnalyzers.Packages.props</DirectoryPackagesPropsPath>
   </PropertyGroup>
 </Project>

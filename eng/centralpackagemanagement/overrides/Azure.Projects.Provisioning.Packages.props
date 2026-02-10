@@ -1,5 +1,5 @@
 <Project>
-  <Import Project="$([MSBuild]::GetDirectoryNameOfFileAbove($(MSBuildThisFileDirectory).., Directory.Build.props))\eng\Directory.Packages.Props" />
+  <Import Project="$(MSBuildThisFileDirectory)..\Directory.Packages.props" />
 
   <ItemGroup Condition="$(MSBuildProjectName.Contains('Azure.Projects.Provisioning'))">
     <PackageVersion Include="Azure.Data.AppConfiguration" Version="1.6.0"/>

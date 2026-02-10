@@ -1,5 +1,5 @@
 <Project>
-  <Import Project="$([MSBuild]::GetDirectoryNameOfFileAbove($(MSBuildThisFileDirectory).., Directory.Build.props))\eng\Directory.Packages.Props" />
+  <Import Project="$(MSBuildThisFileDirectory)..\Directory.Packages.props" />
 
   <!-- Azure.Test.Perf needs older Azure.Core for maximum compatibility with test projects -->
   <ItemGroup Condition="$(MSBuildProjectName.StartsWith('Azure.Test.Perf'))">

@@ -1,7 +1,7 @@
 <Project>
-  <Import Project="$([MSBuild]::GetDirectoryNameOfFileAbove($(MSBuildThisFileDirectory).., Directory.Build.props))\eng\Directory.Packages.Props" />
+  <Import Project="$(MSBuildThisFileDirectory)..\Directory.Packages.props" />
 
-  <ItemGroup Condition = "$(MSBuildProjectName.StartsWith('Azure.Monitor.OpenTelemetry.LiveMetrics.csproj'))">
+  <ItemGroup Condition = "$(MSBuildProjectName.StartsWith('Azure.Monitor.OpenTelemetry.LiveMetrics'))">
     <PackageVersion Include="Microsoft.Extensions.Telemetry" Version="10.1.0" />
     <PackageVersion Include="OpenTelemetry.Extensions.Hosting" Version="1.14.0" />
     <PackageVersion Include="OpenTelemetry.Instrumentation.AspNetCore" Version="1.14.0" />

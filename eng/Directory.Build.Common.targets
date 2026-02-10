@@ -190,11 +190,7 @@
   <Import Project="Azure.Management.Test.targets" Condition="'$(IsMgmtLibrary)' == 'true' and '$(IsTestProject)' == 'true'" />
   <Import Project="CodeGeneration.targets" Condition="'$(IncludeAutorestDependency)' != 'true'" />
 
-  <!-- CentralPackageVersions properties -->
   <PropertyGroup>
-    <DirectoryPackagesPropsPath>$(MSBuildThisFileDirectory)eng\Directory.Packages.props</DirectoryPackagesPropsPath>
-    <ManagePackageVersionsCentrally>true</ManagePackageVersionsCentrally>
-    <CentralPackageVersionOverrideEnabled>false</CentralPackageVersionOverrideEnabled>
     <UseProjectReferenceToAzureClients Condition="'$(UseProjectReferenceToAzureClients)' == ''">false</UseProjectReferenceToAzureClients>
   </PropertyGroup>
 
