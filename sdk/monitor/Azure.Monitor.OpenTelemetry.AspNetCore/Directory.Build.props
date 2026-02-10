@@ -10,4 +10,8 @@
     <Nullable>enable</Nullable>
   </PropertyGroup>
 
+  <PropertyGroup>
+    <DirectoryPackagesPropsPath>$([MSBuild]::GetDirectoryNameOfFileAbove($(MSBuildThisFileDirectory).., Directory.Build.props))\eng\centralpackagemanagement\overrides\Azure.Monitor.OpenTelemetry.AspNetCore.Packages.props</DirectoryPackagesPropsPath>
+  </PropertyGroup>
+
 </Project>

@@ -6,4 +6,8 @@
   </PropertyGroup>
 
   <Import Project="$([MSBuild]::GetDirectoryNameOfFileAbove($(MSBuildThisFileDirectory).., Directory.Build.props))\Directory.Build.props" />
+
+  <PropertyGroup>
+    <DirectoryPackagesPropsPath>$([MSBuild]::GetDirectoryNameOfFileAbove($(MSBuildThisFileDirectory).., Directory.Build.props))\eng\centralpackagemanagement\overrides\Microsoft.ClientModel.TestFramework.packages.props</DirectoryPackagesPropsPath>
+  </PropertyGroup>
 </Project>

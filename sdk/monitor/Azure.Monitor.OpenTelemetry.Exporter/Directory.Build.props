@@ -12,4 +12,8 @@
     <SuppressTfmSupportBuildWarnings>true</SuppressTfmSupportBuildWarnings>
   </PropertyGroup>
 
+  <PropertyGroup>
+    <DirectoryPackagesPropsPath>$([MSBuild]::GetDirectoryNameOfFileAbove($(MSBuildThisFileDirectory).., Directory.Build.props))\eng\centralpackagemanagement\overrides\Azure.Monitor.OpenTelemetry.Exporter.Packages.props</DirectoryPackagesPropsPath>
+  </PropertyGroup>
+
 </Project>

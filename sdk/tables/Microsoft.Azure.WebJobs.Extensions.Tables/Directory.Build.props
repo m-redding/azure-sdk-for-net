@@ -7,4 +7,8 @@
 
   <Import Project="$([MSBuild]::GetDirectoryNameOfFileAbove($(MSBuildThisFileDirectory).., Directory.Build.props))\Directory.Build.props" />
 
+  <PropertyGroup>
+    <DirectoryPackagesPropsPath>$([MSBuild]::GetDirectoryNameOfFileAbove($(MSBuildThisFileDirectory).., Directory.Build.props))\eng\centralpackagemanagement\overrides\Microsoft.Azure.WebJobs.Extensions.Tables.Packages.props</DirectoryPackagesPropsPath>
+  </PropertyGroup>
+
 </Project>
