@@ -7,7 +7,7 @@
     cases and use a frozen versioning strategy as the package is not actively developed.
   -->
   <ItemGroup Condition="$(MSBuildProjectName.StartsWith('Microsoft.Azure.Batch'))">
-    <PackageVersion Include="Azure.Storage.Blobs" Version="12.26.0" />
+    <PackageVersion Update="Azure.Storage.Blobs" Version="12.26.0" />
   </ItemGroup>
   <!--
     xunit is only approved for legacy use. Azure SDK test projects should use NUnit.
