@@ -63,7 +63,7 @@
     <!-- We're not a client library, but I want the same versions used by client libraries -->
     <IsClientLibrary>true</IsClientLibrary>
   </PropertyGroup>
-  <Import Project="$([MSBuild]::GetPathOfFileAbove(.gitignore))\..\eng\Packages.Data.props" />
+  <Import Project="$([MSBuild]::GetPathOfFileAbove(.gitignore))\..\eng\centralpackagemanagement\Directory.Packages.props" />
 
   <!-- Copy XML generated docs into our bin dir -->
   <Target Name="_ResolveCopyLocalNuGetPkgXmls" AfterTargets="ResolveReferences">

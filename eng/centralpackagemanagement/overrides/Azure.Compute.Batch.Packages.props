@@ -1,0 +1,16 @@
+<Project>
+  <Import Project="$([MSBuild]::GetDirectoryNameOfFileAbove($(MSBuildThisFileDirectory).., Directory.Build.props))\eng\Directory.Packages.Props" />
+
+  <!--
+    xunit is only approved for legacy use. Azure SDK test projects should use NUnit.
+    BouncyCastle is approved only for legacy use.
+  -->
+  <ItemGroup Condition="
+      ('$(IsTestProject)' == 'true' or '$(IsTestSupportProject)' == 'true')
+      and $(MSBuildProjectName.StartsWith('Azure.Compute.Batch'))">
+    <PackageVersion Include="FsCheck.Xunit" Version="2.16.6" />
+    <PackageVersion Include="xunit" Version="2.4.2" />
+    <PackageVersion Include="xunit.runner.visualstudio" Version="2.4.2" />
+    <PackageVersion Include="Portable.BouncyCastle" Version="1.9.0" />
+  </ItemGroup>
+</Project>

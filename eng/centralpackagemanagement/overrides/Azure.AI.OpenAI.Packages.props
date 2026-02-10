@@ -1,0 +1,7 @@
+<Project>
+  <Import Project="$([MSBuild]::GetDirectoryNameOfFileAbove($(MSBuildThisFileDirectory).., Directory.Build.props))\eng\Directory.Packages.Props" />
+
+  <ItemGroup Condition="$(MSBuildProjectName.StartsWith('Azure.AI.OpenAI'))">
+    <PackageVersion Include="OpenAI" Version="2.8.0" />
+  </ItemGroup>
+</Project>

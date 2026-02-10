@@ -112,6 +112,11 @@
     <AddDotnetfeedProjectSource>false</AddDotnetfeedProjectSource>
   </PropertyGroup>
 
+  <!-- Central package management default -->
+  <PropertyGroup>
+    <DirectoryPackagesPropsPath>$(MSBuildThisFileDirectory)eng\centralpackagemanagement\Directory.Packages.props</DirectoryPackagesPropsPath>
+  </PropertyGroup>
+
   <!-- AOT defaults -->
   <PropertyGroup Condition="'$(IsShippingLibrary)' == 'true'">
     <AotCompatOptOut>false</AotCompatOptOut> <!-- Set to true to opt out of all AOT checks -->

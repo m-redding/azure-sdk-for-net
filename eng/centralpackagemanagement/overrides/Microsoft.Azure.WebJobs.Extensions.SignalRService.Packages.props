@@ -1,0 +1,19 @@
+<Project>
+  <Import Project="$([MSBuild]::GetDirectoryNameOfFileAbove($(MSBuildThisFileDirectory).., Directory.Build.props))\eng\Directory.Packages.Props" />
+
+  <!-- Microsoft.Azure.SignalR.Management requires 1.0.15 for netstandard2.0 (see issue #51460) -->
+  <ItemGroup Condition="$(MSBuildProjectName.StartsWith('Microsoft.Azure.WebJobs.Extensions.SignalRService'))">
+    <PackageVersion Update="Microsoft.AspNetCore.Http.Connections" Version="1.0.15" />
+  </ItemGroup>
+
+  <!--
+    xunit is only approved for legacy use. Azure SDK test projects should use NUnit.
+  -->
+  <ItemGroup Condition="
+      ('$(IsTestProject)' == 'true' or '$(IsTestSupportProject)' == 'true')
+      and $(MSBuildProjectName.StartsWith('Microsoft.Azure.WebJobs.Extensions.SignalRService'))">
+    <PackageVersion Include="FsCheck.Xunit" Version="2.16.6" />
+    <PackageVersion Include="xunit" Version="2.4.2" />
+    <PackageVersion Include="xunit.runner.visualstudio" Version="2.4.2" />
+  </ItemGroup>
+</Project>
