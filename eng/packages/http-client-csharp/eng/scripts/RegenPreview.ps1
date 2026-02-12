@@ -530,7 +530,7 @@ try {
     }
     
     # Update Directory.Packages.props with local NuGet version
-    $packagesDataPropsPath = Join-Path $sdkRepoPath "eng" "Directory.Packages.props"
+    $packagesDataPropsPath = Join-Path $sdkRepoPath "eng" "centralpackagemanagement" "Directory.Packages.props"
     if (-not (Test-Path $packagesDataPropsPath)) {
         throw "Directory.Packages.props not found at: $packagesDataPropsPath"
     }
@@ -831,7 +831,7 @@ try {
                 "eng/packages/http-client-csharp/package-lock.json"
                 "eng/packages/http-client-csharp-mgmt/package.json"
                 "eng/packages/http-client-csharp-mgmt/package-lock.json"
-                "eng/Directory.Packages.props"
+                "eng/centralpackagemanagement/Directory.Packages.props"
                 "NuGet.Config"
             )
             $restoreCmd = "git restore $($filesToRestore -join ' ')"
