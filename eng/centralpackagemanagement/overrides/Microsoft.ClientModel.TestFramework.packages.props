@@ -2,7 +2,7 @@
   <Import Project="$(MSBuildThisFileDirectory)..\Directory.Packages.props" />
 
   <!-- The unbranded test framework is the first to use NUnit 4; the repository will migrate fully in the near future -->
-  <ItemGroup Condition="$(MSBuildProjectName.StartsWith('Microsoft.ClientModel.TestFramework'))">
+  <ItemGroup Condition="$(MSBuildProjectName.StartsWith('Microsoft.ClientModel.TestFramework')) and '$(IsTestProject)' != 'true'">
     <PackageVersion Include="Castle.Core" Version="$(CastleCoreVersion)" />
     <PackageVersion Include="NUnit" Version="4.4.0" />
   </ItemGroup>
