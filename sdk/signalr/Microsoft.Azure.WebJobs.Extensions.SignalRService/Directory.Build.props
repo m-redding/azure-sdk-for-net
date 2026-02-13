@@ -1,4 +1,4 @@
-<Project>
+﻿<Project>
   <PropertyGroup>
     <IsClientLibrary>true</IsClientLibrary>
   </PropertyGroup>
