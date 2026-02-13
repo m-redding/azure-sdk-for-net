@@ -1,31 +1,14 @@
 <Project> 
-  <Import Project="$(MSBuildThisFileDirectory)..\Directory.Packages.props" />
-
-  <ItemGroup Condition = "$(MSBuildProjectName) == 'Azure.Monitor.OpenTelemetry.Exporter'">
-    <PackageVersion Include="Microsoft.Extensions.Telemetry" Version="10.1.0" />
+  <ItemGroup>
     <PackageVersion Include="OpenTelemetry.Extensions.Hosting" Version="1.14.0" />
-    <PackageVersion Include="OpenTelemetry.Instrumentation.AspNetCore" Version="1.14.0" />
     <PackageVersion Include="OpenTelemetry.PersistentStorage.FileSystem" Version="1.0.2" />
-  </ItemGroup>
-
-  <ItemGroup Condition="
-      ('$(IsTestProject)' != 'true' and '$(IsTestSupportProject)' != 'true' and '$(IsPerfProject)' != 'true')
-      and $(MSBuildProjectName.StartsWith('Azure.Monitor.OpenTelemetry.Exporter'))">
-    <PackageVersion Include="OpenTelemetry" Version="$(OpenTelemetryVersion)"/>
-    <PackageVersion Include="OpenTelemetry.Instrumentation.Http" Version="$(OpenTelemetryInstrumentationHttpVersion)" />
   </ItemGroup>
 
   <!--
     xunit is only approved for legacy use. Azure SDK test projects should use NUnit.
   -->
-  <ItemGroup Condition="
-      ('$(IsTestProject)' == 'true' or '$(IsTestSupportProject)' == 'true')
-      and $(MSBuildProjectName.StartsWith('Azure.Monitor.OpenTelemetry.Exporter'))">
-    <PackageVersion Include="FsCheck.Xunit" Version="2.16.6" />
+  <ItemGroup Condition="'$(IsTestProject)' == 'true'">
     <PackageVersion Include="Microsoft.Extensions.Telemetry" Version="10.1.0" />
-    <PackageVersion Include="OpenTelemetry.Extensions.Hosting" Version="1.14.0" />
-    <PackageVersion Include="OpenTelemetry.Instrumentation.AspNetCore" Version="1.14.0" />
-    <PackageVersion Include="OpenTelemetry.PersistentStorage.FileSystem" Version="1.0.2" />
     <PackageVersion Include="xunit" Version="2.4.2" />
     <PackageVersion Include="xunit.runner.visualstudio" Version="2.4.2" />
   </ItemGroup>

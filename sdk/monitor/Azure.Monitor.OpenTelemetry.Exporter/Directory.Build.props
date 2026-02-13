@@ -12,8 +12,4 @@
     <SuppressTfmSupportBuildWarnings>true</SuppressTfmSupportBuildWarnings>
   </PropertyGroup>
 
-  <PropertyGroup>
-    <DirectoryPackagesPropsPath>$(RepoRoot)eng\centralpackagemanagement\overrides\Azure.Monitor.OpenTelemetry.Exporter.Packages.props</DirectoryPackagesPropsPath>
-  </PropertyGroup>
-
 </Project>

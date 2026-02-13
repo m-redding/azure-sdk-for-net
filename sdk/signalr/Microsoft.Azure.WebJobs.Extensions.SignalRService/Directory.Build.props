@@ -5,8 +5,4 @@
 
   <Import Project="$([MSBuild]::GetDirectoryNameOfFileAbove($(MSBuildThisFileDirectory)..\, Directory.Build.props))\Directory.Build.props" />
 
-  <PropertyGroup>
-    <DirectoryPackagesPropsPath>$(RepoRoot)eng\centralpackagemanagement\overrides\Microsoft.Azure.WebJobs.Extensions.SignalRService.Packages.props</DirectoryPackagesPropsPath>
-  </PropertyGroup>
-
 </Project>

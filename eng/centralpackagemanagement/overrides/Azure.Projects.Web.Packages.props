@@ -1,9 +1,0 @@
-<Project>
-  <Import Project="$(MSBuildThisFileDirectory)..\Directory.Packages.props" />
-
-  <ItemGroup Condition="$(MSBuildProjectName.Contains('Azure.Projects.Web'))">
-    <PackageVersion Include="Azure.Data.AppConfiguration" Version="1.6.0"/>
-    <PackageVersion Include="Azure.Provisioning.AppConfiguration" Version="1.0.0"/>
-    <PackageVersion Include="Azure.Provisioning.Deployment" Version="1.0.0-beta.2"/>
-  </ItemGroup>
-</Project>

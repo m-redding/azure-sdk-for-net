@@ -1,43 +1,20 @@
 <Project>
-  <Import Project="$(MSBuildThisFileDirectory)..\Directory.Packages.props" />
-
-  <ItemGroup Condition = "$(MSBuildProjectName) == 'Azure.Monitor.OpenTelemetry.AspNetCore'">
+  <ItemGroup>
     <PackageVersion Include="Microsoft.Extensions.Telemetry" Version="10.1.0" />
     <PackageVersion Include="OpenTelemetry.Extensions.Hosting" Version="1.14.0" />
     <PackageVersion Include="OpenTelemetry.Instrumentation.AspNetCore" Version="1.14.0" />
-    <PackageVersion Include="OpenTelemetry.PersistentStorage.FileSystem" Version="1.0.2" />
   </ItemGroup>
 
-  <ItemGroup Condition="
-      ('$(IsTestProject)' != 'true' and '$(IsTestSupportProject)' != 'true')
-      and $(MSBuildProjectName.StartsWith('Azure.Monitor.OpenTelemetry.AspNetCore'))">
-    <PackageVersion Include="OpenTelemetry" Version="$(OpenTelemetryVersion)"/>
+  <ItemGroup Condition="'$(IsTestProject)' != 'true'">
     <PackageVersion Include="OpenTelemetry.Instrumentation.Http" Version="$(OpenTelemetryInstrumentationHttpVersion)" />
   </ItemGroup>
 
   <!--
     xunit is only approved for legacy use. Azure SDK test projects should use NUnit.
   -->
-  <ItemGroup Condition="
-      ('$(IsTestProject)' == 'true' or '$(IsTestSupportProject)' == 'true')
-      and $(MSBuildProjectName.StartsWith('Azure.Monitor.OpenTelemetry.AspNetCore'))">
-    <PackageVersion Include="FsCheck.Xunit" Version="2.16.6" />
-    <PackageVersion Include="Microsoft.Extensions.Telemetry" Version="10.1.0" />
-    <PackageVersion Include="OpenTelemetry.Extensions.Hosting" Version="1.14.0" />
-    <PackageVersion Include="OpenTelemetry.Instrumentation.AspNetCore" Version="1.14.0" />
-    <PackageVersion Include="OpenTelemetry.PersistentStorage.FileSystem" Version="1.0.2" />
+  <ItemGroup Condition="'$(IsTestProject)' == 'true'">
     <PackageVersion Include="xunit" Version="2.4.2" />
     <PackageVersion Include="xunit.runner.visualstudio" Version="2.4.2" />
   </ItemGroup>
 
-  <!--
-    Some modern Azure.* test/sample projects depend on legacy Track 1 packages
-    for integration scenarios.
-  -->
-  <ItemGroup Condition="
-      ('$(IsTestProject)' == 'true' or '$(IsTestSupportProject)' == 'true' or '$(IsSamplesProject)' == 'true')
-      and $(MSBuildProjectName.StartsWith('Azure.Monitor.OpenTelemetry.AspNetCore.Integration'))">
-    <PackageVersion Include="Microsoft.Rest.ClientRuntime" Version="$(MicrosoftRestClientRuntimeVersion)" />
-    <PackageVersion Include="Microsoft.Rest.ClientRuntime.Azure.Authentication" Version="$(MicrosoftRestClientRuntimeAzureAuthenticationVersion)" />
-  </ItemGroup>
 </Project>

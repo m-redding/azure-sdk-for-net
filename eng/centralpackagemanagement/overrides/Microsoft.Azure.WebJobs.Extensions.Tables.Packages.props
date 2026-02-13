@@ -1,8 +1,6 @@
 <Project>
-  <Import Project="$(MSBuildThisFileDirectory)..\Directory.Packages.props" />
-
   <!-- Tables.Tests needs legacy WebJobs.Extensions.Storage for T1 testing -->
-  <ItemGroup Condition="$(MSBuildProjectName.StartsWith('Microsoft.Azure.WebJobs.Extensions.Tables.Tests'))">
+  <ItemGroup Condition="'$(IsTestProject)' == 'true'">
     <PackageVersion Include="Microsoft.Azure.WebJobs.Extensions.Storage" Version="4.0.5" />
   </ItemGroup>
 </Project>

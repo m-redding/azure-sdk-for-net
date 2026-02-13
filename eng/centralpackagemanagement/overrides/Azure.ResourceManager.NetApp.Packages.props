@@ -1,13 +1,9 @@
 <Project>
-  <Import Project="$(MSBuildThisFileDirectory)..\Directory.Packages.props" />
-
   <!--
     FluentAssertions is approved only for legacy use. Azure SDK test projects should
     use NUnit assertions.
   -->
-  <ItemGroup Condition="
-      ('$(IsTestProject)' == 'true' or '$(IsTestSupportProject)' == 'true' or '$(IsPerfProject)' == 'true')
-      and $(MSBuildProjectName.StartsWith('Azure.ResourceManager.NetApp'))">
+  <ItemGroup Condition="'$(IsTestProject)' == 'true'">
     <PackageVersion Include="FluentAssertions" Version="5.10.3" />
   </ItemGroup>
 </Project>

@@ -104,6 +104,7 @@
     <PackageVersion Include="Azure.Core.Amqp" Version="1.3.1" />
     <PackageVersion Include="Azure.Core.Experimental" Version="0.1.0-preview.36" />
     <PackageVersion Include="Azure.Core.Expressions.DataFactory" Version="1.0.0" />
+    <PackageVersion Include="Azure.Data.AppConfiguration" Version="1.8.0"/>
     <PackageVersion Include="Azure.Data.Tables" Version="12.11.0" />
     <PackageVersion Include="Azure.Identity" Version="1.17.1" />
     <PackageVersion Include="Azure.Messaging.EventGrid" Version="4.21.0" />
@@ -262,4 +263,25 @@
 
   <!-- Import legacy packages package versions -->
   <Import Project="$(MSBuildThisFileDirectory)Directory.Legacy.Packages.props" />
+
+  <!-- ============================================================== -->
+  <!--              PER-PACKAGE OVERRIDE AUTO-IMPORT                  -->
+  <!--                                                                -->
+  <!-- If an override file named <PackageName>.Packages.props exists  -->
+  <!-- in the overrides/ folder, import it automatically.  This       -->
+  <!-- eliminates the need for each package to manually redirect      -->
+  <!-- DirectoryPackagesPropsPath in its Directory.Build.props.        -->
+  <!--                                                                -->
+  <!-- For .Tests, .Perf, and .Samples projects we also check for    -->
+  <!-- an override matching the base package name (without suffix).   -->
+  <!-- ============================================================== -->
+  <PropertyGroup>
+    <_OverrideDir>$(MSBuildThisFileDirectory)overrides\</_OverrideDir>
+    <_OverridePath Condition="Exists('$(_OverrideDir)$(MSBuildProjectName).Packages.props')">$(_OverrideDir)$(MSBuildProjectName).Packages.props</_OverridePath>
+    <_OverridePath Condition="'$(_OverridePath)' == '' and $(MSBuildProjectName.EndsWith('.Tests'))">$(_OverrideDir)$(MSBuildProjectName.Substring(0, $(MSBuildProjectName.LastIndexOf('.Tests')))).Packages.props</_OverridePath>
+    <_OverridePath Condition="'$(_OverridePath)' == '' and $(MSBuildProjectName.EndsWith('.Perf'))">$(_OverrideDir)$(MSBuildProjectName.Substring(0, $(MSBuildProjectName.LastIndexOf('.Perf')))).Packages.props</_OverridePath>
+    <_OverridePath Condition="'$(_OverridePath)' == '' and $(MSBuildProjectName.EndsWith('.Samples'))">$(_OverrideDir)$(MSBuildProjectName.Substring(0, $(MSBuildProjectName.LastIndexOf('.Samples')))).Packages.props</_OverridePath>
+  </PropertyGroup>
+
+  <Import Project="$(_OverridePath)" Condition="'$(_OverridePath)' != '' and Exists('$(_OverridePath)')" />
 </Project>

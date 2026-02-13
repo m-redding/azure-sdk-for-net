@@ -1,7 +1,5 @@
 <Project>
-  <Import Project="$(MSBuildThisFileDirectory)..\Directory.Packages.props" />
-
-  <ItemGroup Condition="'$(IsClientLibrary)' == 'true' and '$(IsTestProject)' != 'true' and $(MSBuildProjectName.StartsWith('Azure.Developer.Playwright'))">
+  <ItemGroup Condition="'$(IsTestProject)' != 'true'">
     <PackageVersion Include="MSTest.TestFramework" Version="$(MSTestVersion)" />
     <PackageVersion Include="NUnit" Version="$(NUnitVersion)" />
   </ItemGroup>

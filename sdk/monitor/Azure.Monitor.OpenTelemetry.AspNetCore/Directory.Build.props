@@ -10,8 +10,4 @@
     <Nullable>enable</Nullable>
   </PropertyGroup>
 
-  <PropertyGroup>
-    <DirectoryPackagesPropsPath>$(RepoRoot)eng\centralpackagemanagement\overrides\Azure.Monitor.OpenTelemetry.AspNetCore.Packages.props</DirectoryPackagesPropsPath>
-  </PropertyGroup>
-
 </Project>
