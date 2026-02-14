@@ -4,6 +4,6 @@
     use NUnit assertions.
   -->
   <ItemGroup Condition="'$(IsTestProject)' == 'true' or '$(IsPerfProject)' == 'true'">
-    <PackageVersion Include="FluentAssertions" Version="5.10.3" />
+    <PackageVersion Include="FluentAssertions" Version="$(FluentAssertionsVersion)" />
   </ItemGroup>
 </Project>

@@ -1,6 +1,6 @@
 <Project> 
   <ItemGroup>
-    <PackageVersion Include="OpenTelemetry.Extensions.Hosting" Version="1.14.0" />
+    <PackageVersion Include="OpenTelemetry.Extensions.Hosting" Version="$(OpenTelemetryExtensionsHostingVersion)" />
     <PackageVersion Include="OpenTelemetry.PersistentStorage.FileSystem" Version="1.0.2" />
   </ItemGroup>
 
@@ -9,7 +9,7 @@
   -->
   <ItemGroup Condition="'$(IsTestProject)' == 'true'">
     <PackageVersion Include="Microsoft.Extensions.Telemetry" Version="10.1.0" />
-    <PackageVersion Include="xunit" Version="2.4.2" />
-    <PackageVersion Include="xunit.runner.visualstudio" Version="2.4.2" />
+    <PackageVersion Include="xunit" Version="$(XunitVersion)" />
+    <PackageVersion Include="xunit.runner.visualstudio" Version="$(XunitRunnerVersion)" />
   </ItemGroup>
 </Project>

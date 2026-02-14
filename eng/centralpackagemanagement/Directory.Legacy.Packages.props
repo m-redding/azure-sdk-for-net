@@ -13,6 +13,16 @@
     <MicrosoftRestClientRuntimeAzureVersion>[3.3.19, 4.0.0)</MicrosoftRestClientRuntimeAzureVersion>
     <MicrosoftRestClientRuntimeAzureAuthenticationVersion>[2.4.1]</MicrosoftRestClientRuntimeAzureAuthenticationVersion>
     <MicrosoftRestClientRuntimeAzureTestFrameworkVersion>[1.7.7, 2.0.0)</MicrosoftRestClientRuntimeAzureTestFrameworkVersion>
+
+    <!-- Restricted legacy test framework packages — kept as stamps so   -->
+    <!-- version bumps are atomic, but NOT centrally available. Each      -->
+    <!-- package must have an override file to use these.                 -->
+    <XunitVersion>2.4.2</XunitVersion>
+    <XunitRunnerVersion>2.4.2</XunitRunnerVersion>
+    <FluentAssertionsVersion>5.10.3</FluentAssertionsVersion>
+    <PortableBouncyCastleVersion>1.9.0</PortableBouncyCastleVersion>
+    <MicrosoftIdentityModelClientsActiveDirectoryVersion>[3.14.2, 4.0.0)</MicrosoftIdentityModelClientsActiveDirectoryVersion>
+    <MicrosoftIdentityClientPinnedVersion>4.61.3</MicrosoftIdentityClientPinnedVersion>
   </PropertyGroup>
 
   <!-- ============================================================== -->
