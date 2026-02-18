@@ -1,4 +1,4 @@
-﻿// Copyright (c) Microsoft Corporation. All rights reserved.
+// Copyright (c) Microsoft Corporation. All rights reserved.
 // Licensed under the MIT License.
 
 using System;
@@ -74,13 +74,13 @@ namespace Azure.Core.Tests
             Assert.That(await ReadAsync(reliableStream, _buffer, 0, 25), Is.EqualTo(25));
             Assert.That(await ReadAsync(reliableStream, _buffer, 25, 25), Is.EqualTo(25));
             Assert.That(await ReadAsync(reliableStream, _buffer, 50, 50), Is.EqualTo(50));
-            Assert.True(stream1.IsDisposed);
+            Assert.That(stream1.IsDisposed, Is.True);
 
             Assert.That(await ReadAsync(reliableStream, _buffer, 0, 50), Is.EqualTo(0));
-            Assert.False(stream2.IsDisposed);
+            Assert.That(stream2.IsDisposed, Is.False);
 
             reliableStream.Dispose();
-            Assert.True(stream2.IsDisposed);
+            Assert.That(stream2.IsDisposed, Is.True);
 
             AssertReads(_buffer, 100);
         }
@@ -146,7 +146,7 @@ namespace Azure.Core.Tests
 
             var exception = await AsyncAssert.ThrowsAsync<Exception>(
                 async () => await ReadAsync(reliableStream, _buffer, 25, 25, new CancellationToken(true)));
-            Assert.IsInstanceOf(translated, exception);
+            Assert.That(exception, Is.InstanceOf(translated));
 
             AssertReads(_buffer, 25);
         }

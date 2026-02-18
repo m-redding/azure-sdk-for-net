@@ -1,4 +1,4 @@
-﻿// Copyright (c) Microsoft Corporation. All rights reserved.
+// Copyright (c) Microsoft Corporation. All rights reserved.
 // Licensed under the MIT License.
 
 using NUnit.Framework;
@@ -54,7 +54,7 @@ namespace Azure.Core.Experimental.Tests
         {
             Variant value = new(testValue);
             bool success = value.TryGetValue(out char result);
-            Assert.True(success);
+            Assert.That(success, Is.True);
             Assert.That(result, Is.EqualTo(testValue));
 
             Assert.That(value.As<char>(), Is.EqualTo(testValue));
@@ -70,7 +70,7 @@ namespace Azure.Core.Experimental.Tests
             Variant value = new(source);
 
             bool success = value.TryGetValue(out char result);
-            Assert.True(success);
+            Assert.That(success, Is.True);
             Assert.That(result, Is.EqualTo(testValue));
 
             Assert.That(value.As<char>(), Is.EqualTo(testValue));
@@ -86,7 +86,7 @@ namespace Azure.Core.Experimental.Tests
             char source = testValue;
             Variant value = new(source);
             bool success = value.TryGetValue(out char? result);
-            Assert.True(success);
+            Assert.That(success, Is.True);
             Assert.That(result, Is.EqualTo(testValue));
 
             Assert.That((char?)value, Is.EqualTo(testValue));
@@ -102,9 +102,9 @@ namespace Azure.Core.Experimental.Tests
             Variant value = new(o);
 
             Assert.That(value.Type, Is.EqualTo(typeof(char)));
-            Assert.True(value.TryGetValue(out char result));
+            Assert.That(value.TryGetValue(out char result), Is.True);
             Assert.That(result, Is.EqualTo(testValue));
-            Assert.True(value.TryGetValue(out char? nullableResult));
+            Assert.That(value.TryGetValue(out char? nullableResult), Is.True);
             Assert.That(nullableResult!.Value, Is.EqualTo(testValue));
 
             char? n = testValue;
@@ -112,9 +112,9 @@ namespace Azure.Core.Experimental.Tests
             value = new(o);
 
             Assert.That(value.Type, Is.EqualTo(typeof(char)));
-            Assert.True(value.TryGetValue(out result));
+            Assert.That(value.TryGetValue(out result), Is.True);
             Assert.That(result, Is.EqualTo(testValue));
-            Assert.True(value.TryGetValue(out nullableResult));
+            Assert.That(value.TryGetValue(out nullableResult), Is.True);
             Assert.That(nullableResult!.Value, Is.EqualTo(testValue));
         }
 
@@ -123,7 +123,7 @@ namespace Azure.Core.Experimental.Tests
         {
             char? source = null;
             Variant value = source;
-            Assert.Null(value.Type);
+            Assert.That(value.Type, Is.Null);
             Assert.That(value.As<char?>(), Is.EqualTo(source));
             Assert.That(value.As<char?>().HasValue, Is.False);
         }

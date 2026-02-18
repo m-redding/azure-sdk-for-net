@@ -1,4 +1,4 @@
-﻿// Copyright (c) Microsoft Corporation. All rights reserved.
+// Copyright (c) Microsoft Corporation. All rights reserved.
 // Licensed under the MIT License.
 
 using System;
@@ -42,7 +42,7 @@ public class PipelineMessageHeadersLogValueTests
         Assert.That(loggedRequestValue, Is.Not.Null);
         Assert.That(loggedResponseValue, Is.Not.Null);
 
-        Assert.AreEqual(loggedRequestValue, "Sensitive-Header:REDACTED\r\nNonSensitive-Header:NonSensitiveValue\r\nContent-Length:REDACTED\r\n");
-        Assert.AreEqual(loggedResponseValue, "Sensitive-Header:REDACTED\r\nNonSensitive-Header:NonSensitiveValue\r\nContent-Length:REDACTED\r\n");
+        Assert.That("Sensitive-Header:REDACTED\r\nNonSensitive-Header:NonSensitiveValue\r\nContent-Length:REDACTED\r\n", Is.EqualTo(loggedRequestValue));
+        Assert.That("Sensitive-Header:REDACTED\r\nNonSensitive-Header:NonSensitiveValue\r\nContent-Length:REDACTED\r\n", Is.EqualTo(loggedResponseValue));
     }
 }

@@ -1,4 +1,4 @@
-﻿// Copyright (c) Microsoft Corporation. All rights reserved.
+// Copyright (c) Microsoft Corporation. All rights reserved.
 // Licensed under the MIT License.
 
 using System;
@@ -38,7 +38,7 @@ namespace Azure.Core.Tests
         public void SerializeDefaultValue()
         {
             var data = ModelReaderWriter.Write(default(RehydrationToken));
-            Assert.NotNull(data);
+            Assert.That(data, Is.Not.Null);
         }
     }
 }

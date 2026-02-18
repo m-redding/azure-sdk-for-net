@@ -54,7 +54,7 @@ namespace Azure.Core.Tests
             Assert.That(dictionary["StringReadOnlyProperty"], Is.EqualTo("3"));
             Assert.That(dictionary["StringReadOnlyField"], Is.EqualTo("42"));
             Assert.That(dictionary["renamed_property"], Is.EqualTo("renamed value"));
-            Assert.False(dictionary.ContainsKey("IgnoredProperty"));
+            Assert.That(dictionary.ContainsKey("IgnoredProperty"), Is.False);
         }
 
         [Test]
@@ -119,8 +119,8 @@ namespace Azure.Core.Tests
             var dictionary = new Dictionary<string, object>();
 
             new TestBinder().Serialize(new ModelClass(), dictionary);
-            Assert.False(dictionary.ContainsKey("PrivateField"));
-            Assert.False(dictionary.ContainsKey("PrivateProperty"));
+            Assert.That(dictionary.ContainsKey("PrivateField"), Is.False);
+            Assert.That(dictionary.ContainsKey("PrivateProperty"), Is.False);
         }
 
         [Test]

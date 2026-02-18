@@ -1,4 +1,4 @@
-﻿// Copyright (c) Microsoft Corporation. All rights reserved.
+// Copyright (c) Microsoft Corporation. All rights reserved.
 // Licensed under the MIT License.
 
 using System;
@@ -18,14 +18,14 @@ namespace Azure.Core.Amqp.Tests
 
             Assert.That(messageId, Is.EqualTo(new AmqpMessageId("messageId")));
             Assert.That(messageId, Is.EqualTo((object)new AmqpMessageId("messageId")));
-            Assert.False(messageId.Equals(new AmqpMessageId("messageId2")));
+            Assert.That(messageId.Equals(new AmqpMessageId("messageId2")), Is.False);
 
-            Assert.True(messageId.Equals("messageId"));
-            Assert.False(messageId.Equals("messageId2"));
-            Assert.False(messageId.Equals(Encoding.UTF8.GetBytes("messageId")));
-            Assert.False(messageId.Equals(1));
-            Assert.False(messageId.Equals(Guid.NewGuid()));
-            Assert.False(messageId.Equals((object)"messageId"));
+            Assert.That(messageId.Equals("messageId"), Is.True);
+            Assert.That(messageId.Equals("messageId2"), Is.False);
+            Assert.That(messageId.Equals(Encoding.UTF8.GetBytes("messageId")), Is.False);
+            Assert.That(messageId.Equals(1), Is.False);
+            Assert.That(messageId.Equals(Guid.NewGuid()), Is.False);
+            Assert.That(messageId.Equals((object)"messageId"), Is.False);
         }
 
         [Test]

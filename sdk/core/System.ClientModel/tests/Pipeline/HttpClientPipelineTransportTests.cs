@@ -1,4 +1,4 @@
-﻿// Copyright (c) Microsoft Corporation. All rights reserved.
+// Copyright (c) Microsoft Corporation. All rights reserved.
 // Licensed under the MIT License.
 
 using System.ClientModel.Primitives;
@@ -72,7 +72,7 @@ public class HttpClientPipelineTransportTests : SyncAsyncTestBase
         response.ContentStream = new MemoryStream();
         response.Dispose();
 
-        Assert.False(disposeTrackingContent.IsDisposed);
+        Assert.That(disposeTrackingContent.IsDisposed, Is.False);
     }
 
     [TestCaseSource(nameof(HeadersWithValuesAndType))]
@@ -95,7 +95,7 @@ public class HttpClientPipelineTransportTests : SyncAsyncTestBase
 
         await transport.ProcessSyncOrAsync(message, IsAsync);
 
-        Assert.Null(httpMessageContent);
+        Assert.That(httpMessageContent, Is.Null);
     }
 
     [TestCaseSource(nameof(HeadersWithValuesAndType))]

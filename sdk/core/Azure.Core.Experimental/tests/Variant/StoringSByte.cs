@@ -1,4 +1,4 @@
-﻿// Copyright (c) Microsoft Corporation. All rights reserved.
+// Copyright (c) Microsoft Corporation. All rights reserved.
 // Licensed under the MIT License.
 
 using NUnit.Framework;
@@ -57,7 +57,7 @@ namespace Azure.Core.Experimental.Tests
         {
             Variant value = new(testValue);
             bool success = value.TryGetValue(out sbyte result);
-            Assert.True(success);
+            Assert.That(success, Is.True);
             Assert.That(result, Is.EqualTo(testValue));
 
             Assert.That(value.As<sbyte>(), Is.EqualTo(testValue));
@@ -74,7 +74,7 @@ namespace Azure.Core.Experimental.Tests
             Variant value = new(source);
 
             bool success = value.TryGetValue(out sbyte result);
-            Assert.True(success);
+            Assert.That(success, Is.True);
             Assert.That(result, Is.EqualTo(testValue));
 
             Assert.That(value.As<sbyte>(), Is.EqualTo(testValue));
@@ -91,7 +91,7 @@ namespace Azure.Core.Experimental.Tests
             sbyte source = testValue;
             Variant value = new(source);
             bool success = value.TryGetValue(out sbyte? result);
-            Assert.True(success);
+            Assert.That(success, Is.True);
             Assert.That(result, Is.EqualTo(testValue));
 
             Assert.That((sbyte?)value, Is.EqualTo(testValue));
@@ -102,7 +102,7 @@ namespace Azure.Core.Experimental.Tests
         {
             sbyte? source = null;
             Variant value = source;
-            Assert.Null(value.Type);
+            Assert.That(value.Type, Is.Null);
             Assert.That(value.As<sbyte?>(), Is.EqualTo(source));
             Assert.That(value.As<sbyte?>().HasValue, Is.False);
         }

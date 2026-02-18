@@ -1,4 +1,4 @@
-﻿// Copyright (c) Microsoft Corporation. All rights reserved.
+// Copyright (c) Microsoft Corporation. All rights reserved.
 // Licensed under the MIT License.
 
 using NUnit.Framework;
@@ -54,10 +54,10 @@ namespace System.ClientModel.Tests.ModelReaderWriterTests.Models
         protected override void CompareModels(AvailabilitySetData model, AvailabilitySetData model2, string format)
         {
             Assert.That(model2.Id, Is.EqualTo(format == "W" ? null : model.Id));
-            Assert.AreEqual(model.Location, model2.Location);
-            Assert.AreEqual(format == "W" ? null : model.Name, model2.Name);
-            Assert.AreEqual(model.PlatformFaultDomainCount, model2.PlatformFaultDomainCount);
-            Assert.AreEqual(model.PlatformUpdateDomainCount, model2.PlatformUpdateDomainCount);
+            Assert.That(model2.Location, Is.EqualTo(model.Location));
+            Assert.That(model2.Name, Is.EqualTo(format == "W" ? null : model.Name));
+            Assert.That(model2.PlatformFaultDomainCount, Is.EqualTo(model.PlatformFaultDomainCount));
+            Assert.That(model2.PlatformUpdateDomainCount, Is.EqualTo(model.PlatformUpdateDomainCount));
             if (format == "J")
                 Assert.That(model2.ResourceType, Is.EqualTo(model.ResourceType));
             Assert.That(model2.Tags, Is.EquivalentTo(model.Tags));

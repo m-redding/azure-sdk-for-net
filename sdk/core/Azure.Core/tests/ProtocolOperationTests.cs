@@ -1,4 +1,4 @@
-﻿// Copyright (c) Microsoft Corporation. All rights reserved.
+// Copyright (c) Microsoft Corporation. All rights reserved.
 // Licensed under the MIT License.
 
 using System;
@@ -31,7 +31,7 @@ namespace Azure.Core.Tests
             var operation = new ProtocolOperation<MockJsonModel>(null, pipeline, request, response, OperationFinalStateVia.Location, null, null);
             var token = operation.GetRehydrationToken();
 
-            Assert.True(token.HasValue);
+            Assert.That(token.HasValue, Is.True);
             Assert.That(token.Value.Id, Is.EqualTo(OperationId));
             Assert.That(token.Value.Version, Is.EqualTo(NextLinkOperationImplementation.RehydrationTokenVersion));
             Assert.That(token.Value.HeaderSource, Is.EqualTo("Location"));
@@ -57,14 +57,14 @@ namespace Azure.Core.Tests
             var operation = new ProtocolOperation<MockJsonModel>(null, pipeline, request, response, OperationFinalStateVia.Location, null, null);
             var token = operation.GetRehydrationToken();
 
-            Assert.True(token.HasValue);
+            Assert.That(token.HasValue, Is.True);
             Assert.That(token.Value.Id, Is.EqualTo("NOT_SET"));
             Assert.That(token.Value.Version, Is.EqualTo(NextLinkOperationImplementation.RehydrationTokenVersion));
             Assert.That(token.Value.HeaderSource, Is.EqualTo("None"));
             Assert.That(token.Value.NextRequestUri, Is.EqualTo(RequestUri));
             Assert.That(token.Value.InitialUri, Is.EqualTo(RequestUri));
             Assert.That(token.Value.RequestMethod, Is.EqualTo(RequestMethod.Post));
-            Assert.Null(token.Value.LastKnownLocation);
+            Assert.That(token.Value.LastKnownLocation, Is.Null);
             Assert.That(token.Value.FinalStateVia, Is.EqualTo("Location"));
         }
 
@@ -153,7 +153,7 @@ namespace Azure.Core.Tests
             Assert.That(rehydrationUpdateRequest.Uri.ToString(), Is.EqualTo(LocationUri));
             Assert.That(rehydrationUpdateRequest.Method, Is.EqualTo(RequestMethod.Get));
 
-            Assert.True(rehydrationOperation.HasValue);
+            Assert.That(rehydrationOperation.HasValue, Is.True);
             Assert.That(rehydrationOperation.Value.IntValue, Is.EqualTo(1));
             Assert.That(rehydrationOperation.Value.StringValue, Is.EqualTo("one"));
         }
@@ -189,7 +189,7 @@ namespace Azure.Core.Tests
             Assert.That(rehydrationUpdateRequest.Uri.ToString(), Is.EqualTo(RequestUri));
             Assert.That(rehydrationUpdateRequest.Method, Is.EqualTo(RequestMethod.Get));
 
-            Assert.True(rehydrationOperation.HasValue);
+            Assert.That(rehydrationOperation.HasValue, Is.True);
             Assert.That(rehydrationOperation.Value.IntValue, Is.EqualTo(1));
             Assert.That(rehydrationOperation.Value.StringValue, Is.EqualTo("one"));
         }

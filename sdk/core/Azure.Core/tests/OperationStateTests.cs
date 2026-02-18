@@ -1,4 +1,4 @@
-﻿// Copyright (c) Microsoft Corporation. All rights reserved.
+// Copyright (c) Microsoft Corporation. All rights reserved.
 // Licensed under the MIT License.
 
 using System;
@@ -16,11 +16,11 @@ namespace Azure.Core.Tests
             MockResponse mockResponse = new MockResponse(200);
             OperationState<int> state = OperationState<int>.Success(mockResponse, expectedValue);
 
-            Assert.True(state.HasCompleted);
-            Assert.True(state.HasSucceeded);
+            Assert.That(state.HasCompleted, Is.True);
+            Assert.That(state.HasSucceeded, Is.True);
             Assert.That(state.RawResponse, Is.EqualTo(mockResponse));
             Assert.That(state.Value, Is.EqualTo(expectedValue));
-            Assert.IsNull(state.OperationFailedException);
+            Assert.That(state.OperationFailedException, Is.Null);
         }
 
         [Test]
@@ -38,8 +38,8 @@ namespace Azure.Core.Tests
             MockResponse mockResponse = new MockResponse(200);
             OperationState<int> state = OperationState<int>.Failure(mockResponse, expectedException);
 
-            Assert.True(state.HasCompleted);
-            Assert.False(state.HasSucceeded);
+            Assert.That(state.HasCompleted, Is.True);
+            Assert.That(state.HasSucceeded, Is.False);
             Assert.That(state.RawResponse, Is.EqualTo(mockResponse));
             Assert.That(state.Value, Is.EqualTo(default(int)));
             Assert.That(state.OperationFailedException, Is.EqualTo(expectedException));
@@ -55,11 +55,11 @@ namespace Azure.Core.Tests
             MockResponse mockResponse = new MockResponse(200);
             OperationState<int> state = OperationState<int>.Pending(mockResponse);
 
-            Assert.False(state.HasCompleted);
-            Assert.False(state.HasSucceeded);
+            Assert.That(state.HasCompleted, Is.False);
+            Assert.That(state.HasSucceeded, Is.False);
             Assert.That(state.RawResponse, Is.EqualTo(mockResponse));
             Assert.That(state.Value, Is.EqualTo(default(int)));
-            Assert.IsNull(state.OperationFailedException);
+            Assert.That(state.OperationFailedException, Is.Null);
         }
 
         [Test]

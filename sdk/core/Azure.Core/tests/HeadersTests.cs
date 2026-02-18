@@ -1,4 +1,4 @@
-﻿// Copyright (c) Microsoft Corporation. All rights reserved.
+// Copyright (c) Microsoft Corporation. All rights reserved.
 // Licensed under the MIT License.
 using System;
 using System.Text;
@@ -93,10 +93,10 @@ namespace Azure.Core.Tests
             catch (OverflowException ex)
             {
                 threw = true;
-                Assert.IsTrue(ex.Message.Contains("Headers.ContentLengthLong"));
+                Assert.That(ex.Message.Contains("Headers.ContentLengthLong"), Is.True);
             }
 
-            Assert.IsTrue(threw);
+            Assert.That(threw, Is.True);
         }
 
         [Test]
@@ -120,7 +120,7 @@ namespace Azure.Core.Tests
         public void DateReturnsNullForNoHeader()
         {
             var mockResponse = new MockResponse(200);
-            Assert.Null(mockResponse.Headers.Date);
+            Assert.That(mockResponse.Headers.Date, Is.Null);
         }
 
         [Test]
@@ -136,7 +136,7 @@ namespace Azure.Core.Tests
         public void ContentTypeReturnsNullForNoHeader()
         {
             var mockResponse = new MockResponse(200);
-            Assert.Null(mockResponse.Headers.ContentType);
+            Assert.That(mockResponse.Headers.ContentType, Is.Null);
         }
 
         [Test]
@@ -152,7 +152,7 @@ namespace Azure.Core.Tests
         public void RequestIdReturnsNullForNoHeader()
         {
             var mockResponse = new MockResponse(200);
-            Assert.Null(mockResponse.Headers.RequestId);
+            Assert.That(mockResponse.Headers.RequestId, Is.Null);
         }
     }
 }

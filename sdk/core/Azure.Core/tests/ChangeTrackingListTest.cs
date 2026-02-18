@@ -13,7 +13,7 @@ namespace Azure.Core.Tests
         public void UndefinedByDefault()
         {
             var list = new ChangeTrackingList<string>();
-            Assert.True(list.IsUndefined);
+            Assert.That(list.IsUndefined, Is.True);
         }
 
         [Test]
@@ -34,7 +34,7 @@ namespace Azure.Core.Tests
 
             Assert.Throws<ArgumentOutOfRangeException>(() => _ = list[0]);
 
-            Assert.True(list.IsUndefined);
+            Assert.That(list.IsUndefined, Is.True);
         }
 
         [Test]
@@ -44,7 +44,7 @@ namespace Azure.Core.Tests
             list.Add("a");
 
             Assert.That(list[0], Is.EqualTo("a"));
-            Assert.False(list.IsUndefined);
+            Assert.That(list.IsUndefined, Is.False);
         }
 
         [Test]
@@ -54,7 +54,7 @@ namespace Azure.Core.Tests
             list.Insert(0, "a");
 
             Assert.That(list[0], Is.EqualTo("a"));
-            Assert.False(list.IsUndefined);
+            Assert.That(list.IsUndefined, Is.False);
         }
 
         [Test]
@@ -63,7 +63,7 @@ namespace Azure.Core.Tests
             var list = new ChangeTrackingList<string>();
             list.Add("a");
 
-            Assert.True(list.Contains("a"));
+            Assert.That(list.Contains("a"), Is.True);
         }
 
         [Test]
@@ -83,7 +83,7 @@ namespace Azure.Core.Tests
             list.Remove("a");
 
             Assert.That(list.Count, Is.EqualTo(0));
-            Assert.False(list.IsUndefined);
+            Assert.That(list.IsUndefined, Is.False);
         }
 
         [Test]
@@ -93,7 +93,7 @@ namespace Azure.Core.Tests
             list.Clear();
 
             Assert.That(list.Count, Is.EqualTo(0));
-            Assert.False(list.IsUndefined);
+            Assert.That(list.IsUndefined, Is.False);
         }
     }
 }

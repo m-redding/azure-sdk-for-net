@@ -1,4 +1,4 @@
-﻿// Copyright (c) Microsoft Corporation. All rights reserved.
+// Copyright (c) Microsoft Corporation. All rights reserved.
 // Licensed under the MIT License.
 using NUnit.Framework;
 
@@ -53,7 +53,7 @@ namespace Azure.Core.Experimental.Tests
         {
             Variant value = new(testValue);
             bool success = value.TryGetValue(out byte result);
-            Assert.True(success);
+            Assert.That(success, Is.True);
             Assert.That(result, Is.EqualTo(testValue));
 
             Assert.That(value.As<byte>(), Is.EqualTo(testValue));
@@ -69,7 +69,7 @@ namespace Azure.Core.Experimental.Tests
             Variant value = new(source);
 
             bool success = value.TryGetValue(out byte result);
-            Assert.True(success);
+            Assert.That(success, Is.True);
             Assert.That(result, Is.EqualTo(testValue));
 
             Assert.That(value.As<byte>(), Is.EqualTo(testValue));
@@ -85,7 +85,7 @@ namespace Azure.Core.Experimental.Tests
             byte source = testValue;
             Variant value = new(source);
             bool success = value.TryGetValue(out byte? result);
-            Assert.True(success);
+            Assert.That(success, Is.True);
             Assert.That(result, Is.EqualTo(testValue));
 
             Assert.That((byte?)value, Is.EqualTo(testValue));
@@ -101,9 +101,9 @@ namespace Azure.Core.Experimental.Tests
             Variant value = new(o);
 
             Assert.That(value.Type, Is.EqualTo(typeof(byte)));
-            Assert.True(value.TryGetValue(out byte result));
+            Assert.That(value.TryGetValue(out byte result), Is.True);
             Assert.That(result, Is.EqualTo(testValue));
-            Assert.True(value.TryGetValue(out byte? nullableResult));
+            Assert.That(value.TryGetValue(out byte? nullableResult), Is.True);
             Assert.That(nullableResult!.Value, Is.EqualTo(testValue));
 
             byte? n = testValue;
@@ -111,9 +111,9 @@ namespace Azure.Core.Experimental.Tests
             value = new(o);
 
             Assert.That(value.Type, Is.EqualTo(typeof(byte)));
-            Assert.True(value.TryGetValue(out result));
+            Assert.That(value.TryGetValue(out result), Is.True);
             Assert.That(result, Is.EqualTo(testValue));
-            Assert.True(value.TryGetValue(out nullableResult));
+            Assert.That(value.TryGetValue(out nullableResult), Is.True);
             Assert.That(nullableResult!.Value, Is.EqualTo(testValue));
         }
 
@@ -122,7 +122,7 @@ namespace Azure.Core.Experimental.Tests
         {
             byte? source = null;
             Variant value = source;
-            Assert.Null(value.Type);
+            Assert.That(value.Type, Is.Null);
             Assert.That(value.As<byte?>(), Is.EqualTo(source));
             Assert.That(value.As<byte?>().HasValue, Is.False);
         }

@@ -1,4 +1,4 @@
-﻿// Copyright (c) Microsoft Corporation. All rights reserved.
+// Copyright (c) Microsoft Corporation. All rights reserved.
 // Licensed under the MIT License.
 
 using System;
@@ -192,7 +192,7 @@ namespace Azure.Core.Tests
                         break;
 
                     default:
-                        Assert.IsNull(propertyName, $"Unexpected serialized name '{propertyName}' for member {member.DeclaringType}.{member.Name}");
+                        Assert.That(propertyName, Is.Null, $"Unexpected serialized name '{propertyName}' for member {member.DeclaringType}.{member.Name}");
                         break;
                 }
             }

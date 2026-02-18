@@ -71,7 +71,7 @@ namespace Azure.Core.Tests
 
             var content = new TestSerialize();
             writer.WriteObjectValue(content);
-            Assert.True(content.didWrite);
+            Assert.That(content.didWrite, Is.True);
         }
 
         [Test]

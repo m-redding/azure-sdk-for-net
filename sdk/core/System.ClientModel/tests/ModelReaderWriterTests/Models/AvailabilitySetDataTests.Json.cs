@@ -1,4 +1,4 @@
-﻿// Copyright (c) Microsoft Corporation. All rights reserved.
+// Copyright (c) Microsoft Corporation. All rights reserved.
 // Licensed under the MIT License.
 
 using System.ClientModel.Primitives;
@@ -15,7 +15,7 @@ namespace System.ClientModel.Tests.ModelReaderWriterTests.Models
         {
             AvailabilitySetData model = new("eastus");
 
-            Assert.IsFalse(model.Patch.TryGetJson("$.extraSku"u8, out _));
+            Assert.That(model.Patch.TryGetJson("$.extraSku"u8, out _), Is.False);
         }
 
         [Test]
@@ -432,14 +432,14 @@ namespace System.ClientModel.Tests.ModelReaderWriterTests.Models
         private AvailabilitySetData GetInitialModel()
         {
             var model = ModelReaderWriter.Read<AvailabilitySetData>(BinaryData.FromString(JsonPayload));
-            Assert.IsNotNull(model);
+            Assert.That(model, Is.Not.Null);
             return model!;
         }
 
         private static AvailabilitySetData GetRoundTripModel(BinaryData data)
         {
             var model2 = ModelReaderWriter.Read<AvailabilitySetData>(data);
-            Assert.IsNotNull(model2);
+            Assert.That(model2, Is.Not.Null);
             return model2!;
         }
 

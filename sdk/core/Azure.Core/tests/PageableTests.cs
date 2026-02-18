@@ -1,4 +1,4 @@
-﻿// Copyright (c) Microsoft Corporation. All rights reserved.
+// Copyright (c) Microsoft Corporation. All rights reserved.
 // Licensed under the MIT License.
 
 using System.Linq;
@@ -53,7 +53,7 @@ namespace Azure.Core.Tests.Diagnostics
             page = pages.First();
 
             Assert.That(page.Values, Is.EqualTo(new byte[] { 3, 4 }));
-            Assert.Null(page.ContinuationToken);
+            Assert.That(page.ContinuationToken, Is.Null);
         }
 
         [Test]
@@ -75,7 +75,7 @@ namespace Azure.Core.Tests.Diagnostics
             page = await pages.FirstAsync();
 
             Assert.That(page.Values, Is.EqualTo(new byte[] { 3, 4 }));
-            Assert.Null(page.ContinuationToken);
+            Assert.That(page.ContinuationToken, Is.Null);
         }
     }
 }

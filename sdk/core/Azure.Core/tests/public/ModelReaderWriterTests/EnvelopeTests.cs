@@ -1,4 +1,4 @@
-﻿// Copyright (c) Microsoft Corporation. All rights reserved.
+// Copyright (c) Microsoft Corporation. All rights reserved.
 // Licensed under the MIT License.
 
 namespace Azure.Core.Tests.Public.ModelReaderWriterTests
@@ -36,15 +36,15 @@ namespace Azure.Core.Tests.Public.ModelReaderWriterTests
         //{
         //    if (format == ModelReaderWriterFormat.Json)
         //    {
-        //        Assert.AreEqual(model.ReadOnlyProperty, model2.ReadOnlyProperty);
-        //        Assert.AreEqual(model.ModelA.LatinName, model2.ModelA.LatinName);
-        //        Assert.AreEqual(model.ModelA.HasWhiskers, model2.ModelA.HasWhiskers);
+        //        Assert.That(model2.ReadOnlyProperty, Is.EqualTo(model.ReadOnlyProperty));
+        //        Assert.That(model2.ModelA.LatinName, Is.EqualTo(model.ModelA.LatinName));
+        //        Assert.That(model2.ModelA.HasWhiskers, Is.EqualTo(model.ModelA.HasWhiskers));
         //    }
-        //    Assert.AreEqual(model.ModelA.Name, model2.ModelA.Name);
-        //    Assert.AreEqual(model.ModelA.IsHungry, model2.ModelA.IsHungry);
-        //    Assert.AreEqual(model.ModelA.Weight, model2.ModelA.Weight);
-        //    Assert.AreEqual(model.ModelT.X, model2.ModelT.X);
-        //    Assert.AreEqual(model.ModelT.Y, model2.ModelT.Y);
+        //    Assert.That(model2.ModelA.Name, Is.EqualTo(model.ModelA.Name));
+        //    Assert.That(model2.ModelA.IsHungry, Is.EqualTo(model.ModelA.IsHungry));
+        //    Assert.That(model2.ModelA.Weight, Is.EqualTo(model.ModelA.Weight));
+        //    Assert.That(model2.ModelT.X, Is.EqualTo(model.ModelT.X));
+        //    Assert.That(model2.ModelT.Y, Is.EqualTo(model.ModelT.Y));
         //}
 
         //protected override string GetExpectedResult(ModelReaderWriterFormat format)
@@ -67,19 +67,19 @@ namespace Azure.Core.Tests.Public.ModelReaderWriterTests
 
         //protected override void VerifyModel(Envelope<ModelC> model, ModelReaderWriterFormat format)
         //{
-        //    Assert.IsNotNull(model.ModelA);
+        //    Assert.That(model.ModelA, Is.Not.Null);
         //    if (format == ModelReaderWriterFormat.Json)
         //    {
-        //        Assert.AreEqual("read", model.ReadOnlyProperty);
-        //        Assert.AreEqual("Felis catus", model.ModelA.LatinName);
-        //        Assert.AreEqual(false, model.ModelA.HasWhiskers);
+        //        Assert.That(model.ReadOnlyProperty, Is.EqualTo("read"));
+        //        Assert.That(model.ModelA.LatinName, Is.EqualTo("Felis catus"));
+        //        Assert.That(model.ModelA.HasWhiskers, Is.EqualTo(false));
         //    }
-        //    Assert.AreEqual("Cat", model.ModelA.Name);
-        //    Assert.AreEqual(false, model.ModelA.IsHungry);
-        //    Assert.AreEqual(2.5, model.ModelA.Weight);
-        //    Assert.IsNotNull(model.ModelT);
-        //    Assert.AreEqual("hello", model.ModelT.X);
-        //    Assert.AreEqual("bye", model.ModelT.Y);
+        //    Assert.That(model.ModelA.Name, Is.EqualTo("Cat"));
+        //    Assert.That(model.ModelA.IsHungry, Is.EqualTo(false));
+        //    Assert.That(model.ModelA.Weight, Is.EqualTo(2.5));
+        //    Assert.That(model.ModelT, Is.Not.Null);
+        //    Assert.That(model.ModelT.X, Is.EqualTo("hello"));
+        //    Assert.That(model.ModelT.Y, Is.EqualTo("bye"));
         //}
 
         //// Generate a class that implements the NewtonSoft default contract resolver so that ReadOnly properties are not serialized

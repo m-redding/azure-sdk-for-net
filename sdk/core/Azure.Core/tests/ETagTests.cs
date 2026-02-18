@@ -1,4 +1,4 @@
-﻿// Copyright (c) Microsoft Corporation. All rights reserved.
+// Copyright (c) Microsoft Corporation. All rights reserved.
 // Licensed under the MIT License.
 
 using System;
@@ -42,10 +42,10 @@ namespace Azure.Core.Tests
             var eTag = new ETag("a");
 
             Assert.That(eTag, Is.EqualTo(new ETag("a")));
-            Assert.False(eTag == new ETag("A"));
+            Assert.That(eTag == new ETag("A"), Is.False);
 
             Assert.That(eTag, Is.EqualTo(new ETag("a")));
-            Assert.True(eTag != new ETag("A"));
+            Assert.That(eTag != new ETag("A"), Is.True);
         }
 
         [Test]
@@ -54,7 +54,7 @@ namespace Azure.Core.Tests
             ETag eTag = default;
 
             Assert.That(eTag, Is.EqualTo(new ETag(null)));
-            Assert.That(eTag, Is.EqualTo(default));
+            Assert.That(eTag, Is.EqualTo(default(ETag)));
         }
 
         [Test]
@@ -63,10 +63,10 @@ namespace Azure.Core.Tests
             var eTag = new ETag("a");
 
             Assert.That(eTag, Is.EqualTo(new ETag("a")));
-            Assert.False(eTag.Equals(new ETag("A")));
+            Assert.That(eTag.Equals(new ETag("A")), Is.False);
 
             Assert.That(eTag, Is.EqualTo((object)new ETag("a")));
-            Assert.False(eTag.Equals((object)new ETag("A")));
+            Assert.That(eTag.Equals((object)new ETag("A")), Is.False);
         }
 
         [Test]

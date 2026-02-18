@@ -1,4 +1,4 @@
-﻿// Copyright (c) Microsoft Corporation. All rights reserved.
+// Copyright (c) Microsoft Corporation. All rights reserved.
 // Licensed under the MIT License.
 
 using System;
@@ -18,7 +18,7 @@ namespace Azure.Core.Experimental.Tests
 
             bool success = value.TryGetValue(out B result);
             Assert.That(success, Is.False);
-            Assert.Null(result);
+            Assert.That(result, Is.Null);
         }
 
         [Test]
@@ -32,7 +32,7 @@ namespace Azure.Core.Experimental.Tests
 
             bool success = value.TryGetValue(out C result);
             Assert.That(success, Is.False);
-            Assert.Null(result);
+            Assert.That(result, Is.Null);
 
             Assert.Throws<InvalidCastException>(() => value.As<C>());
 

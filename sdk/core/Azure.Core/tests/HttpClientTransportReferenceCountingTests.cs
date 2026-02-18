@@ -30,8 +30,7 @@ namespace Azure.Core.Tests
             using var transport = new HttpClientTransport(client);
 
             // Assert - Reference counting should be disabled for direct HttpClient constructor
-            Assert.IsFalse(transport.IsRefCountingEnabled,
-                "Reference counting should be disabled when using direct HttpClient constructor");
+            Assert.That(transport.IsRefCountingEnabled, Is.False, "Reference counting should be disabled when using direct HttpClient constructor");
 
             // Update should not throw, but should be a no-op
             Assert.DoesNotThrow(() => transport.Update(new HttpPipelineTransportOptions()));
@@ -47,8 +46,7 @@ namespace Azure.Core.Tests
             using var transport = new HttpClientTransport(handler);
 
             // Assert - Reference counting should be disabled for direct HttpMessageHandler constructor
-            Assert.IsFalse(transport.IsRefCountingEnabled,
-                "Reference counting should be disabled when using direct HttpMessageHandler constructor");
+            Assert.That(transport.IsRefCountingEnabled, Is.False, "Reference counting should be disabled when using direct HttpMessageHandler constructor");
 
             // Update should not throw, but should be a no-op
             Assert.DoesNotThrow(() => transport.Update(new HttpPipelineTransportOptions()));
@@ -64,8 +62,7 @@ namespace Azure.Core.Tests
             using var transport = new HttpClientTransport(clientFactory);
 
             // Assert - Reference counting should be enabled and updates should work
-            Assert.IsTrue(transport.IsRefCountingEnabled,
-                "Reference counting should be enabled when using client factory constructor");
+            Assert.That(transport.IsRefCountingEnabled, Is.True, "Reference counting should be enabled when using client factory constructor");
             Assert.DoesNotThrow(() => transport.Update(new HttpPipelineTransportOptions()));
         }
 
@@ -79,8 +76,7 @@ namespace Azure.Core.Tests
             using var transport = new HttpClientTransport(handlerFactory);
 
             // Assert - Reference counting should be enabled and updates should work
-            Assert.IsTrue(transport.IsRefCountingEnabled,
-                "Reference counting should be enabled when using handler factory constructor");
+            Assert.That(transport.IsRefCountingEnabled, Is.True, "Reference counting should be enabled when using handler factory constructor");
             Assert.DoesNotThrow(() => transport.Update(new HttpPipelineTransportOptions()));
         }
 
@@ -91,8 +87,7 @@ namespace Azure.Core.Tests
             using var transport = new HttpClientTransport();
 
             // Assert - Default constructor should enable reference counting and updates via factory
-            Assert.IsTrue(transport.IsRefCountingEnabled,
-                "Reference counting should be enabled when using default constructor");
+            Assert.That(transport.IsRefCountingEnabled, Is.True, "Reference counting should be enabled when using default constructor");
             Assert.DoesNotThrow(() => transport.Update(new HttpPipelineTransportOptions()));
         }
 
@@ -188,8 +183,7 @@ namespace Azure.Core.Tests
             using var transport = new HttpClientTransport(client);
 
             // Act & Assert - Update should not throw for direct client, but should be a no-op
-            Assert.IsFalse(transport.IsRefCountingEnabled,
-                "Reference counting should be disabled for direct client constructor");
+            Assert.That(transport.IsRefCountingEnabled, Is.False, "Reference counting should be disabled for direct client constructor");
             Assert.DoesNotThrow(() => transport.Update(new HttpPipelineTransportOptions()));
         }
 
@@ -201,8 +195,7 @@ namespace Azure.Core.Tests
             using var transport = new HttpClientTransport(clientFactory);
 
             // Act & Assert - Reference counting should be enabled and updates should succeed
-            Assert.IsTrue(transport.IsRefCountingEnabled,
-                "Reference counting should be enabled when using client factory");
+            Assert.That(transport.IsRefCountingEnabled, Is.True, "Reference counting should be enabled when using client factory");
             Assert.DoesNotThrow(() => transport.Update(new HttpPipelineTransportOptions()));
         }
 
@@ -271,7 +264,7 @@ namespace Azure.Core.Tests
             await Task.WhenAll(tasks);
 
             // Assert - Should have created multiple clients due to updates
-            Assert.GreaterOrEqual(updateCount, 4, "Should have created multiple clients due to updates");
+            Assert.That(updateCount, Is.GreaterThanOrEqualTo(4), "Should have created multiple clients due to updates");
         }
 
         #region Helper Methods

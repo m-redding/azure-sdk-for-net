@@ -1,4 +1,4 @@
-﻿// Copyright (c) Microsoft Corporation. All rights reserved.
+// Copyright (c) Microsoft Corporation. All rights reserved.
 // Licensed under the MIT License.
 
 using System.Collections.Generic;
@@ -62,8 +62,8 @@ public class ActivityExtensionsTests
 
         using Activity? activity = activitySource.StartClientActivity(options, "Client.Method");
 
-        Assert.IsNotNull(Activity.Current);
-        Assert.IsNotNull(activity);
+        Assert.That(Activity.Current, Is.Not.Null);
+        Assert.That(activity, Is.Not.Null);
         Assert.That(listener.Activities.Count, Is.EqualTo(1));
     }
 
@@ -152,7 +152,7 @@ public class ActivityExtensionsTests
 
         Assert.That(parent, Is.Not.Null);
         Assert.That(parent!.GetCustomProperty(ScmScopeLabel), Is.EqualTo(ScmScopeValue));
-        Assert.Null(child);
+        Assert.That(child, Is.Null);
     }
 
     [Test]

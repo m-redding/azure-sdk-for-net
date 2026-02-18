@@ -1,4 +1,4 @@
-﻿// Copyright (c) Microsoft Corporation. All rights reserved.
+// Copyright (c) Microsoft Corporation. All rights reserved.
 // Licensed under the MIT License.
 
 using System;
@@ -31,14 +31,14 @@ namespace Azure.Core.Tests
 
             Assert.That(r5_10_copy, Is.EqualTo(r5_10));
             Assert.That(r5_10, Is.EqualTo(r5_10_copy));
-            Assert.IsFalse(r5_10 == nullRange);
-            Assert.IsFalse(r5_10 == nullStart);
-            Assert.IsFalse(r5_10 == nullEnd);
+            Assert.That(r5_10 == nullRange, Is.False);
+            Assert.That(r5_10 == nullStart, Is.False);
+            Assert.That(r5_10 == nullEnd, Is.False);
 
             Assert.That(r5_10, Is.EqualTo(r5_10_copy));
-            Assert.IsTrue(r5_10 != nullRange);
-            Assert.IsTrue(r5_10 != nullStart);
-            Assert.IsTrue(r5_10 != nullEnd);
+            Assert.That(r5_10 != nullRange, Is.True);
+            Assert.That(r5_10 != nullStart, Is.True);
+            Assert.That(r5_10 != nullEnd, Is.True);
         }
 
         [Test, Sequential]

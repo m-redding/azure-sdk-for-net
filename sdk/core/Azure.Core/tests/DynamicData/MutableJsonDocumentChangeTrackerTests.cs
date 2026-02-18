@@ -1,4 +1,4 @@
-﻿// Copyright (c) Microsoft Corporation. All rights reserved.
+// Copyright (c) Microsoft Corporation. All rights reserved.
 // Licensed under the MIT License.
 
 using System;
@@ -16,22 +16,22 @@ namespace Azure.Core.Tests
             char delimiter = MutableJsonDocument.ChangeTracker.Delimiter;
 
             // Test IsLessThan
-            Assert.IsTrue(CreateChange("a").IsLessThan("b".AsSpan()));
-            Assert.IsTrue(CreateChange("a").IsLessThan($"a{delimiter}a".AsSpan()));
+            Assert.That(CreateChange("a").IsLessThan("b".AsSpan()), Is.True);
+            Assert.That(CreateChange("a").IsLessThan($"a{delimiter}a".AsSpan()), Is.True);
 
-            Assert.IsFalse(CreateChange("a").IsLessThan("a".AsSpan()));
+            Assert.That(CreateChange("a").IsLessThan("a".AsSpan()), Is.False);
 
-            Assert.IsFalse(CreateChange("b").IsLessThan("a".AsSpan()));
-            Assert.IsFalse(CreateChange($"a{delimiter}a").IsLessThan("a".AsSpan()));
+            Assert.That(CreateChange("b").IsLessThan("a".AsSpan()), Is.False);
+            Assert.That(CreateChange($"a{delimiter}a").IsLessThan("a".AsSpan()), Is.False);
 
             // Test IsGreaterThan
-            Assert.IsTrue(CreateChange("b").IsGreaterThan("a".AsSpan()));
-            Assert.IsTrue(CreateChange($"a{delimiter}a").IsGreaterThan("a".AsSpan()));
+            Assert.That(CreateChange("b").IsGreaterThan("a".AsSpan()), Is.True);
+            Assert.That(CreateChange($"a{delimiter}a").IsGreaterThan("a".AsSpan()), Is.True);
 
-            Assert.IsFalse(CreateChange("a").IsGreaterThan("a".AsSpan()));
+            Assert.That(CreateChange("a").IsGreaterThan("a".AsSpan()), Is.False);
 
-            Assert.IsFalse(CreateChange("a").IsGreaterThan("b".AsSpan()));
-            Assert.IsFalse(CreateChange("a").IsGreaterThan($"a{delimiter}a".AsSpan()));
+            Assert.That(CreateChange("a").IsGreaterThan("b".AsSpan()), Is.False);
+            Assert.That(CreateChange("a").IsGreaterThan($"a{delimiter}a".AsSpan()), Is.False);
         }
 
         [Test]

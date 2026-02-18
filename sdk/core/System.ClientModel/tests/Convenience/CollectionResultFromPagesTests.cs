@@ -1,4 +1,4 @@
-﻿// Copyright (c) Microsoft Corporation. All rights reserved.
+// Copyright (c) Microsoft Corporation. All rights reserved.
 // Licensed under the MIT License.
 
 using System.Collections.Generic;
@@ -46,7 +46,7 @@ public class CollectionResultFromPagesTests
 
         CollectionResult<int> collection = CollectionResult<int>.FromPages(pages);
 
-        Assert.IsEmpty(collection.ToList());
+        Assert.That(collection.ToList(), Is.Empty);
     }
 
     [Test]
@@ -79,7 +79,7 @@ public class CollectionResultFromPagesTests
 
         List<ClientResult> rawPages = collection.GetRawPages().ToList();
 
-        Assert.IsNotNull(collection.GetContinuationToken(rawPages[0]));
+        Assert.That(collection.GetContinuationToken(rawPages[0]), Is.Not.Null);
         Assert.That(collection.GetContinuationToken(rawPages[1]), Is.Null);
     }
 
@@ -166,7 +166,7 @@ public class CollectionResultFromPagesTests
 
         List<int> values = await ToListAsync(collection);
 
-        Assert.IsEmpty(values);
+        Assert.That(values, Is.Empty);
     }
 
     [Test]
@@ -199,7 +199,7 @@ public class CollectionResultFromPagesTests
 
         List<ClientResult> rawPages = await ToListAsync(collection.GetRawPagesAsync());
 
-        Assert.IsNotNull(collection.GetContinuationToken(rawPages[0]));
+        Assert.That(collection.GetContinuationToken(rawPages[0]), Is.Not.Null);
         Assert.That(collection.GetContinuationToken(rawPages[1]), Is.Null);
     }
 

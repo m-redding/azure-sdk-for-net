@@ -1,4 +1,4 @@
-﻿// Copyright (c) Microsoft Corporation. All rights reserved.
+// Copyright (c) Microsoft Corporation. All rights reserved.
 // Licensed under the MIT License.
 
 using System.ClientModel.Primitives;
@@ -42,7 +42,7 @@ public class StreamedCollectionTests
             PipelineResponse response = page.GetRawResponse();
 
             Assert.That(response.Status, Is.EqualTo(200));
-            Assert.IsTrue(response.Content.ToString().StartsWith("event"));
+            Assert.That(response.Content.ToString().StartsWith("event"), Is.True);
 
             pageCount++;
         }
@@ -63,7 +63,7 @@ public class StreamedCollectionTests
             PipelineResponse response = page.GetRawResponse();
 
             Assert.That(response.Status, Is.EqualTo(200));
-            Assert.IsTrue(response.Content.ToString().StartsWith("event"));
+            Assert.That(response.Content.ToString().StartsWith("event"), Is.True);
 
             pageCount++;
         }
@@ -93,13 +93,13 @@ public class StreamedCollectionTests
         StreamedCollectionClient client = new();
         StreamedValueCollectionResult? values = client.GetValues() as StreamedValueCollectionResult;
 
-        Assert.IsNotNull(values);
+        Assert.That(values, Is.Not.Null);
 
         ClientResult page = values!.GetRawPages().First();
         MockStreamedResponse? response = page.GetRawResponse() as MockStreamedResponse;
 
-        Assert.IsNotNull(response);
-        Assert.IsFalse(response?.IsDisposed);
+        Assert.That(response, Is.Not.Null);
+        Assert.That(response?.IsDisposed, Is.False);
 
         int count = 0;
         foreach (StreamedValue value in values!.GetPageValues(page))
@@ -108,7 +108,7 @@ public class StreamedCollectionTests
             count++;
         }
 
-        Assert.IsTrue(response?.IsDisposed);
+        Assert.That(response?.IsDisposed, Is.True);
     }
 
     [Test]
@@ -133,13 +133,13 @@ public class StreamedCollectionTests
         StreamedCollectionClient client = new();
         AsyncStreamedValueCollectionResult? values = client.GetValuesAsync() as AsyncStreamedValueCollectionResult;
 
-        Assert.IsNotNull(values);
+        Assert.That(values, Is.Not.Null);
 
         ClientResult page = await values!.GetRawPagesAsync().FirstAsync();
         MockStreamedResponse? response = page.GetRawResponse() as MockStreamedResponse;
 
-        Assert.IsNotNull(response);
-        Assert.IsFalse(response?.IsDisposed);
+        Assert.That(response, Is.Not.Null);
+        Assert.That(response?.IsDisposed, Is.False);
 
         int count = 0;
         await foreach (StreamedValue value in values!.GetPageValuesAsync(page))
@@ -148,6 +148,6 @@ public class StreamedCollectionTests
             count++;
         }
 
-        Assert.IsTrue(response?.IsDisposed);
+        Assert.That(response?.IsDisposed, Is.True);
     }
 }

@@ -1,4 +1,4 @@
-﻿// Copyright (c) Microsoft Corporation. All rights reserved.
+// Copyright (c) Microsoft Corporation. All rights reserved.
 // Licensed under the MIT License.
 
 using System;
@@ -27,9 +27,9 @@ namespace Azure.Core.Tests
 
             await operation.WaitForCompletionAsync();
 
-            Assert.Greater(updateCalled, 0);
-            Assert.IsTrue(operation.HasCompleted);
-            Assert.IsTrue(operation.HasValue);
+            Assert.That(updateCalled, Is.GreaterThan(0));
+            Assert.That(operation.HasCompleted, Is.True);
+            Assert.That(operation.HasValue, Is.True);
             Assert.That(operation.GetRawResponse(), Is.EqualTo(testResponse));
 
             Assert.That(operation.GetValues().ToArray(), Is.EqualTo(new[] { 1, 2, 3, 4 }));
@@ -41,8 +41,8 @@ namespace Azure.Core.Tests
         public void NotCompleted()
         {
             var operation = new TestPageableOperation<int>("operation-id", TimeSpan.FromMilliseconds(10), null, null, null);
-            Assert.IsFalse(operation.HasCompleted);
-            Assert.IsFalse(operation.HasValue);
+            Assert.That(operation.HasCompleted, Is.False);
+            Assert.That(operation.HasValue, Is.False);
             Assert.Throws<InvalidOperationException>(() =>
             {
                 _ = operation.Value;

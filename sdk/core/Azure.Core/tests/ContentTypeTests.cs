@@ -1,4 +1,4 @@
-﻿// Copyright (c) Microsoft Corporation. All rights reserved.
+// Copyright (c) Microsoft Corporation. All rights reserved.
 // Licensed under the MIT License.
 
 using NUnit.Framework;
@@ -22,8 +22,8 @@ namespace Azure.Core.Tests
             Assert.That(contentType, Is.EqualTo(new ContentType(aj)));
             Assert.That(contentType, Is.EqualTo((object)aj));
             Assert.That(contentType, Is.EqualTo((object)new ContentType(aj)));
-            Assert.IsFalse(contentType.Equals("text/plain"));
-            Assert.IsFalse(contentType.Equals(null));
+            Assert.That(contentType.Equals("text/plain"), Is.False);
+            Assert.That(contentType.Equals(null), Is.False);
 
             string aos = "application/octet-stream";
             contentType = ContentType.ApplicationOctetStream;
@@ -32,8 +32,8 @@ namespace Azure.Core.Tests
             Assert.That(contentType, Is.EqualTo(new ContentType(aos)));
             Assert.That(contentType, Is.EqualTo((object)aos));
             Assert.That(contentType, Is.EqualTo((object)new ContentType(aos)));
-            Assert.IsFalse(contentType.Equals("text/plain"));
-            Assert.IsFalse(contentType.Equals(null));
+            Assert.That(contentType.Equals("text/plain"), Is.False);
+            Assert.That(contentType.Equals(null), Is.False);
 
             string pt = "text/plain";
             contentType = ContentType.TextPlain;
@@ -42,8 +42,8 @@ namespace Azure.Core.Tests
             Assert.That(contentType, Is.EqualTo(new ContentType(pt)));
             Assert.That(contentType, Is.EqualTo((object)pt));
             Assert.That(contentType, Is.EqualTo((object)new ContentType(pt)));
-            Assert.IsFalse(contentType.Equals("application/json"));
-            Assert.IsFalse(contentType.Equals(null));
+            Assert.That(contentType.Equals("application/json"), Is.False);
+            Assert.That(contentType.Equals(null), Is.False);
         }
     }
 }

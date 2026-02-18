@@ -1,4 +1,4 @@
-﻿// Copyright (c) Microsoft Corporation. All rights reserved.
+// Copyright (c) Microsoft Corporation. All rights reserved.
 // Licensed under the MIT License.
 
 using System;
@@ -28,17 +28,17 @@ namespace Azure.Core.Tests.Public.ModelReaderWriterTests
                 var additionalPropertiesX = typeof(Animal).GetProperty("RawData", System.Reflection.BindingFlags.Instance | System.Reflection.BindingFlags.NonPublic).GetValue(x) as Dictionary<string, BinaryData>;
                 var additionalPropertiesY = typeof(Animal).GetProperty("RawData", System.Reflection.BindingFlags.Instance | System.Reflection.BindingFlags.NonPublic).GetValue(y) as Dictionary<string, BinaryData>;
 
-                Assert.AreEqual(additionalPropertiesX.Count, additionalPropertiesY.Count);
+                Assert.That(additionalPropertiesY.Count, Is.EqualTo(additionalPropertiesX.Count));
 
                 foreach (var additionalProperty in additionalPropertiesX)
                 {
-                    Assert.IsTrue(additionalPropertiesY.ContainsKey(additionalProperty.Key));
-                    Assert.AreEqual(additionalProperty.Value.ToString(), additionalPropertiesY[additionalProperty.Key].ToString());
+                    Assert.That(additionalPropertiesY.ContainsKey(additionalProperty.Key), Is.True);
+                    Assert.That(additionalPropertiesY[additionalProperty.Key].ToString(), Is.EqualTo(additionalProperty.Value.ToString()));
                 }
                 foreach (var additionalProperty in additionalPropertiesY)
                 {
-                    Assert.IsTrue(additionalPropertiesX.ContainsKey(additionalProperty.Key));
-                    Assert.AreEqual(additionalProperty.Value.ToString(), additionalPropertiesX[additionalProperty.Key].ToString());
+                    Assert.That(additionalPropertiesX.ContainsKey(additionalProperty.Key), Is.True);
+                    Assert.That(additionalPropertiesX[additionalProperty.Key].ToString(), Is.EqualTo(additionalProperty.Value.ToString()));
                 }
             }
         }

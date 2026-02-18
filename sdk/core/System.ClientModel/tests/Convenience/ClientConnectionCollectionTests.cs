@@ -1,4 +1,4 @@
-﻿// Copyright (c) Microsoft Corporation. All rights reserved.
+// Copyright (c) Microsoft Corporation. All rights reserved.
 // Licensed under the MIT License.
 
 using System;
@@ -67,7 +67,7 @@ public class ClientConnectionCollectionTests
         string json = JsonSerializer.Serialize(collection);
         ClientConnectionCollection? deserializedCollection = JsonSerializer.Deserialize<ClientConnectionCollection>(json);
 
-        Assert.IsNotNull(deserializedCollection);
+        Assert.That(deserializedCollection, Is.Not.Null);
         Assert.That(deserializedCollection!.Count, Is.EqualTo(1));
         Assert.That(deserializedCollection["id1"].Locator, Is.EqualTo("locator1"));
         Assert.That(deserializedCollection["id1"].CredentialKind, Is.EqualTo(CredentialKind.ApiKeyString));

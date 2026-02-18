@@ -201,14 +201,14 @@ public class AuthenticationTokenProviderTests
                 )
                 {
                     // Only assert no Authorization header if operation does not override the service level flows.
-                    Assert.IsFalse(m.Request.Headers.TryGetValue("Authorization", out _), "Request should not have an Authorization header.");
+                    Assert.That(m.Request.Headers.TryGetValue("Authorization", out _), Is.False, "Request should not have an Authorization header.");
                 }
                 else
                 {
                     // If operation overrides service level flows, Authorization header should be present and populated.
-                    Assert.IsTrue(m.Request.Headers.TryGetValue("Authorization", out var authHeader), "Request should have an Authorization header.");
-                    Assert.IsNotNull(authHeader);
-                    Assert.IsNotEmpty(authHeader);
+                    Assert.That(m.Request.Headers.TryGetValue("Authorization", out var authHeader), Is.True, "Request should have an Authorization header.");
+                    Assert.That(authHeader, Is.Not.Null);
+                    Assert.That(authHeader, Is.Not.Empty);
                 }
                 return new MockPipelineResponse(200);
             });
@@ -280,7 +280,7 @@ public class AuthenticationTokenProviderTests
                 Assert.That(req.RequestUri?.ToString(), Is.EqualTo("https://myauthserver.com/token"));
                 // Extract the Authorization header
                 var authHeader = req.Headers.Authorization;
-                Assert.IsNotNull(authHeader, "Authorization header is missing");
+                Assert.That(authHeader, Is.Not.Null, "Authorization header is missing");
                 Assert.That(authHeader?.Scheme, Is.EqualTo("Basic"), "Authorization scheme should be 'Basic'");
 
                 // Decode the Base64 parameter

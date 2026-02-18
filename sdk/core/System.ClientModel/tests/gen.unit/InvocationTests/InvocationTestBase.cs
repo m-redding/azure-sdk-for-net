@@ -1,4 +1,4 @@
-﻿// Copyright (c) Microsoft Corporation. All rights reserved.
+// Copyright (c) Microsoft Corporation. All rights reserved.
 // Licensed under the MIT License.
 
 using System.ClientModel.Tests.Client.ModelReaderWriterTests.Models;
@@ -362,11 +362,11 @@ namespace TestProject1
 
             if (!contextAdded)
             {
-                Assert.IsNull(result.GenerationSpec);
+                Assert.That(result.GenerationSpec, Is.Null);
             }
             else
             {
-                Assert.IsNotNull(result.GenerationSpec);
+                Assert.That(result.GenerationSpec, Is.Not.Null);
                 Assert.That(result.GenerationSpec!.Type.Name, Is.EqualTo("LocalContext"));
                 Assert.That(result.GenerationSpec.Type.Namespace, Is.EqualTo("TestProject"));
                 Assert.That(result.GenerationSpec.Modifier, Is.EqualTo("public"));
@@ -404,13 +404,13 @@ namespace TestProject1
 
                 if (type == LocalBaseModel)
                 {
-                    Assert.IsNotNull(dict[fullName].PersistableModelProxy);
+                    Assert.That(dict[fullName].PersistableModelProxy, Is.Not.Null);
                     AssertUnknownLocalBaseModel(dict[fullName].PersistableModelProxy!);
 
                     if (dupeModel)
                     {
                         var dupeFullName = $"TestProject1.{type}";
-                        Assert.IsNotNull(dict[dupeFullName].PersistableModelProxy);
+                        Assert.That(dict[dupeFullName].PersistableModelProxy, Is.Not.Null);
                         AssertUnknownLocalBaseModel(dict[dupeFullName].PersistableModelProxy!, "TestProject1");
                     }
                 }
@@ -522,7 +522,7 @@ $$"""
         internal static void AssertTestProject1JsonModelBuilder(TypeBuilderSpec jsonModel)
         {
             Assert.That(jsonModel.Modifier, Is.EqualTo("internal"));
-            Assert.IsNull(jsonModel.PersistableModelProxy);
+            Assert.That(jsonModel.PersistableModelProxy, Is.Null);
             AssertJsonModel(jsonModel.Type, "TestProject1");
             Assert.That(jsonModel.Kind, Is.EqualTo(TypeBuilderKind.IPersistableModel));
             Assert.That(jsonModel.ContextType, Is.EqualTo(s_modelExpectations[jsonModel.Type.Name].Context));
@@ -531,7 +531,7 @@ $$"""
         internal static void AssertJsonModelBuilder(TypeBuilderSpec jsonModel)
         {
             Assert.That(jsonModel.Modifier, Is.EqualTo("internal"));
-            Assert.IsNull(jsonModel.PersistableModelProxy);
+            Assert.That(jsonModel.PersistableModelProxy, Is.Null);
             AssertJsonModel(jsonModel.Type);
             Assert.That(jsonModel.Kind, Is.EqualTo(TypeBuilderKind.IPersistableModel));
             Assert.That(jsonModel.ContextType, Is.EqualTo(s_modelExpectations[jsonModel.Type.Name].Context));
@@ -540,7 +540,7 @@ $$"""
         private static void AssertBaseModelBuilder(TypeBuilderSpec baseModel)
         {
             Assert.That(baseModel.Modifier, Is.EqualTo("internal"));
-            Assert.IsNotNull(baseModel.PersistableModelProxy);
+            Assert.That(baseModel.PersistableModelProxy, Is.Not.Null);
             AssertBaseModel(baseModel.Type);
             Assert.That(baseModel.Kind, Is.EqualTo(TypeBuilderKind.IPersistableModel));
             Assert.That(baseModel.ContextType, Is.EqualTo(s_modelExpectations[baseModel.Type.Name].Context));
@@ -549,7 +549,7 @@ $$"""
         private static void AssertAvailabilitySetDataBuilder(TypeBuilderSpec availabilitySetData)
         {
             Assert.That(availabilitySetData.Modifier, Is.EqualTo("internal"));
-            Assert.IsNull(availabilitySetData.PersistableModelProxy);
+            Assert.That(availabilitySetData.PersistableModelProxy, Is.Null);
             AssertAvailabilitySetData(availabilitySetData.Type);
             Assert.That(availabilitySetData.Kind, Is.EqualTo(TypeBuilderKind.IPersistableModel));
             Assert.That(availabilitySetData.ContextType, Is.EqualTo(s_modelExpectations[availabilitySetData.Type.Name].Context));
@@ -558,7 +558,7 @@ $$"""
         private static void AssertTestProject1LocalBaseModelBuilder(TypeBuilderSpec localBaseModel)
         {
             Assert.That(localBaseModel.Modifier, Is.EqualTo("internal"));
-            Assert.IsNotNull(localBaseModel.PersistableModelProxy);
+            Assert.That(localBaseModel.PersistableModelProxy, Is.Not.Null);
             AssertLocalBaseModel(localBaseModel.Type, "TestProject1");
             Assert.That(localBaseModel.Kind, Is.EqualTo(TypeBuilderKind.IPersistableModel));
             Assert.That(localBaseModel.ContextType, Is.EqualTo(s_modelExpectations[localBaseModel.Type.Name].Context));
@@ -567,7 +567,7 @@ $$"""
         private static void AssertLocalBaseModelBuilder(TypeBuilderSpec localBaseModel)
         {
             Assert.That(localBaseModel.Modifier, Is.EqualTo("internal"));
-            Assert.IsNotNull(localBaseModel.PersistableModelProxy);
+            Assert.That(localBaseModel.PersistableModelProxy, Is.Not.Null);
             AssertLocalBaseModel(localBaseModel.Type);
             Assert.That(localBaseModel.Kind, Is.EqualTo(TypeBuilderKind.IPersistableModel));
             Assert.That(localBaseModel.ContextType, Is.EqualTo(s_modelExpectations[localBaseModel.Type.Name].Context));
@@ -580,7 +580,7 @@ $$"""
             Assert.That(jsonModel.TypeCaseName, Is.EqualTo("JsonModel_"));
             Assert.That(jsonModel.CamelCaseName, Is.EqualTo("jsonModel_"));
             Assert.That(jsonModel.ArrayRank, Is.EqualTo(0));
-            Assert.IsNull(jsonModel.ItemType);
+            Assert.That(jsonModel.ItemType, Is.Null);
         }
 
         internal static void AssertLocalBaseModel(TypeRef localBaseModel, string expectedNamespace = "TestProject")
@@ -590,7 +590,7 @@ $$"""
             Assert.That(localBaseModel.TypeCaseName, Is.EqualTo("LocalBaseModel_"));
             Assert.That(localBaseModel.CamelCaseName, Is.EqualTo("localBaseModel_"));
             Assert.That(localBaseModel.ArrayRank, Is.EqualTo(0));
-            Assert.IsNull(localBaseModel.ItemType);
+            Assert.That(localBaseModel.ItemType, Is.Null);
         }
 
         internal static void AssertUnknownLocalBaseModel(TypeRef unknownLocalBaseModel, string expectedNamespace = "TestProject")
@@ -600,7 +600,7 @@ $$"""
             Assert.That(unknownLocalBaseModel.TypeCaseName, Is.EqualTo("UnknownLocalBaseModel_"));
             Assert.That(unknownLocalBaseModel.CamelCaseName, Is.EqualTo("unknownLocalBaseModel_"));
             Assert.That(unknownLocalBaseModel.ArrayRank, Is.EqualTo(0));
-            Assert.IsNull(unknownLocalBaseModel.ItemType);
+            Assert.That(unknownLocalBaseModel.ItemType, Is.Null);
         }
 
         internal static void AssertBaseModel(TypeRef baseModel)
@@ -610,7 +610,7 @@ $$"""
             Assert.That(baseModel.TypeCaseName, Is.EqualTo("BaseModel_"));
             Assert.That(baseModel.CamelCaseName, Is.EqualTo("baseModel_"));
             Assert.That(baseModel.ArrayRank, Is.EqualTo(0));
-            Assert.IsNull(baseModel.ItemType);
+            Assert.That(baseModel.ItemType, Is.Null);
         }
 
         private static void AssertAvailabilitySetData(TypeRef aset)
@@ -620,7 +620,7 @@ $$"""
             Assert.That(aset.TypeCaseName, Is.EqualTo("AvailabilitySetData_"));
             Assert.That(aset.CamelCaseName, Is.EqualTo("availabilitySetData_"));
             Assert.That(aset.ArrayRank, Is.EqualTo(0));
-            Assert.IsNull(aset.ItemType);
+            Assert.That(aset.ItemType, Is.Null);
         }
 
         [Test]

@@ -1,4 +1,4 @@
-﻿// Copyright (c) Microsoft Corporation. All rights reserved.
+// Copyright (c) Microsoft Corporation. All rights reserved.
 // Licensed under the MIT License.
 
 using System.Collections.Generic;
@@ -56,8 +56,8 @@ namespace Azure.Core.Tests
             await SendGetRequest(transport, _policyMock.Object);
 
             Assert.That(_messages.Count, Is.EqualTo(2));
-            Assert.IsTrue(_messages[0].TryGetProperty("foo", out var _));
-            Assert.IsFalse(_messages[1].TryGetProperty("foo", out var _));
+            Assert.That(_messages[0].TryGetProperty("foo", out var _), Is.True);
+            Assert.That(_messages[1].TryGetProperty("foo", out var _), Is.False);
         }
 
         [Test]
@@ -106,7 +106,7 @@ namespace Azure.Core.Tests
             }
 
             Assert.That(_messages.Count, Is.EqualTo(1));
-            Assert.IsFalse(_messages[0].TryGetProperty("foo", out var _));
+            Assert.That(_messages[0].TryGetProperty("foo", out var _), Is.False);
         }
     }
 }

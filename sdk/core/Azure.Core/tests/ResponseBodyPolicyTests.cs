@@ -1,4 +1,4 @@
-﻿// Copyright (c) Microsoft Corporation. All rights reserved.
+// Copyright (c) Microsoft Corporation. All rights reserved.
 // Licensed under the MIT License.
 
 using System;
@@ -32,7 +32,7 @@ namespace Azure.Core.Tests
             MockTransport mockTransport = CreateMockTransport(mockResponse);
             Response response = await SendGetRequest(mockTransport, NoTimeoutPolicy);
 
-            Assert.IsInstanceOf<MemoryStream>(response.ContentStream);
+            Assert.That(response.ContentStream, Is.InstanceOf<MemoryStream>());
             var ms = (MemoryStream)response.ContentStream;
 
             Assert.That(ms.Length, Is.EqualTo(128));
@@ -63,7 +63,7 @@ namespace Azure.Core.Tests
 
             MockTransport mockTransport = CreateMockTransport(mockResponse);
             Response response = await SendGetRequest(mockTransport, NoTimeoutPolicy);
-            Assert.Null(response.ContentStream);
+            Assert.That(response.ContentStream, Is.Null);
         }
 
         [Test]
@@ -78,7 +78,7 @@ namespace Azure.Core.Tests
             MockTransport mockTransport = CreateMockTransport(mockResponse);
             await SendGetRequest(mockTransport, NoTimeoutPolicy);
 
-            Assert.True(readTrackingStream.IsClosed);
+            Assert.That(readTrackingStream.IsClosed, Is.True);
         }
 
         [Test]
@@ -147,7 +147,7 @@ namespace Azure.Core.Tests
             MockTransport mockTransport = new MockTransport(mockResponse);
             Response response = await SendGetRequest(mockTransport, new ResponseBodyPolicy(TimeSpan.FromMilliseconds(1234567)), bufferResponse: false);
 
-            Assert.IsInstanceOf<ReadTimeoutStream>(response.ContentStream);
+            Assert.That(response.ContentStream, Is.InstanceOf<ReadTimeoutStream>());
             Assert.That(hangingStream.ReadTimeout, Is.EqualTo(1234567));
         }
 
@@ -208,7 +208,7 @@ namespace Azure.Core.Tests
                 message.NetworkTimeout = TimeSpan.FromMilliseconds(30);
             }, new ResponseBodyPolicy(TimeSpan.MaxValue), bufferResponse: false);
 
-            Assert.IsInstanceOf<ReadTimeoutStream>(response.ContentStream);
+            Assert.That(response.ContentStream, Is.InstanceOf<ReadTimeoutStream>());
             Assert.That(hangingStream.ReadTimeout, Is.EqualTo(30));
         }
 
@@ -236,7 +236,7 @@ namespace Azure.Core.Tests
 
             MockTransport mockTransport = CreateMockTransport(mockResponse);
             Assert.ThrowsAsync<TaskCanceledException>(async () => await SendGetRequest(mockTransport, policy, cancellationToken: cts.Token));
-            Assert.IsTrue(stream.IsClosed);
+            Assert.That(stream.IsClosed, Is.True);
         }
 
         [TestCaseSource(nameof(GetExceptionCases))]
@@ -252,7 +252,7 @@ namespace Azure.Core.Tests
             MockTransport mockTransport = CreateMockTransport(mockResponse);
             var thrown = Assert.CatchAsync(async () => await SendGetRequest(mockTransport, policy, cancellationToken: cts.Token));
             Assert.That(thrown, Is.SameAs(exception));
-            Assert.IsFalse(stream.IsClosed);
+            Assert.That(stream.IsClosed, Is.False);
         }
 
         private class SlowReadStream : TestReadStream

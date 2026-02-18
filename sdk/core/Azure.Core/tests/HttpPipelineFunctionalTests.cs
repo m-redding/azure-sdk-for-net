@@ -1,4 +1,4 @@
-﻿// Copyright (c) Microsoft Corporation. All rights reserved.
+// Copyright (c) Microsoft Corporation. All rights reserved.
 // Licensed under the MIT License.
 
 using System;
@@ -94,7 +94,7 @@ namespace Azure.Core.Tests
 
                     await ExecuteRequest(message, httpPipeline);
 
-                    Assert.False(message.Response.ContentStream.CanSeek);
+                    Assert.That(message.Response.ContentStream.CanSeek, Is.False);
                     Assert.Throws<InvalidOperationException>(() => { var content = message.Response.Content; });
 
                     extractedStream = message.ExtractResponseContent();
@@ -160,7 +160,7 @@ namespace Azure.Core.Tests
                 extractedStream.Dispose();
             }
 
-            Assert.Greater(reqNum, requestCount);
+            Assert.That(reqNum, Is.GreaterThan(requestCount));
         }
 
         [Test]

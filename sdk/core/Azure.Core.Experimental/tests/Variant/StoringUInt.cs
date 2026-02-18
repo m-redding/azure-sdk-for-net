@@ -1,4 +1,4 @@
-﻿// Copyright (c) Microsoft Corporation. All rights reserved.
+// Copyright (c) Microsoft Corporation. All rights reserved.
 // Licensed under the MIT License.
 
 using NUnit.Framework;
@@ -55,7 +55,7 @@ namespace Azure.Core.Experimental.Tests
         {
             Variant value = new(testValue);
             bool success = value.TryGetValue(out uint result);
-            Assert.True(success);
+            Assert.That(success, Is.True);
             Assert.That(result, Is.EqualTo(testValue));
 
             Assert.That(value.As<uint>(), Is.EqualTo(testValue));
@@ -69,7 +69,7 @@ namespace Azure.Core.Experimental.Tests
             Variant value = new(source);
 
             bool success = value.TryGetValue(out uint result);
-            Assert.True(success);
+            Assert.That(success, Is.True);
             Assert.That(result, Is.EqualTo(testValue));
 
             Assert.That(value.As<uint>(), Is.EqualTo(testValue));
@@ -83,7 +83,7 @@ namespace Azure.Core.Experimental.Tests
             uint source = testValue;
             Variant value = new(source);
             bool success = value.TryGetValue(out uint? result);
-            Assert.True(success);
+            Assert.That(success, Is.True);
             Assert.That(result, Is.EqualTo(testValue));
 
             Assert.That((uint?)value, Is.EqualTo(testValue));
@@ -97,9 +97,9 @@ namespace Azure.Core.Experimental.Tests
             Variant value = new(o);
 
             Assert.That(value.Type, Is.EqualTo(typeof(uint)));
-            Assert.True(value.TryGetValue(out uint result));
+            Assert.That(value.TryGetValue(out uint result), Is.True);
             Assert.That(result, Is.EqualTo(testValue));
-            Assert.True(value.TryGetValue(out uint? nullableResult));
+            Assert.That(value.TryGetValue(out uint? nullableResult), Is.True);
             Assert.That(nullableResult!.Value, Is.EqualTo(testValue));
 
             uint? n = testValue;
@@ -107,9 +107,9 @@ namespace Azure.Core.Experimental.Tests
             value = new(o);
 
             Assert.That(value.Type, Is.EqualTo(typeof(uint)));
-            Assert.True(value.TryGetValue(out result));
+            Assert.That(value.TryGetValue(out result), Is.True);
             Assert.That(result, Is.EqualTo(testValue));
-            Assert.True(value.TryGetValue(out nullableResult));
+            Assert.That(value.TryGetValue(out nullableResult), Is.True);
             Assert.That(nullableResult!.Value, Is.EqualTo(testValue));
         }
 
@@ -118,7 +118,7 @@ namespace Azure.Core.Experimental.Tests
         {
             uint? source = null;
             Variant value = source;
-            Assert.Null(value.Type);
+            Assert.That(value.Type, Is.Null);
             Assert.That(value.As<uint?>(), Is.EqualTo(source));
             Assert.That(value.As<uint?>().HasValue, Is.False);
         }

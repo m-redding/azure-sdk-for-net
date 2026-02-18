@@ -34,8 +34,8 @@ namespace System.ClientModel.Tests.ModelReaderWriterTests.Models.BaseModels
                 Assert.That(actualRawData.Count, Is.EqualTo(expectedRawData.Count));
                 foreach (var key in expectedRawData.Keys)
                 {
-                    Assert.IsTrue(actualRawData.ContainsKey(key));
-                    Assert.IsTrue(expectedRawData[key].ToMemory().Span.SequenceEqual(actualRawData[key].ToMemory().Span));
+                    Assert.That(actualRawData.ContainsKey(key), Is.True);
+                    Assert.That(expectedRawData[key].ToMemory().Span.SequenceEqual(actualRawData[key].ToMemory().Span), Is.True);
                 }
             }
             else
@@ -58,8 +58,8 @@ namespace System.ClientModel.Tests.ModelReaderWriterTests.Models.BaseModels
                 Assert.That(actualRawData.Count, Is.EqualTo(expectedRawData.Count));
                 foreach (var key in expectedRawData.Keys)
                 {
-                    Assert.IsTrue(actualRawData.ContainsKey(key));
-                    Assert.IsTrue(expectedRawData[key].ToMemory().Span.SequenceEqual(actualRawData[key].ToMemory().Span));
+                    Assert.That(actualRawData.ContainsKey(key), Is.True);
+                    Assert.That(expectedRawData[key].ToMemory().Span.SequenceEqual(actualRawData[key].ToMemory().Span), Is.True);
                 }
             }
             else
@@ -83,8 +83,8 @@ namespace System.ClientModel.Tests.ModelReaderWriterTests.Models.BaseModels
                 Assert.That(actualRawData.Count, Is.EqualTo(expectedRawData.Count));
                 foreach (var key in expectedRawData.Keys)
                 {
-                    Assert.IsTrue(actualRawData.ContainsKey(key));
-                    Assert.IsTrue(expectedRawData[key].ToMemory().Span.SequenceEqual(actualRawData[key].ToMemory().Span));
+                    Assert.That(actualRawData.ContainsKey(key), Is.True);
+                    Assert.That(expectedRawData[key].ToMemory().Span.SequenceEqual(actualRawData[key].ToMemory().Span), Is.True);
                 }
             }
             else

@@ -1,4 +1,4 @@
-﻿// Copyright (c) Microsoft Corporation. All rights reserved.
+// Copyright (c) Microsoft Corporation. All rights reserved.
 // Licensed under the MIT License.
 
 using System;
@@ -22,8 +22,8 @@ namespace Azure.Core.Tests
             MockRequest request = await mockTransport.RequestGate.Cycle(new MockResponse(200));
             await task;
 
-            Assert.True(request.TryGetHeader("x-ms-client-request-id", out string requestId));
-            Assert.True(request.TryGetHeader("x-ms-return-client-request-id", out string returnRequestId));
+            Assert.That(request.TryGetHeader("x-ms-client-request-id", out string requestId), Is.True);
+            Assert.That(request.TryGetHeader("x-ms-return-client-request-id", out string returnRequestId), Is.True);
             Assert.That(requestId, Is.EqualTo(request.ClientRequestId));
             Assert.That(returnRequestId, Is.EqualTo("true"));
         }
@@ -37,7 +37,7 @@ namespace Azure.Core.Tests
                 .Callback<HttpMessage>(message =>
                 {
                     Assert.That(message.Request.ClientRequestId, Is.EqualTo("ExternalClientId"));
-                    Assert.True(message.Request.TryGetHeader("x-ms-client-request-id", out string requestId));
+                    Assert.That(message.Request.TryGetHeader("x-ms-client-request-id", out string requestId), Is.True);
                     Assert.That(requestId, Is.EqualTo("ExternalClientId"));
                 }).Verifiable();
 
@@ -93,7 +93,7 @@ namespace Azure.Core.Tests
                 await SendGetRequest(transport, ReadClientRequestIdPolicy.Shared);
             }
 
-            Assert.IsNotEmpty(transport.SingleRequest.ClientRequestId);
+            Assert.That(transport.SingleRequest.ClientRequestId, Is.Not.Empty);
             Assert.That(transport.SingleRequest.ClientRequestId, Is.Not.EqualTo("custom-id"));
         }
 

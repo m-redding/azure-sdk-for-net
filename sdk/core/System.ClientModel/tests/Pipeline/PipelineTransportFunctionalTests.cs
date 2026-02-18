@@ -1,4 +1,4 @@
-﻿// Copyright (c) Microsoft Corporation. All rights reserved.
+// Copyright (c) Microsoft Corporation. All rights reserved.
 // Licensed under the MIT License.
 
 using System.ClientModel.Primitives;
@@ -123,7 +123,7 @@ public class PipelineTransportFunctionalTests : SyncAsyncTestBase
             method == "GET" ||
             method == "HEAD")
         {
-            Assert.Null(contentLength);
+            Assert.That(contentLength, Is.Null);
         }
         else
         {
@@ -152,7 +152,7 @@ public class PipelineTransportFunctionalTests : SyncAsyncTestBase
 
         await transport.ProcessSyncOrAsync(message, IsAsync);
 
-        Assert.Null(contentType);
+        Assert.That(contentType, Is.Null);
     }
 
     [Test]
@@ -172,7 +172,7 @@ public class PipelineTransportFunctionalTests : SyncAsyncTestBase
 
             await transport.ProcessSyncOrAsync(message, IsAsync);
 
-            Assert.False(disposeTrackingContent.IsDisposed);
+            Assert.That(disposeTrackingContent.IsDisposed, Is.False);
         }
 
         Assert.That(disposeTrackingContent.IsDisposed, Is.True);

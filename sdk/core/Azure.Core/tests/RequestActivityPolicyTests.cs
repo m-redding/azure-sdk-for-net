@@ -1,4 +1,4 @@
-﻿// Copyright (c) Microsoft Corporation. All rights reserved.
+// Copyright (c) Microsoft Corporation. All rights reserved.
 // Licensed under the MIT License.
 
 using System;
@@ -183,7 +183,7 @@ namespace Azure.Core.Tests
 
                 await requestTask;
 
-                Assert.True(mockTransport.SingleRequest.TryGetHeader("traceparent", out string requestId));
+                Assert.That(mockTransport.SingleRequest.TryGetHeader("traceparent", out string requestId), Is.True);
                 Assert.That(requestId, Is.EqualTo(activity.Id));
             }
             finally
@@ -207,7 +207,7 @@ namespace Azure.Core.Tests
             activity.Stop();
 
             string headerName = Activity.DefaultIdFormat == ActivityIdFormat.W3C ? "traceparent" : "Request-Id";
-            Assert.True(transport.SingleRequest.TryGetHeader(headerName, out string requestId));
+            Assert.That(transport.SingleRequest.TryGetHeader(headerName, out string requestId), Is.True);
             Assert.That(requestId, Is.EqualTo(activity.Id));
         }
 
@@ -230,10 +230,10 @@ namespace Azure.Core.Tests
 
                 activity.Stop();
 
-                Assert.True(transport.SingleRequest.TryGetHeader("traceparent", out string requestId));
+                Assert.That(transport.SingleRequest.TryGetHeader("traceparent", out string requestId), Is.True);
                 Assert.That(requestId, Is.EqualTo(activity.Id));
 
-                Assert.True(transport.SingleRequest.TryGetHeader("tracestate", out string traceState));
+                Assert.That(transport.SingleRequest.TryGetHeader("tracestate", out string traceState), Is.True);
                 Assert.That(traceState, Is.EqualTo("trace"));
             }
             finally
@@ -257,13 +257,13 @@ namespace Azure.Core.Tests
             (string, object, object) isEnabledCall = testListener.IsEnabledCalls.Dequeue();
 
             Assert.That(startEvent.Key, Is.EqualTo("Azure.Core.Http.Request.Start"));
-            Assert.IsInstanceOf<HttpMessage>(startEvent.Value);
+            Assert.That(startEvent.Value, Is.InstanceOf<HttpMessage>());
 
             Assert.That(stopEvent.Key, Is.EqualTo("Azure.Core.Http.Request.Stop"));
-            Assert.IsInstanceOf<HttpMessage>(stopEvent.Value);
+            Assert.That(stopEvent.Value, Is.InstanceOf<HttpMessage>());
 
             Assert.That(isEnabledCall.Item1, Is.EqualTo("Azure.Core.Http.Request"));
-            Assert.IsInstanceOf<HttpMessage>(isEnabledCall.Item2);
+            Assert.That(isEnabledCall.Item2, Is.InstanceOf<HttpMessage>());
         }
 
         [Test]
@@ -335,9 +335,9 @@ namespace Azure.Core.Tests
                 Assert.That(activity.TagObjects, Has.Member(new KeyValuePair<string, int>("http.response.status_code", 201)));
                 Assert.That(activity.TagObjects, Has.Member(new KeyValuePair<string, string>("url.full", url)));
                 Assert.That(activity.TagObjects, Has.Member(new KeyValuePair<string, string>("http.request.method", "GET")));
-                Assert.IsEmpty(activity.Tags.Where(kvp => kvp.Key == "http.user_agent"));
-                Assert.IsEmpty(activity.Tags.Where(kvp => kvp.Key == "requestId"));
-                Assert.IsEmpty(activity.Tags.Where(kvp => kvp.Key == "serviceRequestId"));
+                Assert.That(activity.Tags.Where(kvp => kvp.Key == "http.user_agent"), Is.Empty);
+                Assert.That(activity.Tags.Where(kvp => kvp.Key == "requestId"), Is.Empty);
+                Assert.That(activity.Tags.Where(kvp => kvp.Key == "serviceRequestId"), Is.Empty);
 
                 Assert.That(activity.TagObjects, Has.Member(new KeyValuePair<string, string>("az.client_request_id", clientRequestId)));
                 Assert.That(activity.TagObjects, Has.Member(new KeyValuePair<string, string>("az.service_request_id", "server request id")));
@@ -426,8 +426,8 @@ namespace Azure.Core.Tests
 
             Assert.That(activity.TagObjects, Has.Member(new KeyValuePair<string, string>("error.type", "500")));
             Assert.That(activity.Status, Is.EqualTo(ActivityStatusCode.Error));
-            Assert.IsNull(activity.StatusDescription);
-            Assert.IsEmpty(activity.TagObjects.Where(t => t.Key == "otel.status_code"));
+            Assert.That(activity.StatusDescription, Is.Null);
+            Assert.That(activity.TagObjects.Where(t => t.Key == "otel.status_code"), Is.Empty);
         }
 
         [Test]
@@ -455,8 +455,8 @@ namespace Azure.Core.Tests
             Assert.That(activity.TagObjects, Has.Member(new KeyValuePair<string, object>("http.request.resend_count", 42)));
             Assert.That(activity.TagObjects, Has.Member(new KeyValuePair<string, string>("error.type", "500")));
             Assert.That(activity.Status, Is.EqualTo(ActivityStatusCode.Error));
-            Assert.IsNull(activity.StatusDescription);
-            Assert.IsEmpty(activity.TagObjects.Where(t => t.Key == "otel.status_code"));
+            Assert.That(activity.StatusDescription, Is.Null);
+            Assert.That(activity.TagObjects.Where(t => t.Key == "otel.status_code"), Is.Empty);
         }
 #endif
     }

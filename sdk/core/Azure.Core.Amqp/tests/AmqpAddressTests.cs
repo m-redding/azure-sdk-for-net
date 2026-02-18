@@ -1,4 +1,4 @@
-﻿// Copyright (c) Microsoft Corporation. All rights reserved.
+// Copyright (c) Microsoft Corporation. All rights reserved.
 // Licensed under the MIT License.
 
 using System;
@@ -16,7 +16,7 @@ namespace Azure.Core.Amqp.Tests
             Assert.That(address.GetHashCode(), Is.EqualTo("address".GetHashCode()));
             Assert.That(address, Is.EqualTo(new AmqpAddress("address")));
             Assert.That(address, Is.EqualTo((object)new AmqpAddress("address")));
-            Assert.False(address.Equals(new AmqpMessageId("messageId2")));
+            Assert.That(address.Equals(new AmqpMessageId("messageId2")), Is.False);
         }
 
         [Test]

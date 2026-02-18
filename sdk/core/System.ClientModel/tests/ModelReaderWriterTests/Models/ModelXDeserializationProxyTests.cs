@@ -1,4 +1,4 @@
-﻿// Copyright (c) Microsoft Corporation. All rights reserved.
+// Copyright (c) Microsoft Corporation. All rights reserved.
 // Licensed under the MIT License.
 
 using NUnit.Framework;
@@ -17,7 +17,7 @@ namespace System.ClientModel.Tests.ModelReaderWriterTests.Models
             ModelReaderWriterOptions options = new ModelReaderWriterOptions(format);
             BinaryData data = new BinaryData(Encoding.UTF8.GetBytes("{\"kind\":\"X\",\"name\":\"xmodel\",\"xProperty\":100,\"extra\":\"stuff\"}"));
             object? modelX = ModelReaderWriter.Read(data, typeof(ModelXDeserializationProxy), options);
-            Assert.IsNotNull(modelX);
+            Assert.That(modelX, Is.Not.Null);
             Assert.That(modelX, Is.InstanceOf<ModelX>());
             Assert.That(((ModelX)modelX!).Kind, Is.EqualTo("X"));
             Assert.That(((ModelX)modelX).Name, Is.EqualTo("xmodel"));
@@ -25,7 +25,7 @@ namespace System.ClientModel.Tests.ModelReaderWriterTests.Models
             if (format == "J")
             {
                 var rawData = MrwModelTests<ModelX>.GetRawData((ModelX)modelX);
-                Assert.IsNotNull(rawData);
+                Assert.That(rawData, Is.Not.Null);
                 Assert.That(rawData["extra"].ToObjectFromJson<string>(), Is.EqualTo("stuff"));
             }
         }

@@ -1,4 +1,4 @@
-﻿// Copyright (c) Microsoft Corporation. All rights reserved.
+// Copyright (c) Microsoft Corporation. All rights reserved.
 // Licensed under the MIT License.
 
 using System.IO;
@@ -16,15 +16,15 @@ namespace Azure.Core.Tests.Public.ModelReaderWriterTests
 
         protected override void CompareModels(ResourceProviderData model, ResourceProviderData model2, string format)
         {
-            Assert.AreEqual(model.Id, model2.Id);
+            Assert.That(model2.Id, Is.EqualTo(model.Id));
         }
 
         protected override string GetExpectedResult(string format) => WirePayload;
 
         protected override void VerifyModel(ResourceProviderData model, string format)
         {
-            Assert.IsNotNull(model);
-            Assert.IsNotNull(model.Id);
+            Assert.That(model, Is.Not.Null);
+            Assert.That(model.Id, Is.Not.Null);
         }
     }
 }

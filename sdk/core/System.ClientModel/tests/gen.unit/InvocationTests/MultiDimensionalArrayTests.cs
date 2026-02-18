@@ -1,4 +1,4 @@
-﻿// Copyright (c) Microsoft Corporation. All rights reserved.
+// Copyright (c) Microsoft Corporation. All rights reserved.
 // Licensed under the MIT License.
 
 using System.Collections.Generic;
@@ -33,7 +33,7 @@ namespace System.ClientModel.SourceGeneration.Tests.Unit.InvocationTests
             Assert.That(dict.TryGetValue($"{lookupName}.{expectation.TypeName}[,]", out var arrayModel), Is.True);
             Assert.That(arrayModel!.Type.Name, Is.EqualTo($"{expectation.TypeName}[,]"));
             Assert.That(arrayModel.Type.Namespace, Is.EqualTo(lookupName));
-            Assert.IsNotNull(arrayModel.Type.ItemType);
+            Assert.That(arrayModel.Type.ItemType, Is.Not.Null);
             Assert.That(arrayModel.Kind, Is.EqualTo(TypeBuilderKind.MultiDimensionalArray));
             Assert.That(arrayModel.Type.ArrayRank, Is.EqualTo(2));
             Assert.That(arrayModel.Type.TypeCaseName, Is.EqualTo($"{expectation.TypeName}_Array_d1_"));

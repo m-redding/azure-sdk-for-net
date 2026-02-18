@@ -1,4 +1,4 @@
-﻿// Copyright (c) Microsoft Corporation. All rights reserved.
+// Copyright (c) Microsoft Corporation. All rights reserved.
 // Licensed under the MIT License.
 
 using System;
@@ -26,18 +26,18 @@ namespace Azure.Core.Tests
 
             Assert.That(data.A, Is.EqualTo("a.value"));
             Assert.That(data.Details["strValue"].ToObjectFromJson<string>(), Is.EqualTo("1"));
-            Assert.IsTrue(data.Details["strValue"].ToObjectFromJson() is string);
+            Assert.That(data.Details["strValue"].ToObjectFromJson() is string, Is.True);
             Assert.That(data.Details["intValue"].ToObjectFromJson<int>(), Is.EqualTo(1));
-            Assert.IsTrue(data.Details["intValue"].ToObjectFromJson() is int);
+            Assert.That(data.Details["intValue"].ToObjectFromJson() is int, Is.True);
             Assert.That(data.Details["doubleValue"].ToObjectFromJson<double>(), Is.EqualTo(1.1));
-            Assert.IsTrue(data.Details["doubleValue"].ToObjectFromJson() is double);
+            Assert.That(data.Details["doubleValue"].ToObjectFromJson() is double, Is.True);
 
             var toObjectWithT = data.Details["innerProperties"].ToObjectFromJson<Dictionary<string, object>>();
             var jsonElementObject = data.Details["innerProperties"].ToObjectFromJson<object>();
-            Assert.IsTrue(jsonElementObject is JsonElement);
+            Assert.That(jsonElementObject is JsonElement, Is.True);
             var jsonDictionary = data.Details["innerProperties"].ToObjectFromJson();
-            Assert.IsTrue(jsonDictionary is Dictionary<string, object>);
-            Assert.IsTrue(toObjectWithT["strValue"] is JsonElement);
+            Assert.That(jsonDictionary is Dictionary<string, object>, Is.True);
+            Assert.That(toObjectWithT["strValue"] is JsonElement, Is.True);
 
             var dict = data.Details["innerProperties"].ToObjectFromJson() as Dictionary<string, object>;
             Assert.That((string)dict["strValue"], Is.EqualTo("2"));
@@ -143,7 +143,7 @@ namespace Azure.Core.Tests
             Assert.That(properties["doubleValue"].GetType(), Is.EqualTo(typeof(double)));
             Assert.That(properties["trueValue"].GetType(), Is.EqualTo(typeof(bool)));
             Assert.That(properties["falseValue"].GetType(), Is.EqualTo(typeof(bool)));
-            Assert.IsNull(properties["nullValue"]);
+            Assert.That(properties["nullValue"], Is.Null);
 
             Assert.That(GetSerializedString(model), Is.EqualTo(expected));
         }
@@ -155,26 +155,26 @@ namespace Azure.Core.Tests
             var model = BinaryData.FromString(expected);
 
             var properties = model.ToObjectFromJson() as Dictionary<string, object>;
-            Assert.IsTrue(AllValuesAreType(typeof(string), properties["stringArray"]));
-            Assert.IsTrue(AllValuesAreType(typeof(string), properties["dateTimeArray"]));
-            Assert.IsTrue(AllValuesAreType(typeof(int), properties["intArray"]));
-            Assert.IsTrue(AllValuesAreType(typeof(long), properties["longArray"]));
-            Assert.IsTrue(AllValuesAreType(typeof(double), properties["doubleArray"]));
-            Assert.IsTrue(AllValuesAreType(typeof(bool), properties["boolArray"]));
+            Assert.That(AllValuesAreType(typeof(string), properties["stringArray"]), Is.True);
+            Assert.That(AllValuesAreType(typeof(string), properties["dateTimeArray"]), Is.True);
+            Assert.That(AllValuesAreType(typeof(int), properties["intArray"]), Is.True);
+            Assert.That(AllValuesAreType(typeof(long), properties["longArray"]), Is.True);
+            Assert.That(AllValuesAreType(typeof(double), properties["doubleArray"]), Is.True);
+            Assert.That(AllValuesAreType(typeof(bool), properties["boolArray"]), Is.True);
             foreach (var item in properties["nullArray"] as object[])
             {
-                Assert.IsNull(item);
+                Assert.That(item, Is.Null);
             }
             var mixList = properties["mixedNullArray"] as object[];
             for (int i = 0; i < 2; i++)
             {
                 if (i == 0)
                 {
-                    Assert.IsNull(mixList[i]);
+                    Assert.That(mixList[i], Is.Null);
                 }
                 else
                 {
-                    Assert.IsNotNull(mixList[i]);
+                    Assert.That(mixList[i], Is.Not.Null);
                 }
             }
             Assert.That(GetSerializedString(model), Is.EqualTo(expected));
@@ -190,10 +190,10 @@ namespace Azure.Core.Tests
             for (int i = 0; i < 3; i++)
             {
                 var obj = objArray[i] as Dictionary<string, object>;
-                Assert.IsNotNull(obj);
+                Assert.That(obj, Is.Not.Null);
                 Assert.That(obj["intValue"], Is.EqualTo(i));
                 var innerObj = obj["objectValue"] as Dictionary<string, object>;
-                Assert.IsNotNull(innerObj);
+                Assert.That(innerObj, Is.Not.Null);
                 Assert.That(innerObj["stringValue"], Is.EqualTo(i.ToString()));
             }
             Assert.That(GetSerializedString(model), Is.EqualTo(expected));
@@ -206,11 +206,11 @@ namespace Azure.Core.Tests
             var model = BinaryData.FromString(expected);
             var properties = model.ToObjectFromJson() as Dictionary<string, object>;
             var arrayArray = properties["arrayArray"] as object[];
-            Assert.IsNotNull(arrayArray);
+            Assert.That(arrayArray, Is.Not.Null);
             for (int i = 0; i < 2; i++)
             {
                 var array = arrayArray[i] as object[];
-                Assert.IsNotNull(array);
+                Assert.That(array, Is.Not.Null);
                 foreach (var item in array)
                 {
                     Assert.That(item, Is.EqualTo(i));
@@ -330,7 +330,7 @@ namespace Azure.Core.Tests
             string actual = GetSerializedString(payload);
             //for some reason in dotnet 6 only there is a random new line after the binarydata object
             //to make this work in all frameworks we will just do a comparison ignoring whitespace
-            Assert.IsTrue(CompareIgnoreWhitespace(expected, actual));
+            Assert.That(CompareIgnoreWhitespace(expected, actual), Is.True);
         }
 
         private bool? CompareIgnoreWhitespace(string expected, string actual)
@@ -540,8 +540,8 @@ namespace Azure.Core.Tests
 
             async Task AssertData(BinaryData data)
             {
-                Assert.IsNull(data.ToObject<Model>(serializer));
-                Assert.IsNull(await data.ToObjectAsync<Model>(serializer));
+                Assert.That(data.ToObject<Model>(serializer), Is.Null);
+                Assert.That(await data.ToObjectAsync<Model>(serializer), Is.Null);
             }
         }
 
@@ -608,8 +608,8 @@ namespace Azure.Core.Tests
 
             async Task AssertData(BinaryData data)
             {
-                Assert.IsNull(data.ToObject<Model>(serializer));
-                Assert.IsNull(await data.ToObjectAsync<Model>(serializer));
+                Assert.That(data.ToObject<Model>(serializer), Is.Null);
+                Assert.That(await data.ToObjectAsync<Model>(serializer), Is.Null);
             }
         }
 

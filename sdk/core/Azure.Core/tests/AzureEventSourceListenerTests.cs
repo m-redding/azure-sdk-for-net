@@ -1,4 +1,4 @@
-﻿// Copyright (c) Microsoft Corporation. All rights reserved.
+// Copyright (c) Microsoft Corporation. All rights reserved.
 // Licensed under the MIT License.
 
 using System;
@@ -31,7 +31,7 @@ namespace Azure.Core.Tests
             var singleInvocation = invocations.Single();
 
             Assert.That(singleInvocation.Item1.EventName, Is.EqualTo("Request"));
-            Assert.NotNull(singleInvocation.Item2);
+            Assert.That(singleInvocation.Item2, Is.Not.Null);
         }
 
         [Test]
@@ -48,11 +48,11 @@ namespace Azure.Core.Tests
             Assert.That(warningInvocations.Count, Is.EqualTo(1));
             var warningInvocation = warningInvocations.Single();
             Assert.That(warningInvocation.Item1.EventName, Is.EqualTo("ErrorResponse"));
-            Assert.NotNull(warningInvocation.Item2);
+            Assert.That(warningInvocation.Item2, Is.Not.Null);
 
             Assert.That(verboseInvocations.Count, Is.EqualTo(2));
-            Assert.True(verboseInvocations.Any(c => c.Item1.EventName == "ErrorResponse"));
-            Assert.True(verboseInvocations.Any(c => c.Item1.EventName == "Request"));
+            Assert.That(verboseInvocations.Any(c => c.Item1.EventName == "ErrorResponse"), Is.True);
+            Assert.That(verboseInvocations.Any(c => c.Item1.EventName == "Request"), Is.True);
         }
 
         [Test]

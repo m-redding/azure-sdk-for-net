@@ -1,4 +1,4 @@
-﻿// Copyright (c) Microsoft Corporation. All rights reserved.
+// Copyright (c) Microsoft Corporation. All rights reserved.
 // Licensed under the MIT License.
 
 using System;
@@ -38,7 +38,7 @@ namespace Azure.Core.Tests
             Assert.That(response.Status, Is.EqualTo(200));
             Assert.That(mockTransport.Requests.Count, Is.EqualTo(2));
             Assert.That(mockTransport.Requests[1].Uri.ToString(), Is.EqualTo("https://new.host/"));
-            Assert.True(fistResponse.IsDisposed);
+            Assert.That(fistResponse.IsDisposed, Is.True);
 
             var e = testListener.SingleEventById(20);
 
@@ -162,7 +162,7 @@ namespace Azure.Core.Tests
 
             Assert.That(response.Status, Is.EqualTo(200));
             Assert.That(mockTransport.Requests.Count, Is.EqualTo(2));
-            Assert.False(mockTransport.Requests[1].Headers.Contains("Authorization"));
+            Assert.That(mockTransport.Requests[1].Headers.Contains("Authorization"), Is.False);
         }
 
         [Test]

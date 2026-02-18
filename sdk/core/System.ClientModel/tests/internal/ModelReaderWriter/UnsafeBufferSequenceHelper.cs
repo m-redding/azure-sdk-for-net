@@ -1,4 +1,4 @@
-﻿// Copyright (c) Microsoft Corporation. All rights reserved.
+// Copyright (c) Microsoft Corporation. All rights reserved.
 // Licensed under the MIT License.
 
 using System.ClientModel.Internal;
@@ -15,8 +15,8 @@ namespace System.ClientModel.Tests.Internal.ModelReaderWriterTests
         {
             UnsafeBufferSequence writer = SetUpBufferBuilder(totalSize, segmentSize, chunkSize);
             UnsafeBufferSequence.Reader reader = writer.ExtractReader();
-            Assert.IsFalse((bool)IsDisposedField.GetValue(reader)!);
-            Assert.AreEqual(totalSize, reader.Length);
+            Assert.That((bool)IsDisposedField.GetValue(reader)!, Is.False);
+            Assert.That(reader.Length, Is.EqualTo(totalSize));
             return reader;
         }
 

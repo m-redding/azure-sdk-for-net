@@ -1,4 +1,4 @@
-﻿// Copyright (c) Microsoft Corporation. All rights reserved.
+// Copyright (c) Microsoft Corporation. All rights reserved.
 // Licensed under the MIT License.
 
 using System;
@@ -37,7 +37,7 @@ $"Md7RrFHxnAKJj5TZJJJOf5h3OaaF3A5W8gf9Bc68aGQLFT5Y2afIawkYNSULypc3{lineEnding}" 
 $"pn29yMivL7r48dlo{lineEnding}" +
 $"-----END CERTIFICATE-----";
 
-            Assert.IsTrue(PemReader.TryRead(pem.AsSpan(), out PemReader.PemField field));
+            Assert.That(PemReader.TryRead(pem.AsSpan(), out PemReader.PemField field), Is.True);
             Assert.That(field.Label.ToString(), Is.EqualTo("CERTIFICATE"));
             Assert.That(field.FromBase64Data(), Is.EqualTo(s_rsaCertificateBytes));
         }
@@ -64,7 +64,7 @@ lkApwUZg00+9hRWxv0DTh/mRS2zu5i/9W+cZbIcRah0JHgOzAjvsyY9RHjqZ9r7c
 Md7RrFHxnAKJj5TZJJJOf5h3OaaF3A5W8gf9Bc68aGQLFT5Y2afIawkYNSULypc3
 pn29yMivL7r48dlo";
 
-            Assert.IsFalse(PemReader.TryRead(pem.AsSpan(), out _));
+            Assert.That(PemReader.TryRead(pem.AsSpan(), out _), Is.False);
         }
 
         [Test]
@@ -90,7 +90,7 @@ lkApwUZg00+9hRWxv0DTh/mRS2zu5i/9W+cZbIcRah0JHgOzAjvsyY9RHjqZ9r7c
 Md7RrFHxnAKJj5TZJJJOf5h3OaaF3A5W8gf9Bc68aGQLFT5Y2afIawkYNSULypc3
 pn29yMivL7r48dlo";
 
-            Assert.IsFalse(PemReader.TryRead(pem.AsSpan(), out _));
+            Assert.That(PemReader.TryRead(pem.AsSpan(), out _), Is.False);
         }
 
         [Test]
@@ -115,13 +115,13 @@ lkApwUZg00+9hRWxv0DTh/mRS2zu5i/9W+cZbIcRah0JHgOzAjvsyY9RHjqZ9r7c
 Md7RrFHxnAKJj5TZJJJOf5h3OaaF3A5W8gf9Bc68aGQLFT5Y2afIawkYNSULypc3
 pn29yMivL7r48dlo";
 
-            Assert.IsFalse(PemReader.TryRead(pem.AsSpan(), out _));
+            Assert.That(PemReader.TryRead(pem.AsSpan(), out _), Is.False);
         }
 
         [Test]
         public void ReadWithExtraneousData()
         {
-            Assert.IsTrue(PemReader.TryRead(RsaPemPrivateKey.AsSpan(), out PemReader.PemField field));
+            Assert.That(PemReader.TryRead(RsaPemPrivateKey.AsSpan(), out PemReader.PemField field), Is.True);
             Assert.That(field.Label.ToString(), Is.EqualTo("PRIVATE KEY"));
             Assert.That(field.FromBase64Data(), Is.EqualTo(s_rsaPrivateKeyBytes));
         }
@@ -132,14 +132,14 @@ pn29yMivL7r48dlo";
             ReadOnlySpan<char> data = RsaPem.AsSpan();
 
             // Expect to find the private key first.
-            Assert.IsTrue(PemReader.TryRead(data, out PemReader.PemField field));
+            Assert.That(PemReader.TryRead(data, out PemReader.PemField field), Is.True);
             Assert.That(field.Label.ToString(), Is.EqualTo("PRIVATE KEY"));
             Assert.That(field.FromBase64Data(), Is.EqualTo(s_rsaPrivateKeyBytes));
 
             // Expect to find the certificate second.
             data = data.Slice(field.Start + field.Length);
 
-            Assert.IsTrue(PemReader.TryRead(data, out field));
+            Assert.That(PemReader.TryRead(data, out field), Is.True);
             Assert.That(field.Label.ToString(), Is.EqualTo("CERTIFICATE"));
             Assert.That(field.FromBase64Data(), Is.EqualTo(s_rsaCertificateBytes));
         }
@@ -149,7 +149,7 @@ pn29yMivL7r48dlo";
         {
             using X509Certificate2 certificate = PemReader.LoadCertificate(RsaPem.AsSpan(), keyType: PemReader.KeyType.RSA);
             Assert.That(certificate.Subject, Is.EqualTo("CN=Azure SDK"));
-            Assert.IsTrue(certificate.HasPrivateKey);
+            Assert.That(certificate.HasPrivateKey, Is.True);
             Assert.That(certificate.GetRSAPrivateKey().KeySize, Is.EqualTo(2048));
         }
 
@@ -158,7 +158,7 @@ pn29yMivL7r48dlo";
         {
             using X509Certificate2 certificate = PemReader.LoadCertificate(RsaPem.AsSpan());
             Assert.That(certificate.Subject, Is.EqualTo("CN=Azure SDK"));
-            Assert.IsTrue(certificate.HasPrivateKey);
+            Assert.That(certificate.HasPrivateKey, Is.True);
             Assert.That(certificate.GetRSAPrivateKey().KeySize, Is.EqualTo(2048));
         }
 
@@ -167,7 +167,7 @@ pn29yMivL7r48dlo";
         {
             using X509Certificate2 certificate = PemReader.LoadCertificate(RsaPemPrivateKey.AsSpan(), s_rsaCertificateBytes, keyType: PemReader.KeyType.RSA);
             Assert.That(certificate.Subject, Is.EqualTo("CN=Azure SDK"));
-            Assert.IsTrue(certificate.HasPrivateKey);
+            Assert.That(certificate.HasPrivateKey, Is.True);
             Assert.That(certificate.GetRSAPrivateKey().KeySize, Is.EqualTo(2048));
         }
 
@@ -190,7 +190,7 @@ pn29yMivL7r48dlo";
         {
             using X509Certificate2 certificate = PemReader.LoadCertificate(RsaPemCertificate.AsSpan(), s_rsaCertificateBytes, keyType: PemReader.KeyType.RSA, allowCertificateOnly: true);
             Assert.That(certificate.Subject, Is.EqualTo("CN=Azure SDK"));
-            Assert.IsFalse(certificate.HasPrivateKey);
+            Assert.That(certificate.HasPrivateKey, Is.False);
         }
 
         [Test]
@@ -222,7 +222,7 @@ pn29yMivL7r48dlo";
 
             using X509Certificate2 certificate = PemReader.LoadCertificate(pem.AsSpan(), keyType: PemReader.KeyType.RSA);
             Assert.That(certificate.Subject, Is.EqualTo("CN=Azure SDK"));
-            Assert.IsTrue(certificate.HasPrivateKey);
+            Assert.That(certificate.HasPrivateKey, Is.True);
             Assert.That(certificate.GetRSAPrivateKey().KeySize, Is.EqualTo(2048));
         }
 
@@ -231,7 +231,7 @@ pn29yMivL7r48dlo";
         {
             using X509Certificate2 certificate = PemReader.LoadCertificate(RsaPem.AsSpan(), Encoding.UTF8.GetBytes("This is not a certificate"), keyType: PemReader.KeyType.RSA);
             Assert.That(certificate.Subject, Is.EqualTo("CN=Azure SDK"));
-            Assert.IsTrue(certificate.HasPrivateKey);
+            Assert.That(certificate.HasPrivateKey, Is.True);
             Assert.That(certificate.GetRSAPrivateKey().KeySize, Is.EqualTo(2048));
         }
 

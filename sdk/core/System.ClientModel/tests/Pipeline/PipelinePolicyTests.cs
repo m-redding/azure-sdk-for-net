@@ -1,4 +1,4 @@
-﻿// Copyright (c) Microsoft Corporation. All rights reserved.
+// Copyright (c) Microsoft Corporation. All rights reserved.
 // Licensed under the MIT License.
 
 using ClientModel.Tests;
@@ -38,7 +38,7 @@ public class PipelinePolicyTests : SyncAsyncTestBase
 
         await first.ProcessNextSyncOrAsync(message, policies, 0, IsAsync).ConfigureAwait(false);
 
-        Assert.IsFalse(first.CalledProcess);
-        Assert.IsTrue(last.CalledProcess);
+        Assert.That(first.CalledProcess, Is.False);
+        Assert.That(last.CalledProcess, Is.True);
     }
 }

@@ -1,4 +1,4 @@
-﻿// Copyright (c) Microsoft Corporation. All rights reserved.
+// Copyright (c) Microsoft Corporation. All rights reserved.
 // Licensed under the MIT License.
 
 using System.Collections.Generic;
@@ -25,7 +25,7 @@ public class ClientCacheTests
         var clientsField = typeof(ClientCache).GetField("_clients", BindingFlags.NonPublic | BindingFlags.Instance);
         var clients = clientsField?.GetValue(clientCache) as Dictionary<object, ClientEntry>;
 
-        Assert.IsNotNull(clients, "The _clients field is null.");
+        Assert.That(clients, Is.Not.Null, "The _clients field is null.");
         Assert.That(clients!.Count, Is.EqualTo(100), "Cache did not cleanup correctly.");
     }
 
@@ -44,7 +44,7 @@ public class ClientCacheTests
         var clientsField = typeof(ClientCache).GetField("_clients", BindingFlags.NonPublic | BindingFlags.Instance);
         var clients = clientsField?.GetValue(clientCache) as Dictionary<object, ClientEntry>;
 
-        Assert.IsNotNull(clients, "The _clients field is null.");
+        Assert.That(clients, Is.Not.Null, "The _clients field is null.");
         Assert.That(clients!.Count, Is.EqualTo(50), "Cache should not have cleaned up when under the limit.");
     }
 
@@ -68,20 +68,19 @@ public class ClientCacheTests
         var clientsField = typeof(ClientCache).GetField("_clients", BindingFlags.NonPublic | BindingFlags.Instance);
         var clients = clientsField?.GetValue(clientCache) as Dictionary<object, ClientEntry>;
 
-        Assert.IsNotNull(clients, "The _clients field is null.");
+        Assert.That(clients, Is.Not.Null, "The _clients field is null.");
         Assert.That(clients!.Count, Is.EqualTo(100), "Cache did not cleanup correctly.");
 
         // Ensure that recently accessed clients are still in the cache.
-        Assert.IsTrue(clients.ContainsKey(new DummyClientKey("client0")), "Most recently accessed client 'client0' should be in the cache.");
-        Assert.IsTrue(clients.ContainsKey(new DummyClientKey("client1")), "Most recently accessed client 'client1' should be in the cache.");
+        Assert.That(clients.ContainsKey(new DummyClientKey("client0")), Is.True, "Most recently accessed client 'client0' should be in the cache.");
+        Assert.That(clients.ContainsKey(new DummyClientKey("client1")), Is.True, "Most recently accessed client 'client1' should be in the cache.");
 
         // Based on the LRU policy, after adding 110 items then re-accessing "client0" and "client1",
         // the evicted keys are those that were least recently used.
         // Keys "client2" through "client11" should have been evicted.
         for (int i = 2; i < 12; i++)
         {
-            Assert.IsFalse(clients.ContainsKey(new DummyClientKey($"client{i}")),
-            $"Least recently used client 'client{i}' should have been removed.");
+            Assert.That(clients.ContainsKey(new DummyClientKey($"client{i}")), Is.False, $"Least recently used client 'client{i}' should have been removed.");
         }
     }
 
@@ -106,16 +105,16 @@ public class ClientCacheTests
         var clientsField = typeof(ClientCache).GetField("_clients", BindingFlags.NonPublic | BindingFlags.Instance);
         var clients = clientsField?.GetValue(clientCache) as Dictionary<object, ClientEntry>;
 
-        Assert.IsNotNull(clients, "The _clients field is null.");
+        Assert.That(clients, Is.Not.Null, "The _clients field is null.");
         Assert.That(clients!.Count, Is.EqualTo(100), "Cache did not cleanup correctly.");
 
         // Ensure that recently accessed clients are still in the cache.
-        Assert.IsTrue(clients.ContainsKey(new DummyClientKey("client0")), "Most recently accessed client 'client0' should be in the cache.");
-        Assert.IsTrue(clients.ContainsKey(new DummyClientKey("client1")), "Most recently accessed client 'client1' should be in the cache.");
+        Assert.That(clients.ContainsKey(new DummyClientKey("client0")), Is.True, "Most recently accessed client 'client0' should be in the cache.");
+        Assert.That(clients.ContainsKey(new DummyClientKey("client1")), Is.True, "Most recently accessed client 'client1' should be in the cache.");
 
         // Keys "client2" through "client3" should have been evicted.
-        Assert.IsFalse(clients.ContainsKey(new DummyClientKey("client2")));
-        Assert.IsFalse(clients.ContainsKey(new DummyClientKey("client3")));
+        Assert.That(clients.ContainsKey(new DummyClientKey("client2")), Is.False);
+        Assert.That(clients.ContainsKey(new DummyClientKey("client3")), Is.False);
     }
 
     [Test]
@@ -137,8 +136,8 @@ public class ClientCacheTests
         var clientsField = typeof(ClientCache).GetField("_clients", BindingFlags.NonPublic | BindingFlags.Instance);
         var clients = clientsField?.GetValue(clientCache) as Dictionary<object, ClientEntry>;
 
-        Assert.IsNotNull(clients, "The _clients field is null.");
-        Assert.IsTrue(disposableClient.IsDisposed, "Disposable client was not disposed correctly.");
+        Assert.That(clients, Is.Not.Null, "The _clients field is null.");
+        Assert.That(disposableClient.IsDisposed, Is.True, "Disposable client was not disposed correctly.");
     }
 
     [Test]
@@ -156,9 +155,9 @@ public class ClientCacheTests
         var clientsField = typeof(ClientCache).GetField("_clients", BindingFlags.NonPublic | BindingFlags.Instance);
         var clients = clientsField?.GetValue(clientCache) as Dictionary<object, ClientEntry>;
 
-        Assert.IsNotNull(clients, "The _clients field is null.");
-        Assert.IsTrue(clients!.ContainsKey(new DummyClientKey("client1")), "Client1 should be in the cache.");
-        Assert.IsTrue(clients!.ContainsKey(new DummyClientKey("client2")), "Client2 should be in the cache.");
+        Assert.That(clients, Is.Not.Null, "The _clients field is null.");
+        Assert.That(clients!.ContainsKey(new DummyClientKey("client1")), Is.True, "Client1 should be in the cache.");
+        Assert.That(clients!.ContainsKey(new DummyClientKey("client2")), Is.True, "Client2 should be in the cache.");
     }
 
     [Test]
@@ -189,12 +188,12 @@ public class ClientCacheTests
             return new object();  // This call should not trigger recreation for A
         });
 
-        Assert.False(wasRecreated, "Client A was unexpectedly recreated");
+        Assert.That(wasRecreated, Is.False, "Client A was unexpectedly recreated");
 
         var clientsField = typeof(ClientCache).GetField("_clients", BindingFlags.NonPublic | BindingFlags.Instance);
         var clients = clientsField?.GetValue(clientCache) as Dictionary<object, ClientEntry>;
 
-        Assert.IsNotNull(clients, "_clients dictionary should not be null");
+        Assert.That(clients, Is.Not.Null, "_clients dictionary should not be null");
 
         // Extract the keys correctly
         var keys = clients!.Keys.Select(k => k is DummyClientKey DummyClientKey ? DummyClientKey.Key : null).ToList();
@@ -203,7 +202,7 @@ public class ClientCacheTests
         Assert.That(keys, Is.EquivalentTo(new[] { "A", "C", "D" }), "Cache should contain A, C, and D");
 
         // Ensure B was evicted as it was the least recently used
-        Assert.IsFalse(keys.Contains("B"), "Client B should have been evicted.");
+        Assert.That(keys.Contains("B"), Is.False, "Client B should have been evicted.");
     }
 
     [Test]
@@ -229,8 +228,8 @@ public class ClientCacheTests
         var clients = clientsField?.GetValue(clientCache) as Dictionary<object, ClientEntry>;
 
         // Assert that both clients are in the cache with the expected keys
-        Assert.IsTrue(clients!.ContainsKey(new DummyClientKey("abc", options1)), "Client with options1 should be in the cache.");
-        Assert.IsTrue(clients!.ContainsKey(new DummyClientKey("abc", options2)), "Client with options2 should be in the cache.");
+        Assert.That(clients!.ContainsKey(new DummyClientKey("abc", options1)), Is.True, "Client with options1 should be in the cache.");
+        Assert.That(clients!.ContainsKey(new DummyClientKey("abc", options2)), Is.True, "Client with options2 should be in the cache.");
     }
 }
 

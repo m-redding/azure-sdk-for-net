@@ -1,4 +1,4 @@
-﻿// Copyright (c) Microsoft Corporation. All rights reserved.
+// Copyright (c) Microsoft Corporation. All rights reserved.
 // Licensed under the MIT License.
 
 using System.ClientModel.Primitives;
@@ -15,7 +15,7 @@ namespace System.ClientModel.Tests.ModelReaderWriterTests
 
             jp.Set("$.property"u8, "value");
 
-            Assert.IsTrue(jp.Contains("$.property"u8));
+            Assert.That(jp.Contains("$.property"u8), Is.True);
 
             Assert.That(jp.ToString(), Is.EqualTo("[{\"op\":\"add\",\"path\":\"/property\",\"value\":\"value\"}]"));
         }
@@ -28,7 +28,7 @@ namespace System.ClientModel.Tests.ModelReaderWriterTests
             jp.Set("$.property"u8, "value");
             jp.Set("$.x.y.property2"u8, "value");
 
-            Assert.IsTrue(jp.Contains("$.property"u8));
+            Assert.That(jp.Contains("$.property"u8), Is.True);
 
             Assert.That(jp.ToString(), Is.EqualTo("[{\"op\":\"add\",\"path\":\"/property\",\"value\":\"value\"},{\"op\":\"add\",\"path\":\"/x\",\"value\":{\"y\":{\"property2\":\"value\"}}}]"));
         }
@@ -70,7 +70,7 @@ namespace System.ClientModel.Tests.ModelReaderWriterTests
 
             jp.Set("$.property"u8, "value2");
 
-            Assert.IsTrue(jp.Contains("$.property"u8));
+            Assert.That(jp.Contains("$.property"u8), Is.True);
 
             Assert.That(jp.ToString(), Is.EqualTo("[{\"op\":\"replace\",\"path\":\"/property\",\"value\":\"value2\"}]"));
         }
@@ -83,7 +83,7 @@ namespace System.ClientModel.Tests.ModelReaderWriterTests
             jp.Set("$.property"u8, "value2");
             jp.Set("$.x.y.property2"u8, "value2");
 
-            Assert.IsTrue(jp.Contains("$.property"u8));
+            Assert.That(jp.Contains("$.property"u8), Is.True);
 
             Assert.That(jp.ToString(), Is.EqualTo("[{\"op\":\"replace\",\"path\":\"/property\",\"value\":\"value2\"},{\"op\":\"replace\",\"path\":\"/x/y/property2\",\"value\":\"value2\"}]"));
         }

@@ -1,4 +1,4 @@
-﻿// Copyright (c) Microsoft Corporation. All rights reserved.
+// Copyright (c) Microsoft Corporation. All rights reserved.
 // Licensed under the MIT License.
 
 using System;
@@ -61,7 +61,7 @@ namespace Azure.Core.Tests
             HttpClient transportClient = transport.Client;
             var handler = (SocketsHttpHandler)GetHandler(transportClient);
             Assert.That(handler.PooledConnectionLifetime, Is.EqualTo(TimeSpan.FromSeconds(300)));
-            Assert.GreaterOrEqual(handler.MaxConnectionsPerServer, 50);
+            Assert.That(handler.MaxConnectionsPerServer, Is.GreaterThanOrEqualTo(50));
         }
 #else
         [Test]
@@ -114,7 +114,7 @@ namespace Azure.Core.Tests
                 {
                     if (requestCount++ == 1)
                     {
-                        Assert.IsTrue(context.Request.Headers.ContainsKey("cookie"));
+                        Assert.That(context.Request.Headers.ContainsKey("cookie"), Is.True);
                         Assert.That(context.Request.Headers["cookie"].First(),
                             Is.EqualTo("stsservicecookie=estsfd"));
                     }

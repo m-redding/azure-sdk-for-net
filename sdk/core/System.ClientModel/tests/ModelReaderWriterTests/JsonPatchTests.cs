@@ -1,4 +1,4 @@
-﻿// Copyright (c) Microsoft Corporation. All rights reserved.
+// Copyright (c) Microsoft Corporation. All rights reserved.
 // Licensed under the MIT License.
 
 using System.ClientModel.Internal;
@@ -20,7 +20,7 @@ namespace System.ClientModel.Tests.ModelReaderWriterTests
             jp.Set("$.property"u8, "value");
             jp.Set("$.property2"u8, 10);
 
-            Assert.IsTrue(jp.Contains("$.property"u8));
+            Assert.That(jp.Contains("$.property"u8), Is.True);
             Assert.That(jp.GetString("$.property"u8), Is.EqualTo("value"));
             Assert.That(jp.GetInt32("$.property2"u8), Is.EqualTo(10));
 
@@ -134,7 +134,7 @@ namespace System.ClientModel.Tests.ModelReaderWriterTests
         {
             JsonPatch jp = new();
             jp.Set("$['pro.perty']"u8, "value");
-            Assert.IsTrue(jp.Contains("$['pro.perty']"u8));
+            Assert.That(jp.Contains("$['pro.perty']"u8), Is.True);
             Assert.That(jp.GetString("$['pro.perty']"u8), Is.EqualTo("value"));
 
             Assert.That(jp.ToString("J"), Is.EqualTo("{\"pro.perty\":\"value\"}"));
@@ -145,7 +145,7 @@ namespace System.ClientModel.Tests.ModelReaderWriterTests
         {
             JsonPatch jp = new();
             jp.Append("$.items"u8, "value1");
-            Assert.IsFalse(jp.Contains("$.items"u8), "Append should not cause Contains(path) to report true for the array container path.");
+            Assert.That(jp.Contains("$.items"u8), Is.False, "Append should not cause Contains(path) to report true for the array container path.");
 
             Assert.That(jp.GetString("$.items[0]"u8), Is.EqualTo("value1"));
         }
@@ -156,11 +156,11 @@ namespace System.ClientModel.Tests.ModelReaderWriterTests
             JsonPatch jp = new("{\"parent\":{\"child\":1}}"u8.ToArray());
             jp.Set("$.parent.child"u8, 10);
 
-            Assert.IsTrue(jp.Contains("$.parent.child"u8));
-            Assert.IsTrue(jp.Contains("$.parent"u8, "child"u8));
+            Assert.That(jp.Contains("$.parent.child"u8), Is.True);
+            Assert.That(jp.Contains("$.parent"u8, "child"u8), Is.True);
 
-            Assert.IsFalse(jp.Contains("$.parent"u8, "missing"u8));
-            Assert.IsFalse(jp.Contains("$.parent.child"u8, "grand"u8));
+            Assert.That(jp.Contains("$.parent"u8, "missing"u8), Is.False);
+            Assert.That(jp.Contains("$.parent.child"u8, "grand"u8), Is.False);
         }
 
         [Test]
@@ -169,9 +169,9 @@ namespace System.ClientModel.Tests.ModelReaderWriterTests
             JsonPatch jp = new();
             jp.Append("$.arr"u8, 5);
 
-            Assert.IsFalse(jp.Contains("$.arr"u8), "Array container path should not be considered 'contained' after only an append.");
+            Assert.That(jp.Contains("$.arr"u8), Is.False, "Array container path should not be considered 'contained' after only an append.");
 
-            Assert.IsTrue(jp.Contains("$"u8, "arr"u8), "Prefix/property Contains currently ignores ArrayItemAppend and reports true.");
+            Assert.That(jp.Contains("$"u8, "arr"u8), Is.True, "Prefix/property Contains currently ignores ArrayItemAppend and reports true.");
         }
 
         [Test]
@@ -182,13 +182,13 @@ namespace System.ClientModel.Tests.ModelReaderWriterTests
             jp.Set("$.obj.a"u8, 1);
             jp.Set("$.obj.b"u8, 2);
 
-            Assert.IsFalse(jp.IsRemoved("$.obj.a"u8));
-            Assert.IsFalse(jp.IsRemoved("$.obj.b"u8));
+            Assert.That(jp.IsRemoved("$.obj.a"u8), Is.False);
+            Assert.That(jp.IsRemoved("$.obj.b"u8), Is.False);
 
             jp.Remove("$.obj.a"u8);
 
-            Assert.IsTrue(jp.IsRemoved("$.obj.a"u8));
-            Assert.IsFalse(jp.IsRemoved("$.obj.b"u8));
+            Assert.That(jp.IsRemoved("$.obj.a"u8), Is.True);
+            Assert.That(jp.IsRemoved("$.obj.b"u8), Is.False);
 
             var ex = Assert.Throws<KeyNotFoundException>(() => jp.GetInt32("$.obj.a"u8));
             Assert.That(ex!.Message, Is.EqualTo("No value found at JSON path '$.obj.a'."));
@@ -201,7 +201,7 @@ namespace System.ClientModel.Tests.ModelReaderWriterTests
             jp.Set("$.p"u8, 5);
             jp.Remove("$.p"u8);
             jp.Set("$.p"u8, 10);
-            Assert.IsFalse(jp.IsRemoved("$.p"u8));
+            Assert.That(jp.IsRemoved("$.p"u8), Is.False);
             Assert.That(jp.GetInt32("$.p"u8), Is.EqualTo(10));
         }
 
@@ -238,9 +238,9 @@ namespace System.ClientModel.Tests.ModelReaderWriterTests
         {
             JsonPatch jp = new();
             jp.Set("$.x"u8, 5);
-            Assert.IsTrue(jp.TryGetValue("$.x"u8, out int v) && v == 5);
+            Assert.That(jp.TryGetValue("$.x"u8, out int v) && v == 5, Is.True);
             jp.Remove("$.x"u8);
-            Assert.IsFalse(jp.TryGetValue("$.x"u8, out int _));
+            Assert.That(jp.TryGetValue("$.x"u8, out int _), Is.False);
         }
 
         [Test]
@@ -249,8 +249,8 @@ namespace System.ClientModel.Tests.ModelReaderWriterTests
             JsonPatch jp = new();
             jp.Set("$.a"u8, 1);
             bool found = jp.TryGetNullableValue("$.a"u8, out char? c);
-            Assert.IsFalse(found);
-            Assert.False(c.HasValue);
+            Assert.That(found, Is.False);
+            Assert.That(c.HasValue, Is.False);
         }
 
         [Test]
@@ -259,7 +259,7 @@ namespace System.ClientModel.Tests.ModelReaderWriterTests
             JsonPatch jp = new();
             jp.Append("$.arr"u8, 1);
             jp.Append("$.arr"u8, 2);
-            Assert.IsFalse(jp.Contains("$.arr"u8));
+            Assert.That(jp.Contains("$.arr"u8), Is.False);
             jp.Set("$.arr[0]"u8, 10);
             Assert.That(jp.GetInt32("$.arr[0]"u8), Is.EqualTo(10));
             Assert.That(jp.GetInt32("$.arr[1]"u8), Is.EqualTo(2));
@@ -270,7 +270,7 @@ namespace System.ClientModel.Tests.ModelReaderWriterTests
         {
             JsonPatch jp = new();
             jp.SetNull("$.n"u8);
-            Assert.IsTrue(jp.TryGetJson("$.n"u8, out var mem));
+            Assert.That(jp.TryGetJson("$.n"u8, out var mem), Is.True);
             Assert.That(Encoding.UTF8.GetString(mem.Span.ToArray()), Is.EqualTo("null"));
         }
 
@@ -487,16 +487,16 @@ namespace System.ClientModel.Tests.ModelReaderWriterTests
 
             // GetString should return single escape
             Assert.That(jp.GetString("$.text"u8), Is.EqualTo("Line1\nLine2\tTabbed\"Quote\""));
-            Assert.IsTrue(jp.TryGetValue("$.text"u8, out string? value));
+            Assert.That(jp.TryGetValue("$.text"u8, out string? value), Is.True);
             Assert.That(value, Is.EqualTo("Line1\nLine2\tTabbed\"Quote\""));
-            Assert.IsTrue(value!.Contains("\n"));
-            Assert.IsFalse(value.Contains("\\n"));
+            Assert.That(value!.Contains("\n"), Is.True);
+            Assert.That(value.Contains("\\n"), Is.False);
 
             // GetJson should return the exact byte array we passed in
             Assert.That(jp.GetJson("$.text"u8).ToArray(), Is.EqualTo("Line1\nLine2\tTabbed\"Quote\""u8.ToArray()).AsCollection);
 
             // EncodedValue should have the exact byte array we passed in
-            Assert.IsTrue(jp.TryGetEncodedValue("$.text"u8, out var encodedValue));
+            Assert.That(jp.TryGetEncodedValue("$.text"u8, out var encodedValue), Is.True);
             Assert.That(encodedValue.Value.ToArray(), Is.EqualTo("Line1\nLine2\tTabbed\"Quote\""u8.ToArray()));
 
             // ToString will have 2 characters to represent the escaped characters 0x0A (\n), 0x09 (\t), and \u0022 (")
@@ -512,16 +512,16 @@ namespace System.ClientModel.Tests.ModelReaderWriterTests
 
             // GetString should return single escape
             Assert.That(jp.GetString("$.text"u8), Is.EqualTo("Line1\nLine2\tTabbed\"Quote\""));
-            Assert.IsTrue(jp.TryGetValue("$.text"u8, out string? value));
+            Assert.That(jp.TryGetValue("$.text"u8, out string? value), Is.True);
             Assert.That(value, Is.EqualTo("Line1\nLine2\tTabbed\"Quote\""));
-            Assert.IsTrue(value!.Contains("\n"));
-            Assert.IsFalse(value.Contains("\\n"));
+            Assert.That(value!.Contains("\n"), Is.True);
+            Assert.That(value.Contains("\\n"), Is.False);
 
             // GetJson should return the exact byte array we passed in
             Assert.That(jp.GetJson("$.text"u8).ToArray(), Is.EqualTo("\"Line1\\nLine2\\tTabbed\\\"Quote\\\"\""u8.ToArray()).AsCollection);
 
             // EncodedValue should have the exact byte array we passed in
-            Assert.IsTrue(jp.TryGetEncodedValue("$.text"u8, out var encodedValue));
+            Assert.That(jp.TryGetEncodedValue("$.text"u8, out var encodedValue), Is.True);
             Assert.That(encodedValue.Value.ToArray(), Is.EqualTo("\"Line1\\nLine2\\tTabbed\\\"Quote\\\"\""u8.ToArray()));
 
             // ToString will have 2 characters to represent the escaped characters 0x0A (\n), 0x09 (\t), and \u0022 (")
@@ -536,16 +536,16 @@ namespace System.ClientModel.Tests.ModelReaderWriterTests
 
             // GetString should return single escape
             Assert.That(jp.GetString("$.text"u8), Is.EqualTo("Line1\nLine2\tTabbed\"Quote\""));
-            Assert.IsTrue(jp.TryGetValue("$.text"u8, out string? value));
+            Assert.That(jp.TryGetValue("$.text"u8, out string? value), Is.True);
             Assert.That(value, Is.EqualTo("Line1\nLine2\tTabbed\"Quote\""));
-            Assert.IsTrue(value!.Contains("\n"));
-            Assert.IsFalse(value.Contains("\\n"));
+            Assert.That(value!.Contains("\n"), Is.True);
+            Assert.That(value.Contains("\\n"), Is.False);
 
             // GetJson should return the exact byte array we passed in
             Assert.That(jp.GetJson("$.text"u8).ToArray(), Is.EqualTo("\"Line1\\nLine2\\tTabbed\\\"Quote\\\"\""u8.ToArray()).AsCollection);
 
             // EncodedValue should have the exact byte array we passed in
-            Assert.IsTrue(jp.TryGetEncodedValue("$.text"u8, out var encodedValue));
+            Assert.That(jp.TryGetEncodedValue("$.text"u8, out var encodedValue), Is.True);
             Assert.That(encodedValue.Value.ToArray(), Is.EqualTo("\"Line1\\nLine2\\tTabbed\\\"Quote\\\"\""u8.ToArray()));
 
             // ToString will have 2 characters to represent the escaped characters 0x0A (\n), 0x09 (\t), and \u0022 (")

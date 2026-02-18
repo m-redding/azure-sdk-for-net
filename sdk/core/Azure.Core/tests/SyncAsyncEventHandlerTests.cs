@@ -1,4 +1,4 @@
-﻿// Copyright (c) Microsoft Corporation. All rights reserved.
+// Copyright (c) Microsoft Corporation. All rights reserved.
 // Licensed under the MIT License.
 
 using System;
@@ -208,8 +208,8 @@ namespace Azure.Core.Tests
             client.Working += test.Handle;
             await client.DoWorkAsync();
 
-            Assert.IsTrue(test.Raised);
-            Assert.IsTrue(test.Completed);
+            Assert.That(test.Raised, Is.True);
+            Assert.That(test.Completed, Is.True);
         }
 
         [Test]
@@ -237,7 +237,7 @@ namespace Azure.Core.Tests
             client.Working -= test.Handle;
             await client.DoWorkAsync();
 
-            Assert.IsFalse(test.Raised);
+            Assert.That(test.Raised, Is.False);
         }
 
         [Test]
@@ -283,10 +283,10 @@ namespace Azure.Core.Tests
 
             await client.DoWorkAsync();
 
-            Assert.IsTrue(first.Completed);
-            Assert.IsTrue(third.Completed);
+            Assert.That(first.Completed, Is.True);
+            Assert.That(third.Completed, Is.True);
 
-            Assert.IsFalse(second.Raised);
+            Assert.That(second.Raised, Is.False);
         }
 
         [Test]
@@ -305,7 +305,7 @@ namespace Azure.Core.Tests
                             s => s.Name == $"{nameof(TestClient)}.{nameof(TestClient.Working)}");
 
                     Assert.That(Activity.Current.OperationName, Is.EqualTo($"{nameof(TestClient)}.{nameof(TestClient.DoWork)}"));
-                    Assert.IsNull(scope);
+                    Assert.That(scope, Is.Null);
                     return Task.CompletedTask;
                 };
             await client.DoWorkAsync();
@@ -322,8 +322,8 @@ namespace Azure.Core.Tests
             client.Working += test.Handle;
             await client.DoWorkAsync();
 
-            Assert.IsTrue(test.Raised);
-            Assert.IsTrue(test.Completed);
+            Assert.That(test.Raised, Is.True);
+            Assert.That(test.Completed, Is.True);
         }
 
         [Test]
@@ -339,9 +339,9 @@ namespace Azure.Core.Tests
             client.Working += third.Handle;
             await client.DoWorkAsync();
 
-            Assert.IsTrue(first.Completed);
-            Assert.IsTrue(second.Completed);
-            Assert.IsTrue(third.Completed);
+            Assert.That(first.Completed, Is.True);
+            Assert.That(second.Completed, Is.True);
+            Assert.That(third.Completed, Is.True);
         }
 
         [Test]
@@ -357,9 +357,9 @@ namespace Azure.Core.Tests
             client.Working += third.Handle;
             await client.DoWorkAsync();
 
-            Assert.IsTrue(first.Completed);
-            Assert.IsTrue(second.Completed);
-            Assert.IsTrue(third.Completed);
+            Assert.That(first.Completed, Is.True);
+            Assert.That(second.Completed, Is.True);
+            Assert.That(third.Completed, Is.True);
         }
 
         [Test]
@@ -375,9 +375,9 @@ namespace Azure.Core.Tests
             client.Working += third.Handle;
             await client.DoWorkAsync();
 
-            Assert.IsTrue(first.Completed);
-            Assert.IsTrue(second.Completed);
-            Assert.IsTrue(third.Completed);
+            Assert.That(first.Completed, Is.True);
+            Assert.That(second.Completed, Is.True);
+            Assert.That(third.Completed, Is.True);
         }
 
         [Test]
@@ -393,9 +393,9 @@ namespace Azure.Core.Tests
             client.Working += third.Handle;
             await client.DoWorkAsync();
 
-            Assert.IsTrue(first.Completed);
-            Assert.IsTrue(second.Completed);
-            Assert.IsTrue(third.Completed);
+            Assert.That(first.Completed, Is.True);
+            Assert.That(second.Completed, Is.True);
+            Assert.That(third.Completed, Is.True);
         }
 
         [Test]
@@ -414,10 +414,10 @@ namespace Azure.Core.Tests
             first.Callback = (_, _) => { client.Working += fourth.Handle; return Task.CompletedTask; };
             await client.DoWorkAsync();
 
-            Assert.IsTrue(first.Completed);
-            Assert.IsTrue(second.Completed);
-            Assert.IsTrue(third.Completed);
-            Assert.IsFalse(fourth.Raised);
+            Assert.That(first.Completed, Is.True);
+            Assert.That(second.Completed, Is.True);
+            Assert.That(third.Completed, Is.True);
+            Assert.That(fourth.Raised, Is.False);
         }
 
         [Test]
@@ -435,9 +435,9 @@ namespace Azure.Core.Tests
             first.Callback = (_, _) => { client.Working -= first.Handle; return Task.CompletedTask; };
             await client.DoWorkAsync();
 
-            Assert.IsTrue(first.Completed);
-            Assert.IsTrue(second.Completed);
-            Assert.IsTrue(third.Completed);
+            Assert.That(first.Completed, Is.True);
+            Assert.That(second.Completed, Is.True);
+            Assert.That(third.Completed, Is.True);
 
             await client.DoWorkAsync();
             Assert.That(first.CompletedCount, Is.EqualTo(1));
@@ -485,7 +485,7 @@ namespace Azure.Core.Tests
             client.Working += test.Handle;
             await client.DoWorkAsync();
 
-            Assert.IsNotNull(test.LastEventArgs);
+            Assert.That(test.LastEventArgs, Is.Not.Null);
         }
 
         [Test]
@@ -516,8 +516,8 @@ namespace Azure.Core.Tests
             client.Working += before.Handle;
             client.WorkCompleted += after.Handle;
             int result = await client.DoWorkAsync();
-            Assert.True(before.Completed);
-            Assert.True(after.Completed);
+            Assert.That(before.Completed, Is.True);
+            Assert.That(after.Completed, Is.True);
             Assert.That(after.LastEventArgs.Client, Is.SameAs(original));
             Assert.That(after.LastEventArgs.Result, Is.EqualTo(result));
         }
@@ -535,8 +535,8 @@ namespace Azure.Core.Tests
             await client.DoWorkAsync(cancellation.Token);
             cancellation.Cancel();
 
-            Assert.IsTrue(test.Raised);
-            Assert.IsTrue(test.Completed);
+            Assert.That(test.Raised, Is.True);
+            Assert.That(test.Completed, Is.True);
         }
 
         [Test]
@@ -556,8 +556,8 @@ namespace Azure.Core.Tests
             {
             }
 
-            Assert.IsTrue(test.Raised);
-            Assert.IsFalse(test.Completed);
+            Assert.That(test.Raised, Is.True);
+            Assert.That(test.Completed, Is.False);
         }
 
         [Test]
@@ -582,12 +582,12 @@ namespace Azure.Core.Tests
             {
             }
 
-            Assert.IsTrue(first.Raised);
-            Assert.IsFalse(first.Completed);
-            Assert.IsFalse(second.Raised);
-            Assert.IsFalse(second.Completed);
-            Assert.IsFalse(third.Raised);
-            Assert.IsFalse(third.Completed);
+            Assert.That(first.Raised, Is.True);
+            Assert.That(first.Completed, Is.False);
+            Assert.That(second.Raised, Is.False);
+            Assert.That(second.Completed, Is.False);
+            Assert.That(third.Raised, Is.False);
+            Assert.That(third.Completed, Is.False);
         }
         #endregion
 
@@ -606,12 +606,12 @@ namespace Azure.Core.Tests
             }
             catch (AggregateException ex)
             {
-                Assert.IsInstanceOf<InvalidOperationException>(ex.InnerException);
+                Assert.That(ex.InnerException, Is.InstanceOf<InvalidOperationException>());
                 Assert.That(ex.InnerException.Message, Is.EqualTo("Boom!"));
             }
 
-            Assert.IsTrue(test.Raised);
-            Assert.IsFalse(test.Completed);
+            Assert.That(test.Raised, Is.True);
+            Assert.That(test.Completed, Is.False);
         }
 
         [Test]
@@ -634,16 +634,16 @@ namespace Azure.Core.Tests
             }
             catch (AggregateException ex)
             {
-                Assert.IsInstanceOf<InvalidOperationException>(ex.InnerException);
+                Assert.That(ex.InnerException, Is.InstanceOf<InvalidOperationException>());
                 Assert.That(ex.InnerException.Message, Is.EqualTo("Boom!"));
             }
 
-            Assert.IsTrue(first.Raised);
-            Assert.IsFalse(first.Completed);
-            Assert.IsTrue(second.Raised);
-            Assert.IsTrue(second.Completed);
-            Assert.IsTrue(third.Raised);
-            Assert.IsTrue(third.Completed);
+            Assert.That(first.Raised, Is.True);
+            Assert.That(first.Completed, Is.False);
+            Assert.That(second.Raised, Is.True);
+            Assert.That(second.Completed, Is.True);
+            Assert.That(third.Raised, Is.True);
+            Assert.That(third.Completed, Is.True);
         }
 
         [Test]
@@ -673,12 +673,12 @@ namespace Azure.Core.Tests
                 Assert.That(messages.Count, Is.EqualTo(3));
             }
 
-            Assert.IsTrue(first.Raised);
-            Assert.IsFalse(first.Completed);
-            Assert.IsTrue(second.Raised);
-            Assert.IsFalse(second.Completed);
-            Assert.IsTrue(third.Raised);
-            Assert.IsFalse(third.Completed);
+            Assert.That(first.Raised, Is.True);
+            Assert.That(first.Completed, Is.False);
+            Assert.That(second.Raised, Is.True);
+            Assert.That(second.Completed, Is.False);
+            Assert.That(third.Raised, Is.True);
+            Assert.That(third.Completed, Is.False);
         }
 
         [Test]
@@ -694,8 +694,8 @@ namespace Azure.Core.Tests
             }
             catch (AggregateException outer)
             {
-                Assert.IsInstanceOf<AggregateException>(outer.InnerException);
-                Assert.IsInstanceOf<InvalidOperationException>(outer.InnerException.InnerException);
+                Assert.That(outer.InnerException, Is.InstanceOf<AggregateException>());
+                Assert.That(outer.InnerException.InnerException, Is.InstanceOf<InvalidOperationException>());
             }
         }
         #endregion

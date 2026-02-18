@@ -1,4 +1,4 @@
-﻿// Copyright (c) Microsoft Corporation. All rights reserved.
+// Copyright (c) Microsoft Corporation. All rights reserved.
 // Licensed under the MIT License.
 
 using System;
@@ -108,7 +108,7 @@ namespace Azure.Core.Tests
             Assert.That(point.CustomProperties["additionalArray"], Is.EqualTo(new object[] { 1, 2.2, 9999999999999999999L, "hello", true, null }));
 
             Assert.That(point.TryGetCustomProperty("additionalObject", out var obj), Is.EqualTo(true));
-            Assert.True(obj is IReadOnlyDictionary<string, object>);
+            Assert.That(obj is IReadOnlyDictionary<string, object>, Is.True);
             var dictionary = (IReadOnlyDictionary<string, object>)obj;
             Assert.That(dictionary["additionalNumber"], Is.EqualTo(1));
             Assert.That(dictionary["additionalNumber2"], Is.EqualTo(2.2));
@@ -353,7 +353,7 @@ namespace Azure.Core.Tests
 
             Assert.That(point.Coordinates.Longitude, Is.EqualTo(-122.091954).Within(1e-10));
             Assert.That(point.Coordinates.Latitude, Is.EqualTo(47.607148).Within(1e-10));
-            Assert.IsNotNull(point.BoundingBox);
+            Assert.That(point.BoundingBox, Is.Not.Null);
             Assert.That(point.BoundingBox.West, Is.EqualTo(-180));
             Assert.That(point.BoundingBox.South, Is.EqualTo(-90));
             Assert.That(point.BoundingBox.East, Is.EqualTo(180));

@@ -1,4 +1,4 @@
-﻿// Copyright (c) Microsoft Corporation. All rights reserved.
+// Copyright (c) Microsoft Corporation. All rights reserved.
 // Licensed under the MIT License.
 
 using System.Threading.Tasks;
@@ -18,7 +18,7 @@ namespace Azure.Core.Tests
             MockClient client = new MockClient(options);
             Response response = await client.GetValueAsync();
             dynamic value = response.Content.ToDynamicFromJson();
-            Assert.IsNull(value.Foo);
+            Assert.That(value.Foo, Is.Null);
             Assert.That((int)value.foo, Is.EqualTo(1));
         }
 

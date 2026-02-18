@@ -1,4 +1,4 @@
-﻿// Copyright (c) Microsoft Corporation. All rights reserved.
+// Copyright (c) Microsoft Corporation. All rights reserved.
 // Licensed under the MIT License.
 
 using System;
@@ -85,7 +85,7 @@ namespace Azure.Core.Tests
 
             await ExecuteRequest(request, transport);
 
-            Assert.True(request.Content.TryComputeLength(out var cl));
+            Assert.That(request.Content.TryComputeLength(out var cl), Is.True);
             Assert.That(cl, Is.EqualTo(10));
             Assert.That(contentLength, Is.EqualTo(50));
         }
@@ -119,7 +119,7 @@ namespace Azure.Core.Tests
 
             // InfiniteStream has a length of long.MaxValue check that it got sent correctly
             Assert.That(contentLength, Is.EqualTo(infiniteStream.Length));
-            Assert.Greater(infiniteStream.Length, int.MaxValue);
+            Assert.That(infiniteStream.Length, Is.GreaterThan(int.MaxValue));
         }
 
         [Test]
@@ -269,7 +269,7 @@ namespace Azure.Core.Tests
             using TestServer testServer = new TestServer(
                 context =>
                 {
-                    Assert.True(context.Request.Headers.TryGetValue(headerName, out httpHeaderValues));
+                    Assert.That(context.Request.Headers.TryGetValue(headerName, out httpHeaderValues), Is.True);
                 });
 
             var transport = GetTransport();
@@ -282,10 +282,10 @@ namespace Azure.Core.Tests
                 request.Content = RequestContent.Create(new byte[16]);
             }
 
-            Assert.True(request.Headers.TryGetValue(headerName, out var value));
+            Assert.That(request.Headers.TryGetValue(headerName, out var value), Is.True);
             Assert.That(value, Is.EqualTo(headerValue));
 
-            Assert.True(request.Headers.TryGetValue(headerName.ToUpper(), out value));
+            Assert.That(request.Headers.TryGetValue(headerName.ToUpper(), out value), Is.True);
             Assert.That(value, Is.EqualTo(headerValue));
 
             Assert.That(request.Headers, Is.EqualTo(new[]
@@ -310,11 +310,11 @@ namespace Azure.Core.Tests
             var transport = GetTransport();
             Request request = transport.CreateRequest();
 
-            Assert.False(request.Headers.TryGetValue(headerName, out string value));
-            Assert.IsNull(value);
+            Assert.That(request.Headers.TryGetValue(headerName, out string value), Is.False);
+            Assert.That(value, Is.Null);
 
-            Assert.False(request.Headers.TryGetValues(headerName, out IEnumerable<string> values));
-            Assert.IsNull(values);
+            Assert.That(request.Headers.TryGetValues(headerName, out IEnumerable<string> values), Is.False);
+            Assert.That(values, Is.Null);
         }
 
         [TestCaseSource(nameof(HeadersWithValues))]
@@ -331,7 +331,7 @@ namespace Azure.Core.Tests
             using TestServer testServer = new TestServer(
                 context =>
                 {
-                    Assert.True(context.Request.Headers.TryGetValue(headerName, out httpHeaderValues));
+                    Assert.That(context.Request.Headers.TryGetValue(headerName, out httpHeaderValues), Is.True);
                 });
 
             var transport = GetTransport();
@@ -340,12 +340,12 @@ namespace Azure.Core.Tests
             request.Headers.Add(headerName, headerValue);
             request.Headers.Add(headerName, anotherHeaderValue);
 
-            Assert.True(request.Headers.Contains(headerName));
+            Assert.That(request.Headers.Contains(headerName), Is.True);
 
-            Assert.True(request.Headers.TryGetValue(headerName, out var value));
+            Assert.That(request.Headers.TryGetValue(headerName, out var value), Is.True);
             Assert.That(value, Is.EqualTo(joinedHeaderValues));
 
-            Assert.True(request.Headers.TryGetValues(headerName, out IEnumerable<string> values));
+            Assert.That(request.Headers.TryGetValues(headerName, out IEnumerable<string> values), Is.True);
             Assert.That(values, Is.EqualTo(new[] { headerValue, anotherHeaderValue }).AsCollection);
 
             Assert.That(request.Headers, Is.EqualTo(new[]
@@ -374,12 +374,12 @@ namespace Azure.Core.Tests
 
             Response response = await ExecuteRequest(request, transport);
 
-            Assert.True(response.Headers.Contains(headerName), $"response.Headers contains the following headers: {string.Join(", ", response.Headers.Select(h => $"\"{h.Name}\": \"{h.Value}\""))}");
+            Assert.That(response.Headers.Contains(headerName), Is.True, $"response.Headers contains the following headers: {string.Join(", ", response.Headers.Select(h => $"\"{h.Name}\": \"{h.Value}\""))}");
 
-            Assert.True(response.Headers.TryGetValue(headerName, out var value));
+            Assert.That(response.Headers.TryGetValue(headerName, out var value), Is.True);
             Assert.That(value, Is.EqualTo(headerValue));
 
-            Assert.True(response.Headers.TryGetValues(headerName, out IEnumerable<string> values));
+            Assert.That(response.Headers.TryGetValues(headerName, out IEnumerable<string> values), Is.True);
             Assert.That(values, Is.EqualTo(new[] { headerValue }).AsCollection);
 
             Assert.That(response.Headers, Has.Member(new HttpHeader(headerName, headerValue)));
@@ -410,12 +410,12 @@ namespace Azure.Core.Tests
 
             Response response = await ExecuteRequest(request, transport);
 
-            Assert.True(response.Headers.Contains(headerName));
+            Assert.That(response.Headers.Contains(headerName), Is.True);
 
-            Assert.True(response.Headers.TryGetValue(headerName, out var value));
+            Assert.That(response.Headers.TryGetValue(headerName, out var value), Is.True);
             Assert.That(value, Is.EqualTo(joinedHeaderValues));
 
-            Assert.True(response.Headers.TryGetValues(headerName, out IEnumerable<string> values));
+            Assert.That(response.Headers.TryGetValues(headerName, out IEnumerable<string> values), Is.True);
             Assert.That(values, Is.EqualTo(new[] { headerValue, anotherHeaderValue }).AsCollection);
 
             Assert.That(response.Headers, Has.Member(new HttpHeader(headerName, joinedHeaderValues)));
@@ -432,7 +432,7 @@ namespace Azure.Core.Tests
                 {
                     if (checkOnServer)
                     {
-                        Assert.False(context.Request.Headers.TryGetValue(headerName, out _));
+                        Assert.That(context.Request.Headers.TryGetValue(headerName, out _), Is.False);
                     }
                 });
 
@@ -440,12 +440,12 @@ namespace Azure.Core.Tests
             Request request = CreateRequest(transport, testServer);
 
             request.Headers.Add(headerName, headerValue);
-            Assert.True(request.Headers.Remove(headerName));
-            Assert.False(request.Headers.Remove(headerName));
+            Assert.That(request.Headers.Remove(headerName), Is.True);
+            Assert.That(request.Headers.Remove(headerName), Is.False);
 
-            Assert.False(request.Headers.TryGetValue(headerName, out _));
-            Assert.False(request.Headers.TryGetValue(headerName.ToUpper(), out _));
-            Assert.False(request.Headers.Contains(headerName.ToUpper()));
+            Assert.That(request.Headers.TryGetValue(headerName, out _), Is.False);
+            Assert.That(request.Headers.TryGetValue(headerName.ToUpper(), out _), Is.False);
+            Assert.That(request.Headers.Contains(headerName.ToUpper()), Is.False);
 
             await ExecuteRequest(request, transport);
         }
@@ -458,7 +458,7 @@ namespace Azure.Core.Tests
             using TestServer testServer = new TestServer(
                 context =>
                 {
-                    Assert.True(context.Request.Headers.TryGetValue(headerName, out httpHeaderValues));
+                    Assert.That(context.Request.Headers.TryGetValue(headerName, out httpHeaderValues), Is.True);
                 });
 
             var transport = GetTransport();
@@ -472,10 +472,10 @@ namespace Azure.Core.Tests
                 request.Content = RequestContent.Create(new byte[16]);
             }
 
-            Assert.True(request.Headers.TryGetValue(headerName, out var value));
+            Assert.That(request.Headers.TryGetValue(headerName, out var value), Is.True);
             Assert.That(value, Is.EqualTo(headerValue));
 
-            Assert.True(request.Headers.TryGetValue(headerName.ToUpper(), out value));
+            Assert.That(request.Headers.TryGetValue(headerName.ToUpper(), out value), Is.True);
             Assert.That(value, Is.EqualTo(headerValue));
 
             Assert.That(request.Headers, Is.EqualTo(new[]
@@ -591,7 +591,7 @@ namespace Azure.Core.Tests
                 method == RequestMethod.Get ||
                 method == RequestMethod.Head)
             {
-                Assert.Null(contentLength);
+                Assert.That(contentLength, Is.Null);
             }
             else
             {
@@ -619,7 +619,7 @@ namespace Azure.Core.Tests
             request.Uri.Reset(testServer.Address);
 
             await ExecuteRequest(request, transport);
-            Assert.Null(contentType);
+            Assert.That(contentType, Is.Null);
         }
 
         [Test]
@@ -628,8 +628,8 @@ namespace Azure.Core.Tests
             using TestServer testServer = new TestServer(context => { });
             var transport = GetTransport();
             Request request = transport.CreateRequest();
-            Assert.IsNotEmpty(request.ClientRequestId);
-            Assert.True(Guid.TryParse(request.ClientRequestId, out _));
+            Assert.That(request.ClientRequestId, Is.Not.Empty);
+            Assert.That(Guid.TryParse(request.ClientRequestId, out _), Is.True);
             request.Method = RequestMethod.Get;
             request.Uri.Reset(testServer.Address);
 
@@ -712,10 +712,10 @@ namespace Azure.Core.Tests
                 request.Uri.Reset(testServer.Address);
 
                 await ExecuteRequest(request, transport);
-                Assert.False(disposeTrackingContent.IsDisposed);
+                Assert.That(disposeTrackingContent.IsDisposed, Is.False);
             }
 
-            Assert.True(disposeTrackingContent.IsDisposed);
+            Assert.That(disposeTrackingContent.IsDisposed, Is.True);
         }
         [Test]
         public void GetIsDefaultMethod()
@@ -754,7 +754,7 @@ namespace Azure.Core.Tests
                     Request request = transport.CreateRequest();
                     request.Uri.Reset(new Uri(url));
                     Response response = await ExecuteRequest(request, transport);
-                    Assert.True(response.Headers.TryGetValue("Via", out var via));
+                    Assert.That(response.Headers.TryGetValue("Via", out var via), Is.True);
                     Assert.That(via, Is.EqualTo("Test-Proxy"));
                 }
             }
@@ -789,7 +789,7 @@ namespace Azure.Core.Tests
                     Request request = transport.CreateRequest();
                     request.Uri.Reset(new Uri("http://microsoft.com"));
                     Response response = await ExecuteRequest(request, transport);
-                    Assert.True(response.Headers.TryGetValue("Via", out var via));
+                    Assert.That(response.Headers.TryGetValue("Via", out var via), Is.True);
                     Assert.That(via, Is.EqualTo("Test-Proxy"));
                 }
             }
@@ -817,7 +817,7 @@ namespace Azure.Core.Tests
                 Request request = transport.CreateRequest();
                 request.Uri.Reset(testServer.Address);
                 Response response = await ExecuteRequest(request, transport);
-                Assert.True(response.Headers.TryGetValues("Sync-Token", out System.Collections.Generic.IEnumerable<string> tokens));
+                Assert.That(response.Headers.TryGetValues("Sync-Token", out System.Collections.Generic.IEnumerable<string> tokens), Is.True);
                 Assert.That(tokens.Count(), Is.EqualTo(2));
                 Assert.That(tokens, Is.EqualTo(new[] { "A", "B" }).AsCollection);
             }
@@ -838,7 +838,7 @@ namespace Azure.Core.Tests
                 Request request = transport.CreateRequest();
                 request.Uri.Reset(testServer.Address);
                 Response response = await ExecuteRequest(request, transport);
-                Assert.True(response.Headers.TryGetValues("Sync-Token", out System.Collections.Generic.IEnumerable<string> tokens));
+                Assert.That(response.Headers.TryGetValues("Sync-Token", out System.Collections.Generic.IEnumerable<string> tokens), Is.True);
                 Assert.That(tokens.Count(), Is.EqualTo(1));
                 Assert.That(tokens, Is.EqualTo(new[] { "A,B" }).AsCollection);
             }
@@ -858,7 +858,7 @@ namespace Azure.Core.Tests
                 Request request = transport.CreateRequest();
                 request.Uri.Reset(testServer.Address);
                 RequestFailedException exception = Assert.ThrowsAsync<RequestFailedException>(async () => await ExecuteRequest(request, transport));
-                Assert.IsNotEmpty(exception.Message);
+                Assert.That(exception.Message, Is.Not.Empty);
                 Assert.That(exception.Status, Is.EqualTo(0));
             }
         }
@@ -877,9 +877,9 @@ namespace Azure.Core.Tests
                 Request request = transport.CreateRequest();
                 request.Uri.Reset(testServer.Address);
                 RequestFailedException exception = Assert.ThrowsAsync<RequestFailedException>(async () => await ExecuteRequest(request, transport));
-                Assert.IsNotEmpty(exception.Message);
+                Assert.That(exception.Message, Is.Not.Empty);
                 Assert.That(exception.Status, Is.EqualTo(0));
-                Assert.IsNotEmpty(exception.InnerException.Message);
+                Assert.That(exception.InnerException.Message, Is.Not.Empty);
             }
         }
 
@@ -1052,8 +1052,8 @@ namespace Azure.Core.Tests
                     Assert.Multiple(
                         () =>
                         {
-                            Assert.IsTrue(isValidCert);
-                            Assert.IsTrue(setCertCallback);
+                            Assert.That(isValidCert, Is.True);
+                            Assert.That(setCertCallback, Is.True);
                         });
                 }
                 catch (Exception ex) when (ex is not AssertionException)
@@ -1079,8 +1079,8 @@ namespace Azure.Core.Tests
                         Assert.Multiple(
                             () =>
                             {
-                                Assert.NotNull(cert, $"{nameof(ServerCertificateCustomValidationArgs)}.{nameof(ServerCertificateCustomValidationArgs.Certificate)} should not be null");
-                                Assert.NotNull(chain, $"{nameof(ServerCertificateCustomValidationArgs)}.{nameof(ServerCertificateCustomValidationArgs.CertificateAuthorityChain)} should not be null");
+                                Assert.That(cert, Is.Not.Null, $"{nameof(ServerCertificateCustomValidationArgs)}.{nameof(ServerCertificateCustomValidationArgs.Certificate)} should not be null");
+                                Assert.That(chain, Is.Not.Null, $"{nameof(ServerCertificateCustomValidationArgs)}.{nameof(ServerCertificateCustomValidationArgs.CertificateAuthorityChain)} should not be null");
                             });
                     }
                 }
@@ -1102,12 +1102,12 @@ namespace Azure.Core.Tests
                     var cert = context.Connection.ClientCertificate;
                     if (setClientCertificate)
                     {
-                        Assert.NotNull(cert);
+                        Assert.That(cert, Is.Not.Null);
                         Assert.That(cert, Is.EqualTo(clientCert));
                     }
                     else
                     {
-                        Assert.Null(cert);
+                        Assert.That(cert, Is.Null);
                     }
                     byte[] buffer = Encoding.UTF8.GetBytes("Hello");
                     await context.Response.Body.WriteAsync(buffer, 0, buffer.Length);
@@ -1146,13 +1146,13 @@ namespace Azure.Core.Tests
                     var cert = context.Connection.ClientCertificate;
                     if (setClientCertificate)
                     {
-                        Assert.NotNull(cert);
+                        Assert.That(cert, Is.Not.Null);
                         Assert.That(cert, Is.EqualTo(clientCert));
                         validatedCert = true;
                     }
                     else
                     {
-                        Assert.Null(cert);
+                        Assert.That(cert, Is.Null);
                     }
                     byte[] buffer = Encoding.UTF8.GetBytes("Hello");
                     await context.Response.Body.WriteAsync(buffer, 0, buffer.Length);
@@ -1180,7 +1180,7 @@ namespace Azure.Core.Tests
                 request.Uri.Reset(testServer.Address);
 
                 await ExecuteRequest(request, transport);
-                Assert.IsTrue(validatedCert, "Client certificate was not validated after transport update.");
+                Assert.That(validatedCert, Is.True, "Client certificate was not validated after transport update.");
             }
         }
 
@@ -1204,13 +1204,13 @@ namespace Azure.Core.Tests
                         var cert = context.Connection.ClientCertificate;
                         if (setClientCertificate)
                         {
-                            Assert.NotNull(cert);
+                            Assert.That(cert, Is.Not.Null);
                             Assert.That(cert, Is.EqualTo(anotherCert));
                             validatedCert = true;
                         }
                         else
                         {
-                            Assert.NotNull(cert);
+                            Assert.That(cert, Is.Not.Null);
                             Assert.That(cert, Is.EqualTo(clientCert));
                             validatedCert = true;
                         }
@@ -1242,7 +1242,7 @@ namespace Azure.Core.Tests
                     request.Uri.Reset(testServer.Address);
 
                     await ExecuteRequest(request, transport);
-                    Assert.IsTrue(validatedCert, "Client certificate was not validated after transport update.");
+                    Assert.That(validatedCert, Is.True, "Client certificate was not validated after transport update.");
                 }
             }
             finally
@@ -1304,7 +1304,7 @@ namespace Azure.Core.Tests
             using (TestServer testServer = new TestServer(
                 context =>
                 {
-                    Assert.IsFalse(context.Request.Headers.ContainsKey("cookie"));
+                    Assert.That(context.Request.Headers.ContainsKey("cookie"), Is.False);
                     context.Response.StatusCode = 200;
                     context.Response.Headers.Add(
                         "set-cookie",
@@ -1354,7 +1354,7 @@ namespace Azure.Core.Tests
                 }
 
                 // response should have been cleared by transport
-                Assert.IsFalse(message.HasResponse);
+                Assert.That(message.HasResponse, Is.False);
             }
         }
 

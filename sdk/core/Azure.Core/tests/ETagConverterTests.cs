@@ -1,4 +1,4 @@
-﻿// Copyright (c) Microsoft Corporation. All rights reserved.
+// Copyright (c) Microsoft Corporation. All rights reserved.
 // Licensed under the MIT License.
 
 using Azure.Core.Serialization;
@@ -48,7 +48,7 @@ namespace Azure.Core.Tests
 
             if (value == null)
             {
-                Assert.Null(deserialized.ETag);
+                Assert.That(deserialized.ETag, Is.Null);
             }
             else
             {

@@ -1,4 +1,4 @@
-﻿// Copyright (c) Microsoft Corporation. All rights reserved.
+// Copyright (c) Microsoft Corporation. All rights reserved.
 // Licensed under the MIT License.
 
 using System;
@@ -22,7 +22,7 @@ namespace Azure.Core.Tests
 
             await SendGetRequest(transport, telemetryPolicy);
 
-            Assert.True(transport.SingleRequest.TryGetHeader("User-Agent", out var userAgent));
+            Assert.That(transport.SingleRequest.TryGetHeader("User-Agent", out var userAgent), Is.True);
 
             AssemblyInformationalVersionAttribute versionAttribute = assembly.GetCustomAttribute<AssemblyInformationalVersionAttribute>();
             string version = versionAttribute.InformationalVersion;
@@ -42,7 +42,7 @@ namespace Azure.Core.Tests
 
             await SendGetRequest(transport, telemetryPolicy);
 
-            Assert.True(transport.SingleRequest.TryGetHeader("User-Agent", out var userAgent));
+            Assert.That(transport.SingleRequest.TryGetHeader("User-Agent", out var userAgent), Is.True);
             Assert.That(userAgent, Does.StartWith("application-id "));
         }
 

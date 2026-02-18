@@ -1,4 +1,4 @@
-﻿// Copyright (c) Microsoft Corporation. All rights reserved.
+// Copyright (c) Microsoft Corporation. All rights reserved.
 // Licensed under the MIT License.
 
 using System;
@@ -121,7 +121,7 @@ namespace Microsoft.Azure.Core.Spatial.NewtonsoftJson.Tests
             Assert.That(point.Longitude, Is.EqualTo(-121.726906));
 
             // Not currently supported.
-            Assert.IsNull(point.Z);
+            Assert.That(point.Z, Is.Null);
         }
 
         [Test]
@@ -141,7 +141,7 @@ namespace Microsoft.Azure.Core.Spatial.NewtonsoftJson.Tests
             Assert.That(point.Longitude, Is.EqualTo(-121.0));
 
             // Not currently supported.
-            Assert.IsNull(point.Z);
+            Assert.That(point.Z, Is.Null);
         }
 
         [TestCaseSource(nameof(ReadBadJsonData))]

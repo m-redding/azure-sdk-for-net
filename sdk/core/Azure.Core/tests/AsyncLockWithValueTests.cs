@@ -1,4 +1,4 @@
-﻿// Copyright (c) Microsoft Corporation. All rights reserved.
+// Copyright (c) Microsoft Corporation. All rights reserved.
 // Licensed under the MIT License.
 
 using System;
@@ -16,12 +16,12 @@ namespace Azure.Core.Tests
         {
             var alwv = new AsyncLockWithValue<int>(42);
 
-            Assert.IsTrue(alwv.HasValue);
-            Assert.IsTrue(alwv.TryGetValue(out var value));
+            Assert.That(alwv.HasValue, Is.True);
+            Assert.That(alwv.TryGetValue(out var value), Is.True);
             Assert.That(value, Is.EqualTo(42));
 
             using var asyncLock = await alwv.GetLockOrValueAsync(async).ConfigureAwait(false);
-            Assert.IsTrue(asyncLock.HasValue);
+            Assert.That(asyncLock.HasValue, Is.True);
             Assert.That(asyncLock.Value, Is.EqualTo(42));
         }
 
@@ -31,20 +31,20 @@ namespace Azure.Core.Tests
             var alwv = new AsyncLockWithValue<int>();
             AsyncLockWithValue<int>.LockOrValue asyncLock;
 
-            Assert.IsFalse(alwv.HasValue);
-            Assert.IsFalse(alwv.TryGetValue(out _));
+            Assert.That(alwv.HasValue, Is.False);
+            Assert.That(alwv.TryGetValue(out _), Is.False);
             using (asyncLock = await alwv.GetLockOrValueAsync(async).ConfigureAwait(false))
             {
-                Assert.IsFalse(asyncLock.HasValue);
+                Assert.That(asyncLock.HasValue, Is.False);
                 asyncLock.SetValue(42);
             }
 
-            Assert.IsTrue(alwv.HasValue);
-            Assert.IsTrue(alwv.TryGetValue(out var value));
+            Assert.That(alwv.HasValue, Is.True);
+            Assert.That(alwv.TryGetValue(out var value), Is.True);
             Assert.That(value, Is.EqualTo(42));
             using (asyncLock = await alwv.GetLockOrValueAsync(async).ConfigureAwait(false))
             {
-                Assert.IsTrue(asyncLock.HasValue);
+                Assert.That(asyncLock.HasValue, Is.True);
                 Assert.That(asyncLock.Value, Is.EqualTo(42));
             }
         }
@@ -55,20 +55,20 @@ namespace Azure.Core.Tests
             var alwv = new AsyncLockWithValue<int>();
             AsyncLockWithValue<int>.LockOrValue asyncLock;
 
-            Assert.IsFalse(alwv.HasValue);
-            Assert.IsFalse(alwv.TryGetValue(out _));
+            Assert.That(alwv.HasValue, Is.False);
+            Assert.That(alwv.TryGetValue(out _), Is.False);
             using (asyncLock = await alwv.GetLockOrValueAsync(async).ConfigureAwait(false))
             {
-                Assert.IsFalse(asyncLock.HasValue);
+                Assert.That(asyncLock.HasValue, Is.False);
                 asyncLock.SetValue(42);
             }
 
-            Assert.IsTrue(alwv.HasValue);
-            Assert.IsTrue(alwv.TryGetValue(out var value));
+            Assert.That(alwv.HasValue, Is.True);
+            Assert.That(alwv.TryGetValue(out var value), Is.True);
             Assert.That(value, Is.EqualTo(42));
             using (asyncLock = await alwv.GetLockOrValueAsync(async).ConfigureAwait(false))
             {
-                Assert.IsTrue(asyncLock.HasValue);
+                Assert.That(asyncLock.HasValue, Is.True);
                 Assert.Throws<InvalidOperationException>(() => asyncLock.SetValue(6 * 9));
             }
         }
@@ -85,7 +85,7 @@ namespace Azure.Core.Tests
                 using var secondLock = await alwv.GetLockOrValueAsync(async, cts.Token);
             }, default);
 
-            Assert.IsFalse(task.IsCompleted);
+            Assert.That(task.IsCompleted, Is.False);
             cts.Cancel();
             Assert.CatchAsync<OperationCanceledException>(async () => await task);
 
@@ -114,15 +114,15 @@ namespace Azure.Core.Tests
                 lock2.SetValue(42);
             });
 
-            Assert.IsFalse(task1.IsCompleted);
-            Assert.IsFalse(task2.IsCompleted);
+            Assert.That(task1.IsCompleted, Is.False);
+            Assert.That(task2.IsCompleted, Is.False);
 
             tcs.SetException(new InvalidOperationException());
             Assert.CatchAsync<InvalidOperationException>(async () => await task1);
             await task2;
 
             using var lock3 = await alwv.GetLockOrValueAsync(async).ConfigureAwait(false);
-            Assert.IsTrue(lock3.HasValue);
+            Assert.That(lock3.HasValue, Is.True);
             Assert.That(lock3.Value, Is.EqualTo(42));
         }
 
@@ -154,9 +154,9 @@ namespace Azure.Core.Tests
                 lock3.SetValue(42);
             }, default);
 
-            Assert.IsFalse(task1.IsCompleted);
-            Assert.IsFalse(task2.IsCompleted);
-            Assert.IsFalse(task3.IsCompleted);
+            Assert.That(task1.IsCompleted, Is.False);
+            Assert.That(task2.IsCompleted, Is.False);
+            Assert.That(task3.IsCompleted, Is.False);
 
             cts.Cancel();
             Assert.CatchAsync<OperationCanceledException>(async () => await task2);
@@ -166,7 +166,7 @@ namespace Azure.Core.Tests
             await task3;
 
             var lock4 = await alwv.GetLockOrValueAsync(async, default);
-            Assert.IsTrue(lock4.HasValue);
+            Assert.That(lock4.HasValue, Is.True);
             Assert.That(lock4.Value, Is.EqualTo(42));
         }
 
@@ -176,8 +176,8 @@ namespace Azure.Core.Tests
             var alwv = new AsyncLockWithValue<int>();
             AsyncLockWithValue<int>.LockOrValue lockOrValue;
 
-            Assert.IsFalse(alwv.HasValue);
-            Assert.IsFalse(alwv.TryGetValue(out _));
+            Assert.That(alwv.HasValue, Is.False);
+            Assert.That(alwv.TryGetValue(out _), Is.False);
             using (lockOrValue = await alwv.GetLockOrValueAsync(async).ConfigureAwait(false))
             { }
 
@@ -189,8 +189,8 @@ namespace Azure.Core.Tests
         {
             var alwv = new AsyncLockWithValue<int>();
 
-            Assert.IsFalse(alwv.HasValue);
-            Assert.IsFalse(alwv.TryGetValue(out _));
+            Assert.That(alwv.HasValue, Is.False);
+            Assert.That(alwv.TryGetValue(out _), Is.False);
             var lockOrValue = await alwv.GetLockOrValueAsync(async).ConfigureAwait(false);
 
             lockOrValue.Dispose();
@@ -212,17 +212,17 @@ namespace Azure.Core.Tests
             {
                 tasks.Add(Task.Run(async () =>
                 {
-                    Assert.IsFalse(alwv.HasValue);
-                    Assert.IsFalse(alwv.TryGetValue(out _));
+                    Assert.That(alwv.HasValue, Is.False);
+                    Assert.That(alwv.TryGetValue(out _), Is.False);
                     using var asyncLock = await alwv.GetLockOrValueAsync(async);
-                    Assert.IsFalse(asyncLock.HasValue);
+                    Assert.That(asyncLock.HasValue, Is.False);
                 }));
             }
 
             firstLock.Dispose();
             await Task.WhenAll(tasks);
-            Assert.IsFalse(alwv.HasValue);
-            Assert.IsFalse(alwv.TryGetValue(out _));
+            Assert.That(alwv.HasValue, Is.False);
+            Assert.That(alwv.TryGetValue(out _), Is.False);
         }
 
         [Test]
@@ -236,7 +236,7 @@ namespace Azure.Core.Tests
                 tasks.Add(Task.Run(async () =>
                 {
                     using var asyncLock = await alwv.GetLockOrValueAsync(async);
-                    Assert.IsTrue(asyncLock.HasValue);
+                    Assert.That(asyncLock.HasValue, Is.True);
                     Assert.That(asyncLock.Value, Is.EqualTo(42));
                 }));
             }
@@ -308,7 +308,7 @@ namespace Azure.Core.Tests
                 {
                     tcs?.SetResult(0);
                     using var asyncLock = await lockWithValue.GetLockOrValueAsync(isAsync, token);
-                    Assert.IsFalse(asyncLock.HasValue);
+                    Assert.That(asyncLock.HasValue, Is.False);
                 }, default);
         }
     }

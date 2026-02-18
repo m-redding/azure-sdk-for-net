@@ -1,4 +1,4 @@
-﻿// Copyright (c) Microsoft Corporation. All rights reserved.
+// Copyright (c) Microsoft Corporation. All rights reserved.
 // Licensed under the MIT License.
 
 using System;
@@ -53,7 +53,7 @@ namespace Azure.Core.Tests
             await pipeline.SendAsync(message, message.CancellationToken);
 
             Request request = mockTransport.Requests[0];
-            Assert.IsTrue(request.Headers.TryGetValues("PerCallHeader", out var values));
+            Assert.That(request.Headers.TryGetValues("PerCallHeader", out var values), Is.True);
             Assert.That(values.Count(), Is.EqualTo(1));
             Assert.That(values.ElementAt(0), Is.EqualTo("Value"));
         }
@@ -79,7 +79,7 @@ namespace Azure.Core.Tests
             await pipeline.SendAsync(message, message.CancellationToken);
 
             Request request = mockTransport.Requests[0];
-            Assert.IsTrue(request.Headers.TryGetValues("PerRetryHeader", out var values));
+            Assert.That(request.Headers.TryGetValues("PerRetryHeader", out var values), Is.True);
             Assert.That(values.Count(), Is.EqualTo(3));
             Assert.That(values.ElementAt(0), Is.EqualTo("Value"));
             Assert.That(values.ElementAt(1), Is.EqualTo("Value"));
@@ -109,7 +109,7 @@ namespace Azure.Core.Tests
 
             Request request = mockTransport.Requests[0];
 
-            Assert.IsTrue(request.Headers.TryGetValues("BeforeTransportHeader", out var values));
+            Assert.That(request.Headers.TryGetValues("BeforeTransportHeader", out var values), Is.True);
             Assert.That(values.Count(), Is.EqualTo(3));
             Assert.That(values.ElementAt(0), Is.EqualTo("Value"));
             Assert.That(values.ElementAt(1), Is.EqualTo("Value"));
@@ -140,20 +140,20 @@ namespace Azure.Core.Tests
 
             Request request = mockTransport.Requests[0];
 
-            Assert.IsTrue(request.Headers.TryGetValues("PerCallHeader1", out var perCall1Values));
+            Assert.That(request.Headers.TryGetValues("PerCallHeader1", out var perCall1Values), Is.True);
             Assert.That(perCall1Values.Count(), Is.EqualTo(1));
             Assert.That(perCall1Values.ElementAt(0), Is.EqualTo("PerCall1"));
 
-            Assert.IsTrue(request.Headers.TryGetValues("PerCallHeader2", out var perCall2Values));
+            Assert.That(request.Headers.TryGetValues("PerCallHeader2", out var perCall2Values), Is.True);
             Assert.That(perCall2Values.Count(), Is.EqualTo(1));
             Assert.That(perCall2Values.ElementAt(0), Is.EqualTo("PerCall2"));
 
-            Assert.IsTrue(request.Headers.TryGetValues("PerRetryHeader", out var perRetryValues));
+            Assert.That(request.Headers.TryGetValues("PerRetryHeader", out var perRetryValues), Is.True);
             Assert.That(perRetryValues.ElementAt(0), Is.EqualTo("PerRetry"));
             Assert.That(perRetryValues.ElementAt(1), Is.EqualTo("PerRetry"));
             Assert.That(perRetryValues.ElementAt(2), Is.EqualTo("PerRetry"));
 
-            Assert.IsTrue(request.Headers.TryGetValues("BeforeTransportHeader", out var beforeTransportValues));
+            Assert.That(request.Headers.TryGetValues("BeforeTransportHeader", out var beforeTransportValues), Is.True);
             Assert.That(beforeTransportValues.ElementAt(0), Is.EqualTo("BeforeTransport"));
             Assert.That(beforeTransportValues.ElementAt(1), Is.EqualTo("BeforeTransport"));
             Assert.That(beforeTransportValues.ElementAt(2), Is.EqualTo("BeforeTransport"));
@@ -187,19 +187,19 @@ namespace Azure.Core.Tests
 
             Request request = mockTransport.Requests[0];
 
-            Assert.IsTrue(request.Headers.TryGetValues("PerCall", out var perCallValues));
+            Assert.That(request.Headers.TryGetValues("PerCall", out var perCallValues), Is.True);
             Assert.That(perCallValues.Count(), Is.EqualTo(3));
             Assert.That(perCallValues.ElementAt(0), Is.EqualTo("Builder"));
             Assert.That(perCallValues.ElementAt(1), Is.EqualTo("ClientOptions"));
             Assert.That(perCallValues.ElementAt(2), Is.EqualTo("RequestContext"));
 
-            Assert.IsTrue(request.Headers.TryGetValues("PerRetry", out var perRetryValues));
+            Assert.That(request.Headers.TryGetValues("PerRetry", out var perRetryValues), Is.True);
             Assert.That(perRetryValues.Count(), Is.EqualTo(3));
             Assert.That(perRetryValues.ElementAt(0), Is.EqualTo("Builder"));
             Assert.That(perRetryValues.ElementAt(1), Is.EqualTo("ClientOptions"));
             Assert.That(perRetryValues.ElementAt(2), Is.EqualTo("RequestContext"));
 
-            Assert.IsTrue(request.Headers.TryGetValues("BeforeTransport", out var beforeTransportValues));
+            Assert.That(request.Headers.TryGetValues("BeforeTransport", out var beforeTransportValues), Is.True);
             Assert.That(beforeTransportValues.Count(), Is.EqualTo(2));
             Assert.That(beforeTransportValues.ElementAt(0), Is.EqualTo("ClientOptions"));
             Assert.That(beforeTransportValues.ElementAt(1), Is.EqualTo("RequestContext"));
@@ -247,7 +247,7 @@ namespace Azure.Core.Tests
 
             await pipeline.SendAsync(message, context.CancellationToken);
 
-            Assert.IsFalse(message.Response.IsError);
+            Assert.That(message.Response.IsError, Is.False);
 
             EventWrittenEventArgs e = listener.SingleEventById(5); // ResponseEvent
             Assert.That(e.Level, Is.EqualTo(EventLevel.Informational));

@@ -1,4 +1,4 @@
-﻿// Copyright (c) Microsoft Corporation. All rights reserved.
+// Copyright (c) Microsoft Corporation. All rights reserved.
 // Licensed under the MIT License.
 
 using System.ClientModel.Primitives;
@@ -77,10 +77,10 @@ namespace System.ClientModel.Tests.ModelReaderWriterTests.Models
 
             var model = ModelReaderWriter.Read<DictionaryOfAset>(BinaryData.FromString(json), ModelReaderWriterOptions.Json, TestClientModelReaderWriterContext.Default);
 
-            Assert.IsNotNull(model);
+            Assert.That(model, Is.Not.Null);
             Assert.That(model!.Items.Count, Is.EqualTo(2));
-            Assert.IsTrue(model.Items.ContainsKey("testAS-3375"));
-            Assert.IsTrue(model.Items.ContainsKey("testAS-3376"));
+            Assert.That(model.Items.ContainsKey("testAS-3375"), Is.True);
+            Assert.That(model.Items.ContainsKey("testAS-3376"), Is.True);
             Assert.That(model.Items["testAS-3375"].Name, Is.EqualTo("testAS-3375"));
             Assert.That(model.Items["testAS-3376"].Name, Is.EqualTo("testAS-3376"));
             Assert.That(model.Patch.GetString("$.testAS-3375.name"u8), Is.EqualTo("testAS-3375"));
@@ -100,10 +100,10 @@ namespace System.ClientModel.Tests.ModelReaderWriterTests.Models
 
             var model2 = ModelReaderWriter.Read<DictionaryOfAset>(data, ModelReaderWriterOptions.Json, TestClientModelReaderWriterContext.Default);
 
-            Assert.IsNotNull(model2);
+            Assert.That(model2, Is.Not.Null);
             Assert.That(model2!.Items.Count, Is.EqualTo(2));
-            Assert.IsTrue(model2.Items.ContainsKey("testAS-3376"));
-            Assert.IsTrue(model2.Items.ContainsKey("testAS-3375"));
+            Assert.That(model2.Items.ContainsKey("testAS-3376"), Is.True);
+            Assert.That(model2.Items.ContainsKey("testAS-3375"), Is.True);
             Assert.That(model2.Items["testAS-3375"].Name, Is.EqualTo("testAS-3377"));
             Assert.That(model2.Items["testAS-3376"].Name, Is.EqualTo("testAS-3376"));
             Assert.That(model2.Patch.GetString("$.testAS-3375.name"u8), Is.EqualTo("testAS-3377"));
@@ -120,10 +120,10 @@ namespace System.ClientModel.Tests.ModelReaderWriterTests.Models
 
             var model = ModelReaderWriter.Read<DictionaryOfAset>(BinaryData.FromString(json), ModelReaderWriterOptions.Json, TestClientModelReaderWriterContext.Default);
 
-            Assert.IsNotNull(model);
+            Assert.That(model, Is.Not.Null);
             Assert.That(model!.Items.Count, Is.EqualTo(2));
-            Assert.IsTrue(model.Items.ContainsKey("testAS-3375"));
-            Assert.IsTrue(model.Items.ContainsKey("testAS-3376"));
+            Assert.That(model.Items.ContainsKey("testAS-3375"), Is.True);
+            Assert.That(model.Items.ContainsKey("testAS-3376"), Is.True);
             Assert.That(model.Items["testAS-3375"].Name, Is.EqualTo("testAS-3375"));
             Assert.That(model.Items["testAS-3376"].Name, Is.EqualTo("testAS-3376"));
             Assert.That(model.Patch.GetString("$.testAS-3375.name"u8), Is.EqualTo("testAS-3375"));
@@ -138,9 +138,9 @@ namespace System.ClientModel.Tests.ModelReaderWriterTests.Models
 
             var model2 = ModelReaderWriter.Read<DictionaryOfAset>(data, ModelReaderWriterOptions.Json, TestClientModelReaderWriterContext.Default);
 
-            Assert.IsNotNull(model2);
+            Assert.That(model2, Is.Not.Null);
             Assert.That(model2!.Items.Count, Is.EqualTo(1));
-            Assert.IsTrue(model2.Items.ContainsKey("testAS-3376"));
+            Assert.That(model2.Items.ContainsKey("testAS-3376"), Is.True);
             Assert.That(model2.Items["testAS-3376"].Name, Is.EqualTo("testAS-3376"));
             Assert.That(model2.Patch.GetString("$.testAS-3376.name"u8), Is.EqualTo("testAS-3376"));
         }
@@ -152,10 +152,10 @@ namespace System.ClientModel.Tests.ModelReaderWriterTests.Models
 
             var model = ModelReaderWriter.Read<DictionaryOfAset>(BinaryData.FromString(json), ModelReaderWriterOptions.Json, TestClientModelReaderWriterContext.Default);
 
-            Assert.IsNotNull(model);
+            Assert.That(model, Is.Not.Null);
             Assert.That(model!.Items.Count, Is.EqualTo(2));
-            Assert.IsTrue(model.Items.ContainsKey("testAS-3375"));
-            Assert.IsTrue(model.Items.ContainsKey("testAS-3376"));
+            Assert.That(model.Items.ContainsKey("testAS-3375"), Is.True);
+            Assert.That(model.Items.ContainsKey("testAS-3376"), Is.True);
             Assert.That(model.Items["testAS-3375"].Name, Is.EqualTo("testAS-3375"));
             Assert.That(model.Items["testAS-3376"].Name, Is.EqualTo("testAS-3376"));
             Assert.That(model.Patch.GetString("$.testAS-3375.name"u8), Is.EqualTo("testAS-3375"));
@@ -175,11 +175,11 @@ namespace System.ClientModel.Tests.ModelReaderWriterTests.Models
 
             var model2 = ModelReaderWriter.Read<DictionaryOfAset>(data, ModelReaderWriterOptions.Json, TestClientModelReaderWriterContext.Default);
 
-            Assert.IsNotNull(model2);
+            Assert.That(model2, Is.Not.Null);
             Assert.That(model2!.Items.Count, Is.EqualTo(3));
-            Assert.IsTrue(model2.Items.ContainsKey("testAS-3375"));
-            Assert.IsTrue(model2.Items.ContainsKey("testAS-3376"));
-            Assert.IsTrue(model2.Items.ContainsKey("testAS-3377"));
+            Assert.That(model2.Items.ContainsKey("testAS-3375"), Is.True);
+            Assert.That(model2.Items.ContainsKey("testAS-3376"), Is.True);
+            Assert.That(model2.Items.ContainsKey("testAS-3377"), Is.True);
             Assert.That(model2.Items["testAS-3377"].Name, Is.EqualTo("testAS-3377"));
             Assert.That(model2.Items["testAS-3375"].Name, Is.EqualTo("testAS-3375"));
             Assert.That(model2.Items["testAS-3376"].Name, Is.EqualTo("testAS-3376"));
@@ -201,11 +201,11 @@ namespace System.ClientModel.Tests.ModelReaderWriterTests.Models
 
             var model3 = ModelReaderWriter.Read<DictionaryOfAset>(data2, ModelReaderWriterOptions.Json, TestClientModelReaderWriterContext.Default);
 
-            Assert.IsNotNull(model3);
+            Assert.That(model3, Is.Not.Null);
             Assert.That(model3!.Items.Count, Is.EqualTo(3));
-            Assert.IsTrue(model3.Items.ContainsKey("testAS-3375"));
-            Assert.IsTrue(model3.Items.ContainsKey("testAS-3376"));
-            Assert.IsTrue(model3.Items.ContainsKey("testAS-3377"));
+            Assert.That(model3.Items.ContainsKey("testAS-3375"), Is.True);
+            Assert.That(model3.Items.ContainsKey("testAS-3376"), Is.True);
+            Assert.That(model3.Items.ContainsKey("testAS-3377"), Is.True);
             Assert.That(model3.Items["testAS-3377"].Name, Is.EqualTo("testAS-3377"));
             Assert.That(model3.Items["testAS-3375"].Name, Is.EqualTo("testAS-3375"));
             Assert.That(model3.Items["testAS-3376"].Name, Is.EqualTo("testAS-3376"));
@@ -224,10 +224,10 @@ namespace System.ClientModel.Tests.ModelReaderWriterTests.Models
 
             var model = ModelReaderWriter.Read<DictionaryOfAset>(BinaryData.FromString(json), ModelReaderWriterOptions.Json, TestClientModelReaderWriterContext.Default);
 
-            Assert.IsNotNull(model);
+            Assert.That(model, Is.Not.Null);
             Assert.That(model!.Items.Count, Is.EqualTo(2));
-            Assert.IsTrue(model.Items.ContainsKey("testAS-3375"));
-            Assert.IsTrue(model.Items.ContainsKey("testAS-3376"));
+            Assert.That(model.Items.ContainsKey("testAS-3375"), Is.True);
+            Assert.That(model.Items.ContainsKey("testAS-3376"), Is.True);
             Assert.That(model.Items["testAS-3375"].PlatformUpdateDomainCount, Is.EqualTo(5));
             Assert.That(model.Items["testAS-3375"].Name, Is.EqualTo("testAS-3375"));
             Assert.That(model.Items["testAS-3376"].Name, Is.EqualTo("testAS-3376"));
@@ -243,10 +243,10 @@ namespace System.ClientModel.Tests.ModelReaderWriterTests.Models
 
             var model2 = ModelReaderWriter.Read<DictionaryOfAset>(data, ModelReaderWriterOptions.Json, TestClientModelReaderWriterContext.Default);
 
-            Assert.IsNotNull(model2);
+            Assert.That(model2, Is.Not.Null);
             Assert.That(model2!.Items.Count, Is.EqualTo(2));
-            Assert.IsTrue(model2.Items.ContainsKey("testAS-3375"));
-            Assert.IsTrue(model2.Items.ContainsKey("testAS-3376"));
+            Assert.That(model2.Items.ContainsKey("testAS-3375"), Is.True);
+            Assert.That(model2.Items.ContainsKey("testAS-3376"), Is.True);
             Assert.That(model2.Items["testAS-3375"].PlatformUpdateDomainCount, Is.EqualTo(10));
             Assert.That(model2.Items["testAS-3375"].Name, Is.EqualTo("testAS-3375"));
             Assert.That(model2.Items["testAS-3376"].Name, Is.EqualTo("testAS-3376"));
@@ -262,10 +262,10 @@ namespace System.ClientModel.Tests.ModelReaderWriterTests.Models
 
             var model = ModelReaderWriter.Read<DictionaryOfAset>(BinaryData.FromString(json), ModelReaderWriterOptions.Json, TestClientModelReaderWriterContext.Default);
 
-            Assert.IsNotNull(model);
+            Assert.That(model, Is.Not.Null);
             Assert.That(model!.Items.Count, Is.EqualTo(2));
-            Assert.IsTrue(model.Items.ContainsKey("testAS-3375"));
-            Assert.IsTrue(model.Items.ContainsKey("testAS-3376"));
+            Assert.That(model.Items.ContainsKey("testAS-3375"), Is.True);
+            Assert.That(model.Items.ContainsKey("testAS-3376"), Is.True);
             Assert.That(model.Items["testAS-3375"].Name, Is.EqualTo("testAS-3375"));
             Assert.That(model.Items["testAS-3376"].Name, Is.EqualTo("testAS-3376"));
             Assert.That(model.Patch.GetString("$.testAS-3375.name"u8), Is.EqualTo("testAS-3375"));
@@ -280,10 +280,10 @@ namespace System.ClientModel.Tests.ModelReaderWriterTests.Models
 
             var model2 = ModelReaderWriter.Read<DictionaryOfAset>(data, ModelReaderWriterOptions.Json, TestClientModelReaderWriterContext.Default);
 
-            Assert.IsNotNull(model2);
+            Assert.That(model2, Is.Not.Null);
             Assert.That(model2!.Items.Count, Is.EqualTo(2));
-            Assert.IsTrue(model2.Items.ContainsKey("testAS-3375"));
-            Assert.IsTrue(model2.Items.ContainsKey("testAS-3376"));
+            Assert.That(model2.Items.ContainsKey("testAS-3375"), Is.True);
+            Assert.That(model2.Items.ContainsKey("testAS-3376"), Is.True);
             Assert.That(model2.Items["testAS-3375"].Name, Is.EqualTo(null));
             Assert.That(model2.Items["testAS-3376"].Name, Is.EqualTo("testAS-3376"));
             Assert.Throws<KeyNotFoundException>(() => model2.Patch.GetString("$.testAS-3375.name"u8));

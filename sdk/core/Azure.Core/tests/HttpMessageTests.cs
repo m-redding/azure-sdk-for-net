@@ -1,4 +1,4 @@
-﻿// Copyright (c) Microsoft Corporation. All rights reserved.
+// Copyright (c) Microsoft Corporation. All rights reserved.
 // Licensed under the MIT License.
 
 using Azure.Core.Pipeline;
@@ -14,7 +14,7 @@ namespace Azure.Core.Tests
         {
             HttpMessage message = new HttpMessage(new MockRequest(), ResponseClassifier.Shared);
 
-            Assert.False(message.TryGetProperty("someName", out _));
+            Assert.That(message.TryGetProperty("someName", out _), Is.False);
         }
 
         [Test]
@@ -23,7 +23,7 @@ namespace Azure.Core.Tests
             HttpMessage message = new HttpMessage(new MockRequest(), ResponseClassifier.Shared);
             message.SetProperty("someName", "value");
 
-            Assert.True(message.TryGetProperty("someName", out object value));
+            Assert.That(message.TryGetProperty("someName", out object value), Is.True);
             Assert.That(value, Is.EqualTo("value"));
         }
 
@@ -32,7 +32,7 @@ namespace Azure.Core.Tests
         {
             HttpMessage message = new HttpMessage(new MockRequest(), ResponseClassifier.Shared);
 
-            Assert.False(message.TryGetProperty(typeof(string), out _));
+            Assert.That(message.TryGetProperty(typeof(string), out _), Is.False);
         }
 
         [Test]
@@ -41,7 +41,7 @@ namespace Azure.Core.Tests
             HttpMessage message = new HttpMessage(new MockRequest(), ResponseClassifier.Shared);
             message.SetProperty(typeof(string), "value");
 
-            Assert.True(message.TryGetProperty(typeof(string), out object value));
+            Assert.That(message.TryGetProperty(typeof(string), out object value), Is.True);
             Assert.That(value, Is.EqualTo("value"));
         }
 
@@ -83,7 +83,7 @@ namespace Azure.Core.Tests
             HttpMessage message = new HttpMessage(new MockRequest(), ResponseClassifier.Shared);
             message.SetProperty("someName", "value");
 
-            Assert.False(message.TryGetProperty("SomeName", out _));
+            Assert.That(message.TryGetProperty("SomeName", out _), Is.False);
         }
 
         [Test]
@@ -96,16 +96,16 @@ namespace Azure.Core.Tests
             message.ApplyRequestContext(context, ResponseClassifier200204304);
 
             message.Response = new MockResponse(204);
-            Assert.IsTrue(message.ResponseClassifier.IsErrorResponse(message));
+            Assert.That(message.ResponseClassifier.IsErrorResponse(message), Is.True);
 
             message.Response = new MockResponse(304);
-            Assert.IsFalse(message.ResponseClassifier.IsErrorResponse(message));
+            Assert.That(message.ResponseClassifier.IsErrorResponse(message), Is.False);
 
             message.Response = new MockResponse(404);
-            Assert.IsTrue(message.ResponseClassifier.IsErrorResponse(message));
+            Assert.That(message.ResponseClassifier.IsErrorResponse(message), Is.True);
 
             message.Response = new MockResponse(500);
-            Assert.IsTrue(message.ResponseClassifier.IsErrorResponse(message));
+            Assert.That(message.ResponseClassifier.IsErrorResponse(message), Is.True);
         }
 
         [Test]
@@ -118,16 +118,16 @@ namespace Azure.Core.Tests
             message.ApplyRequestContext(context, ResponseClassifier200204304);
 
             message.Response = new MockResponse(204);
-            Assert.IsFalse(message.ResponseClassifier.IsErrorResponse(message));
+            Assert.That(message.ResponseClassifier.IsErrorResponse(message), Is.False);
 
             message.Response = new MockResponse(304);
-            Assert.IsFalse(message.ResponseClassifier.IsErrorResponse(message));
+            Assert.That(message.ResponseClassifier.IsErrorResponse(message), Is.False);
 
             message.Response = new MockResponse(404);
-            Assert.IsFalse(message.ResponseClassifier.IsErrorResponse(message));
+            Assert.That(message.ResponseClassifier.IsErrorResponse(message), Is.False);
 
             message.Response = new MockResponse(500);
-            Assert.IsTrue(message.ResponseClassifier.IsErrorResponse(message));
+            Assert.That(message.ResponseClassifier.IsErrorResponse(message), Is.True);
         }
 
         [Test]
@@ -142,19 +142,19 @@ namespace Azure.Core.Tests
             message.ApplyRequestContext(context, ResponseClassifier200204304);
 
             message.Response = new MockResponse(204);
-            Assert.IsFalse(message.ResponseClassifier.IsErrorResponse(message));
+            Assert.That(message.ResponseClassifier.IsErrorResponse(message), Is.False);
 
             message.Response = new MockResponse(301);
-            Assert.IsTrue(message.ResponseClassifier.IsErrorResponse(message));
+            Assert.That(message.ResponseClassifier.IsErrorResponse(message), Is.True);
 
             message.Response = new MockResponse(304);
-            Assert.IsTrue(message.ResponseClassifier.IsErrorResponse(message));
+            Assert.That(message.ResponseClassifier.IsErrorResponse(message), Is.True);
 
             message.Response = new MockResponse(404);
-            Assert.IsFalse(message.ResponseClassifier.IsErrorResponse(message));
+            Assert.That(message.ResponseClassifier.IsErrorResponse(message), Is.False);
 
             message.Response = new MockResponse(500);
-            Assert.IsTrue(message.ResponseClassifier.IsErrorResponse(message));
+            Assert.That(message.ResponseClassifier.IsErrorResponse(message), Is.True);
         }
 
         [Test]
@@ -163,23 +163,23 @@ namespace Azure.Core.Tests
             HttpMessage message = new HttpMessage(new MockRequest(), ResponseClassifier200204304);
 
             message.Response = new MockResponse(404);
-            Assert.IsTrue(message.ResponseClassifier.IsErrorResponse(message));
+            Assert.That(message.ResponseClassifier.IsErrorResponse(message), Is.True);
 
             // This replaces the base classifier with one that thinks
             // only 404 is a non-error.
             message.ResponseClassifier = new StatusCodeClassifier(stackalloc ushort[] { 404 });
 
             message.Response = new MockResponse(204);
-            Assert.IsTrue(message.ResponseClassifier.IsErrorResponse(message));
+            Assert.That(message.ResponseClassifier.IsErrorResponse(message), Is.True);
 
             message.Response = new MockResponse(304);
-            Assert.IsTrue(message.ResponseClassifier.IsErrorResponse(message));
+            Assert.That(message.ResponseClassifier.IsErrorResponse(message), Is.True);
 
             message.Response = new MockResponse(404);
-            Assert.IsFalse(message.ResponseClassifier.IsErrorResponse(message));
+            Assert.That(message.ResponseClassifier.IsErrorResponse(message), Is.False);
 
             message.Response = new MockResponse(500);
-            Assert.IsTrue(message.ResponseClassifier.IsErrorResponse(message));
+            Assert.That(message.ResponseClassifier.IsErrorResponse(message), Is.True);
         }
 
         [Test]
@@ -188,7 +188,7 @@ namespace Azure.Core.Tests
             HttpMessage message = new HttpMessage(new MockRequest(), ResponseClassifier200204304);
 
             message.Response = new MockResponse(404);
-            Assert.IsTrue(message.ResponseClassifier.IsErrorResponse(message));
+            Assert.That(message.ResponseClassifier.IsErrorResponse(message), Is.True);
 
             RequestContext context = new RequestContext();
             context.AddClassifier(new StatusCodeHandler(304, true));
@@ -200,13 +200,13 @@ namespace Azure.Core.Tests
             message.ResponseClassifier = new StatusCodeClassifier(stackalloc ushort[] { 404 });
 
             message.Response = new MockResponse(304);
-            Assert.IsTrue(message.ResponseClassifier.IsErrorResponse(message));
+            Assert.That(message.ResponseClassifier.IsErrorResponse(message), Is.True);
 
             message.Response = new MockResponse(404);
-            Assert.IsFalse(message.ResponseClassifier.IsErrorResponse(message));
+            Assert.That(message.ResponseClassifier.IsErrorResponse(message), Is.False);
 
             message.Response = new MockResponse(500);
-            Assert.IsTrue(message.ResponseClassifier.IsErrorResponse(message));
+            Assert.That(message.ResponseClassifier.IsErrorResponse(message), Is.True);
         }
 
         [Test]
@@ -221,29 +221,29 @@ namespace Azure.Core.Tests
             var message = pipeline.CreateMessage();
 
             message.Response = new MockResponse(304);
-            Assert.IsTrue(message.ResponseClassifier.IsErrorResponse(message));
+            Assert.That(message.ResponseClassifier.IsErrorResponse(message), Is.True);
 
             message.Response = new MockResponse(404);
-            Assert.IsFalse(message.ResponseClassifier.IsErrorResponse(message));
+            Assert.That(message.ResponseClassifier.IsErrorResponse(message), Is.False);
 
             message.ResponseClassifier = new StatusCodeClassifier(stackalloc ushort[] { 304 });
 
             message.Response = new MockResponse(304);
-            Assert.IsFalse(message.ResponseClassifier.IsErrorResponse(message));
+            Assert.That(message.ResponseClassifier.IsErrorResponse(message), Is.False);
 
             message.Response = new MockResponse(404);
-            Assert.IsTrue(message.ResponseClassifier.IsErrorResponse(message));
+            Assert.That(message.ResponseClassifier.IsErrorResponse(message), Is.True);
 
             message.ResponseClassifier = ResponseClassifier200204304;
 
             message.Response = new MockResponse(304);
-            Assert.IsFalse(message.ResponseClassifier.IsErrorResponse(message));
+            Assert.That(message.ResponseClassifier.IsErrorResponse(message), Is.False);
 
             message.Response = new MockResponse(404);
-            Assert.IsTrue(message.ResponseClassifier.IsErrorResponse(message));
+            Assert.That(message.ResponseClassifier.IsErrorResponse(message), Is.True);
 
             message.Response = new MockResponse(500);
-            Assert.IsTrue(message.ResponseClassifier.IsErrorResponse(message));
+            Assert.That(message.ResponseClassifier.IsErrorResponse(message), Is.True);
         }
 
         [Test]
@@ -256,16 +256,16 @@ namespace Azure.Core.Tests
             message.ApplyRequestContext(context, ResponseClassifier200204304);
 
             message.Response = new MockResponse(204);
-            Assert.IsTrue(message.ResponseClassifier.IsErrorResponse(message));
+            Assert.That(message.ResponseClassifier.IsErrorResponse(message), Is.True);
 
             message.Response = new MockResponse(304);
-            Assert.IsFalse(message.ResponseClassifier.IsErrorResponse(message));
+            Assert.That(message.ResponseClassifier.IsErrorResponse(message), Is.False);
 
             message.Response = new MockResponse(404);
-            Assert.IsTrue(message.ResponseClassifier.IsErrorResponse(message));
+            Assert.That(message.ResponseClassifier.IsErrorResponse(message), Is.True);
 
             message.Response = new MockResponse(500);
-            Assert.IsTrue(message.ResponseClassifier.IsErrorResponse(message));
+            Assert.That(message.ResponseClassifier.IsErrorResponse(message), Is.True);
         }
 
         [Test]
@@ -279,16 +279,16 @@ namespace Azure.Core.Tests
             message.ApplyRequestContext(context, ResponseClassifier200204304);
 
             message.Response = new MockResponse(204);
-            Assert.IsTrue(message.ResponseClassifier.IsErrorResponse(message));
+            Assert.That(message.ResponseClassifier.IsErrorResponse(message), Is.True);
 
             message.Response = new MockResponse(304);
-            Assert.IsFalse(message.ResponseClassifier.IsErrorResponse(message));
+            Assert.That(message.ResponseClassifier.IsErrorResponse(message), Is.False);
 
             message.Response = new MockResponse(404);
-            Assert.IsTrue(message.ResponseClassifier.IsErrorResponse(message));
+            Assert.That(message.ResponseClassifier.IsErrorResponse(message), Is.True);
 
             message.Response = new MockResponse(500);
-            Assert.IsTrue(message.ResponseClassifier.IsErrorResponse(message));
+            Assert.That(message.ResponseClassifier.IsErrorResponse(message), Is.True);
         }
 
         [Test]
@@ -298,16 +298,16 @@ namespace Azure.Core.Tests
             message.ApplyRequestContext(new RequestContext(), HeadResponseClassifier.Instance);
 
             message.Response = new MockResponse(204);
-            Assert.IsFalse(message.ResponseClassifier.IsErrorResponse(message));
+            Assert.That(message.ResponseClassifier.IsErrorResponse(message), Is.False);
 
             message.Response = new MockResponse(304);
-            Assert.IsTrue(message.ResponseClassifier.IsErrorResponse(message));
+            Assert.That(message.ResponseClassifier.IsErrorResponse(message), Is.True);
 
             message.Response = new MockResponse(404);
-            Assert.IsFalse(message.ResponseClassifier.IsErrorResponse(message));
+            Assert.That(message.ResponseClassifier.IsErrorResponse(message), Is.False);
 
             message.Response = new MockResponse(500);
-            Assert.IsTrue(message.ResponseClassifier.IsErrorResponse(message));
+            Assert.That(message.ResponseClassifier.IsErrorResponse(message), Is.True);
         }
 
         [Test]
@@ -321,16 +321,16 @@ namespace Azure.Core.Tests
             message.ApplyRequestContext(context, HeadResponseClassifier.Instance);
 
             message.Response = new MockResponse(204);
-            Assert.IsFalse(message.ResponseClassifier.IsErrorResponse(message));
+            Assert.That(message.ResponseClassifier.IsErrorResponse(message), Is.False);
 
             message.Response = new MockResponse(304);
-            Assert.IsTrue(message.ResponseClassifier.IsErrorResponse(message));
+            Assert.That(message.ResponseClassifier.IsErrorResponse(message), Is.True);
 
             message.Response = new MockResponse(404);
-            Assert.IsTrue(message.ResponseClassifier.IsErrorResponse(message));
+            Assert.That(message.ResponseClassifier.IsErrorResponse(message), Is.True);
 
             message.Response = new MockResponse(500);
-            Assert.IsFalse(message.ResponseClassifier.IsErrorResponse(message));
+            Assert.That(message.ResponseClassifier.IsErrorResponse(message), Is.False);
         }
 
         [Test]
@@ -345,16 +345,16 @@ namespace Azure.Core.Tests
             message.ApplyRequestContext(context, HeadResponseClassifier.Instance);
 
             message.Response = new MockResponse(204);
-            Assert.IsFalse(message.ResponseClassifier.IsErrorResponse(message));
+            Assert.That(message.ResponseClassifier.IsErrorResponse(message), Is.False);
 
             message.Response = new MockResponse(304);
-            Assert.IsTrue(message.ResponseClassifier.IsErrorResponse(message));
+            Assert.That(message.ResponseClassifier.IsErrorResponse(message), Is.True);
 
             message.Response = new MockResponse(404);
-            Assert.IsTrue(message.ResponseClassifier.IsErrorResponse(message));
+            Assert.That(message.ResponseClassifier.IsErrorResponse(message), Is.True);
 
             message.Response = new MockResponse(500);
-            Assert.IsFalse(message.ResponseClassifier.IsErrorResponse(message));
+            Assert.That(message.ResponseClassifier.IsErrorResponse(message), Is.False);
         }
 
         [Test]
@@ -368,16 +368,16 @@ namespace Azure.Core.Tests
             message.ApplyRequestContext(context, ResponseClassifier200204304);
 
             message.Response = new MockResponse(204);
-            Assert.IsFalse(message.ResponseClassifier.IsErrorResponse(message));
+            Assert.That(message.ResponseClassifier.IsErrorResponse(message), Is.False);
 
             message.Response = new MockResponse(304);
-            Assert.IsFalse(message.ResponseClassifier.IsErrorResponse(message));
+            Assert.That(message.ResponseClassifier.IsErrorResponse(message), Is.False);
 
             message.Response = new MockResponse(404);
-            Assert.IsTrue(message.ResponseClassifier.IsErrorResponse(message));
+            Assert.That(message.ResponseClassifier.IsErrorResponse(message), Is.True);
 
             message.Response = new MockResponse(500);
-            Assert.IsTrue(message.ResponseClassifier.IsErrorResponse(message));
+            Assert.That(message.ResponseClassifier.IsErrorResponse(message), Is.True);
         }
 
         #region Helpers

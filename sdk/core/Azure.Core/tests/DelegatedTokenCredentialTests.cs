@@ -1,4 +1,4 @@
-﻿// Copyright (c) Microsoft Corporation. All rights reserved.
+// Copyright (c) Microsoft Corporation. All rights reserved.
 // Licensed under the MIT License.
 
 using System;
@@ -72,7 +72,7 @@ namespace Azure.Core.Tests
             var credential = DelegatedTokenCredential.Create(getToken);
             var result = credential.CreateTokenOptions(properties);
 
-            Assert.IsNotNull(result);
+            Assert.That(result, Is.Not.Null);
             Assert.That(result.Properties[GetTokenOptions.ScopesPropertyName], Is.EqualTo(scopesMemory));
             Assert.That(result.Properties["additionalProperty"], Is.EqualTo("value"));
         }
@@ -89,7 +89,7 @@ namespace Azure.Core.Tests
             var credential = DelegatedTokenCredential.Create(getToken);
             var result = credential.CreateTokenOptions(properties);
 
-            Assert.IsNull(result);
+            Assert.That(result, Is.Null);
         }
 
         [Test]
@@ -105,7 +105,7 @@ namespace Azure.Core.Tests
             var credential = DelegatedTokenCredential.Create(getToken);
             var tokenOptions = credential.CreateTokenOptions(properties);
 
-            Assert.IsNotNull(tokenOptions);
+            Assert.That(tokenOptions, Is.Not.Null);
 
             // This should not throw since we have valid scopes
             Assert.DoesNotThrow(() =>

@@ -25,11 +25,11 @@ namespace Azure.Core.Expressions.DataFactory.Tests
             // Test serialization
             var options = new ModelReaderWriterOptions("W");
             var binaryData = ((IPersistableModel<DataFactoryKeyVaultSecret>)keyVaultSecret).Write(options);
-            Assert.IsNotNull(binaryData);
+            Assert.That(binaryData, Is.Not.Null);
 
             // Test deserialization
             var deserializedSecret = ModelReaderWriter.Read<DataFactoryKeyVaultSecret>(binaryData, options);
-            Assert.IsNotNull(deserializedSecret);
+            Assert.That(deserializedSecret, Is.Not.Null);
             Assert.That(deserializedSecret.Store.ReferenceName, Is.EqualTo(keyVaultSecret.Store.ReferenceName));
         }
 
@@ -46,11 +46,11 @@ namespace Azure.Core.Expressions.DataFactory.Tests
             // Test serialization
             var options = new ModelReaderWriterOptions("W");
             var binaryData = ((IPersistableModel<DataFactoryLinkedServiceReference>)linkedServiceRef).Write(options);
-            Assert.IsNotNull(binaryData);
+            Assert.That(binaryData, Is.Not.Null);
 
             // Test deserialization
             var deserializedRef = ModelReaderWriter.Read<DataFactoryLinkedServiceReference>(binaryData, options);
-            Assert.IsNotNull(deserializedRef);
+            Assert.That(deserializedRef, Is.Not.Null);
             Assert.That(deserializedRef.ReferenceName, Is.EqualTo(linkedServiceRef.ReferenceName));
             Assert.That(deserializedRef.ReferenceKind, Is.EqualTo(linkedServiceRef.ReferenceKind));
         }
@@ -68,11 +68,11 @@ namespace Azure.Core.Expressions.DataFactory.Tests
             // Test serialization
             var options = new ModelReaderWriterOptions("W");
             var binaryData = ((IPersistableModel<DataFactorySecretString>)secretString).Write(options);
-            Assert.IsNotNull(binaryData);
+            Assert.That(binaryData, Is.Not.Null);
 
             // Test deserialization
             var deserializedSecret = ModelReaderWriter.Read<DataFactorySecretString>(binaryData, options);
-            Assert.IsNotNull(deserializedSecret);
+            Assert.That(deserializedSecret, Is.Not.Null);
             Assert.That(deserializedSecret.Value, Is.EqualTo(secretString.Value));
         }
 
@@ -89,11 +89,11 @@ namespace Azure.Core.Expressions.DataFactory.Tests
             // Test serialization
             var options = new ModelReaderWriterOptions("W");
             var binaryData = ((IPersistableModel<DataFactorySecret>)secret).Write(options);
-            Assert.IsNotNull(binaryData);
+            Assert.That(binaryData, Is.Not.Null);
 
             // Test deserialization
             var deserializedSecret = ModelReaderWriter.Read<DataFactorySecret>(binaryData, options);
-            Assert.IsNotNull(deserializedSecret);
+            Assert.That(deserializedSecret, Is.Not.Null);
             Assert.That(deserializedSecret, Is.InstanceOf<DataFactorySecretString>());
             Assert.That(((DataFactorySecretString)deserializedSecret).Value, Is.EqualTo(((DataFactorySecretString)secret).Value));
         }
@@ -117,9 +117,9 @@ namespace Azure.Core.Expressions.DataFactory.Tests
             using var document = JsonDocument.Parse(stream);
             var root = document.RootElement;
 
-            Assert.IsTrue(root.TryGetProperty("value", out var valueProperty));
+            Assert.That(root.TryGetProperty("value", out var valueProperty), Is.True);
             Assert.That(valueProperty.GetString(), Is.EqualTo("testSecret"));
-            Assert.IsTrue(root.TryGetProperty("type", out var typeProperty));
+            Assert.That(root.TryGetProperty("type", out var typeProperty), Is.True);
             Assert.That(typeProperty.GetString(), Is.EqualTo("SecureString"));
         }
 
@@ -137,7 +137,7 @@ namespace Azure.Core.Expressions.DataFactory.Tests
             var secretString = ((IJsonModel<DataFactorySecretString>)new DataFactorySecretString("dummy")).Create(ref reader, options);
 
             // Assert
-            Assert.IsNotNull(secretString);
+            Assert.That(secretString, Is.Not.Null);
             Assert.That(secretString.Value, Is.EqualTo("testSecret"));
         }
 

@@ -1,4 +1,4 @@
-﻿// Copyright (c) Microsoft Corporation. All rights reserved.
+// Copyright (c) Microsoft Corporation. All rights reserved.
 // Licensed under the MIT License.
 
 using System;
@@ -21,7 +21,7 @@ namespace Azure.Core.Tests
             var httpMessage = new HttpMessage(new MockRequest(), ResponseClassifier.Shared);
             httpMessage.Response = new MockResponse(code);
 
-            Assert.True(httpMessage.ResponseClassifier.IsRetriableResponse(httpMessage));
+            Assert.That(httpMessage.ResponseClassifier.IsRetriableResponse(httpMessage), Is.True);
         }
 
         [Test]
@@ -29,7 +29,7 @@ namespace Azure.Core.Tests
         {
             var classifier = ResponseClassifier.Shared;
 
-            Assert.True(classifier.IsRetriableException(new RequestFailedException(0, "IO Exception")));
+            Assert.That(classifier.IsRetriableException(new RequestFailedException(0, "IO Exception")), Is.True);
         }
 
         [Test]
@@ -37,7 +37,7 @@ namespace Azure.Core.Tests
         {
             var classifier = ResponseClassifier.Shared;
 
-            Assert.False(classifier.IsRetriableException(new RequestFailedException(500, "IO Exception")));
+            Assert.That(classifier.IsRetriableException(new RequestFailedException(500, "IO Exception")), Is.False);
         }
 
         [Test]
@@ -45,7 +45,7 @@ namespace Azure.Core.Tests
         {
             var httpMessage = new HttpMessage(new MockRequest(), ResponseClassifier.Shared);
 
-            Assert.True(httpMessage.ResponseClassifier.IsRetriable(httpMessage, new OperationCanceledException()));
+            Assert.That(httpMessage.ResponseClassifier.IsRetriable(httpMessage, new OperationCanceledException()), Is.True);
         }
 
         [Test]

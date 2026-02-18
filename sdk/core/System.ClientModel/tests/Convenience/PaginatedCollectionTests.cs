@@ -1,4 +1,4 @@
-﻿// Copyright (c) Microsoft Corporation. All rights reserved.
+// Copyright (c) Microsoft Corporation. All rights reserved.
 // Licensed under the MIT License.
 
 using System.ClientModel.Primitives;
@@ -218,8 +218,8 @@ public class PaginatedCollectionTests
         PaginatedCollectionClient convenienceClient = new();
         CollectionResult convenienceCollection = convenienceClient.GetValues();
 
-        Assert.IsTrue(Validate(protocolCollection));
-        Assert.IsTrue(Validate(convenienceCollection));
+        Assert.That(Validate(protocolCollection), Is.True);
+        Assert.That(Validate(convenienceCollection), Is.True);
     }
 
     [Test]
@@ -292,7 +292,7 @@ public class PaginatedCollectionTests
             threwException = true;
         }
 
-        Assert.IsTrue(threwException);
+        Assert.That(threwException, Is.True);
     }
 
     [Test]
@@ -334,8 +334,8 @@ public class PaginatedCollectionTests
         PaginatedCollectionClient convenienceClient = new();
         AsyncCollectionResult convenienceCollection = convenienceClient.GetValuesAsync();
 
-        Assert.IsTrue(await ValidateAsync(protocolCollection));
-        Assert.IsTrue(await ValidateAsync(convenienceCollection));
+        Assert.That(await ValidateAsync(protocolCollection), Is.True);
+        Assert.That(await ValidateAsync(convenienceCollection), Is.True);
     }
 
     [Test]

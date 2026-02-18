@@ -1,4 +1,4 @@
-﻿// Copyright (c) Microsoft Corporation. All rights reserved.
+// Copyright (c) Microsoft Corporation. All rights reserved.
 // Licensed under the MIT License.
 
 using System;
@@ -39,7 +39,7 @@ namespace Azure.Core.Tests
 
             (string Key, object Value, DiagnosticListener) stopEvent = testListener.Events.Dequeue();
 
-            Assert.Null(Activity.Current);
+            Assert.That(Activity.Current, Is.Null);
             Assert.That(startEvent.Key, Is.EqualTo("ActivityName.Start"));
             Assert.That(stopEvent.Key, Is.EqualTo("ActivityName.Stop"));
 
@@ -70,7 +70,7 @@ namespace Azure.Core.Tests
 
             scope.Dispose();
 
-            Assert.True(duration > TimeSpan.Zero);
+            Assert.That(duration > TimeSpan.Zero, Is.True);
         }
 
         [Test]
@@ -149,7 +149,7 @@ namespace Azure.Core.Tests
 
             (string Key, object Value, DiagnosticListener) stopEvent = testListener.Events.Dequeue();
 
-            Assert.Null(Activity.Current);
+            Assert.That(Activity.Current, Is.Null);
             Assert.That(startEvent.Key, Is.EqualTo("ActivityName.Start"));
             Assert.That(stopEvent.Key, Is.EqualTo("ActivityName.Stop"));
 
@@ -179,8 +179,8 @@ namespace Azure.Core.Tests
             (string Key, object Value, DiagnosticListener) stopEvent = testListener.Events.Dequeue();
             var isEnabledCall = testListener.IsEnabledCalls.Dequeue();
 
-            Assert.NotNull(activity);
-            Assert.Null(Activity.Current);
+            Assert.That(activity, Is.Not.Null);
+            Assert.That(Activity.Current, Is.Null);
             Assert.That(startEvent.Key, Is.EqualTo("ActivityName.Start"));
             Assert.That(stopEvent.Key, Is.EqualTo("ActivityName.Stop"));
             Assert.That(isEnabledCall.Name, Is.EqualTo("ActivityName"));
@@ -200,7 +200,7 @@ namespace Azure.Core.Tests
 
             Assert.That(linkedActivity2.IdFormat, Is.EqualTo(ActivityIdFormat.W3C));
             Assert.That(linkedActivity2.ParentId, Is.EqualTo("00-6e76af18746bae4eadc3581338bbe8b2-2899ebfdbdce904b-00"));
-            Assert.Null(linkedActivity2.TraceStateString);
+            Assert.That(linkedActivity2.TraceStateString, Is.Null);
 
             Assert.That(testListener.Events.Count, Is.EqualTo(0));
         }
@@ -229,7 +229,7 @@ namespace Azure.Core.Tests
 
             (string Key, object Value, DiagnosticListener) stopEvent = testListener.Events.Dequeue();
 
-            Assert.Null(Activity.Current);
+            Assert.That(Activity.Current, Is.Null);
             Assert.That(startEvent.Key, Is.EqualTo("ActivityName.Start"));
             Assert.That(stopEvent.Key, Is.EqualTo("ActivityName.Stop"));
 
@@ -266,7 +266,7 @@ namespace Azure.Core.Tests
             (string Key, object Value, DiagnosticListener) exceptionEvent = testListener.Events.Dequeue();
             (string Key, object Value, DiagnosticListener) stopEvent = testListener.Events.Dequeue();
 
-            Assert.Null(Activity.Current);
+            Assert.That(Activity.Current, Is.Null);
             Assert.That(startEvent.Key, Is.EqualTo("ActivityName.Start"));
             Assert.That(exceptionEvent.Key, Is.EqualTo("ActivityName.Exception"));
             Assert.That(stopEvent.Key, Is.EqualTo("ActivityName.Stop"));
@@ -284,7 +284,7 @@ namespace Azure.Core.Tests
             DiagnosticScopeFactory clientDiagnostics = new DiagnosticScopeFactory("Azure.Clients", "Microsoft.Azure.Core.Cool.Tests", false, false, true);
             DiagnosticScope scope = clientDiagnostics.CreateScope("");
 
-            Assert.IsFalse(scope.IsEnabled);
+            Assert.That(scope.IsEnabled, Is.False);
 
             scope.AddAttribute("Attribute1", "Value1");
             scope.AddAttribute("Attribute2", 2, i => i.ToString());
@@ -329,7 +329,7 @@ namespace Azure.Core.Tests
             nestedScope.SetDisplayName("Nested Activity Display Name");
             nestedScope.Start();
 
-            Assert.IsTrue(nestedScope.IsEnabled);
+            Assert.That(nestedScope.IsEnabled, Is.True);
             Assert.That(Activity.Current.OperationName, Is.EqualTo("ClientName.NestedActivityName"));
             Assert.That(Activity.Current.DisplayName, Is.EqualTo("Nested Activity Display Name"));
             nestedScope.Dispose();
@@ -345,12 +345,12 @@ namespace Azure.Core.Tests
 
             DiagnosticScopeFactory clientDiagnostics = new DiagnosticScopeFactory("Azure.Clients", "Microsoft.Azure.Core.Cool.Tests", true, false, true);
             DiagnosticScope scope = clientDiagnostics.CreateScope("ClientName.ActivityName", ActivityKind.Server);
-            Assert.IsTrue(scope.IsEnabled);
+            Assert.That(scope.IsEnabled, Is.True);
             scope.Start();
             Assert.That(Activity.Current.OperationName, Is.EqualTo("ClientName.ActivityName"));
 
             DiagnosticScope nestedScope = clientDiagnostics.CreateScope("ClientName.NestedActivityName");
-            Assert.IsTrue(nestedScope.IsEnabled);
+            Assert.That(nestedScope.IsEnabled, Is.True);
             nestedScope.Start();
 
             Activity nestedActivity = Activity.Current;
@@ -377,7 +377,7 @@ namespace Azure.Core.Tests
             DiagnosticScopeFactory clientDiagnostics2 = new DiagnosticScopeFactory("Azure.Clients2", "Microsoft.Azure.Core.Cool.Tests", true, false, true);
             DiagnosticScope nestedScope = clientDiagnostics2.CreateScope("ClientName.NestedActivityName");
             nestedScope.Start();
-            Assert.IsTrue(nestedScope.IsEnabled);
+            Assert.That(nestedScope.IsEnabled, Is.True);
             Assert.That(Activity.Current.OperationName, Is.EqualTo("ClientName.NestedActivityName"));
             nestedScope.Dispose();
 
@@ -397,11 +397,11 @@ namespace Azure.Core.Tests
             DiagnosticScopeFactory clientDiagnostics2 = new DiagnosticScopeFactory("Azure.Clients2", "Microsoft.Azure.Core.Cool.Tests", true, false, true);
             DiagnosticScope nestedScope = clientDiagnostics2.CreateScope("ClientName.NestedActivityName");
             nestedScope.Start();
-            Assert.IsTrue(nestedScope.IsEnabled);
+            Assert.That(nestedScope.IsEnabled, Is.True);
             Assert.That(Activity.Current.OperationName, Is.EqualTo("ClientName.NestedActivityName"));
             nestedScope.Dispose();
 
-            Assert.IsNull(Activity.Current);
+            Assert.That(Activity.Current, Is.Null);
         }
 
         [Test]
@@ -416,11 +416,11 @@ namespace Azure.Core.Tests
 
             DiagnosticScope nextScope = clientDiagnostics.CreateScope("ClientName.ActivityName");
             nextScope.Start();
-            Assert.IsTrue(nextScope.IsEnabled);
+            Assert.That(nextScope.IsEnabled, Is.True);
             Assert.That(Activity.Current.OperationName, Is.EqualTo("ClientName.ActivityName"));
             nextScope.Dispose();
 
-            Assert.IsNull(Activity.Current);
+            Assert.That(Activity.Current, Is.Null);
         }
     }
 }

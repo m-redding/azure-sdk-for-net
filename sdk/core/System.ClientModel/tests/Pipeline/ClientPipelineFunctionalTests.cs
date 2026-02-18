@@ -1,4 +1,4 @@
-﻿// Copyright (c) Microsoft Corporation. All rights reserved.
+// Copyright (c) Microsoft Corporation. All rights reserved.
 // Licensed under the MIT License.
 
 using System.ClientModel.Primitives;
@@ -186,7 +186,7 @@ public class ClientPipelineFunctionalTests : SyncAsyncTestBase
             Assert.Throws<InvalidOperationException>(() => { var content = message.Response.Content; });
         }
 
-        Assert.Greater(reqNum, requestCount);
+        Assert.That(reqNum, Is.GreaterThan(requestCount));
     }
 
     [Test]

@@ -1,4 +1,4 @@
-﻿// Copyright (c) Microsoft Corporation. All rights reserved.
+// Copyright (c) Microsoft Corporation. All rights reserved.
 // Licensed under the MIT License.
 
 using System;
@@ -58,21 +58,21 @@ namespace Azure.Core.Tests.Public.ModelReaderWriterTests
 
         protected override void VerifyModel(ModelXmlCrossLibrary model, string format)
         {
-            Assert.AreEqual("Color", model.Key);
-            Assert.AreEqual("Red", model.Value);
-            Assert.AreEqual("ReadOnly", model.ReadOnlyProperty);
-            Assert.IsNotNull(model.ChildModelXml);
-            Assert.AreEqual("ChildRed", model.ChildModelXml.ChildValue);
-            Assert.AreEqual("ChildReadOnly", model.ChildModelXml.ChildReadOnlyProperty);
+            Assert.That(model.Key, Is.EqualTo("Color"));
+            Assert.That(model.Value, Is.EqualTo("Red"));
+            Assert.That(model.ReadOnlyProperty, Is.EqualTo("ReadOnly"));
+            Assert.That(model.ChildModelXml, Is.Not.Null);
+            Assert.That(model.ChildModelXml.ChildValue, Is.EqualTo("ChildRed"));
+            Assert.That(model.ChildModelXml.ChildReadOnlyProperty, Is.EqualTo("ChildReadOnly"));
         }
 
         protected override void CompareModels(ModelXmlCrossLibrary model, ModelXmlCrossLibrary model2, string format)
         {
-            Assert.AreEqual(model.Key, model2.Key);
-            Assert.AreEqual(model.Value, model2.Value);
+            Assert.That(model2.Key, Is.EqualTo(model.Key));
+            Assert.That(model2.Value, Is.EqualTo(model.Value));
             if (format.Equals("J"))
-                Assert.AreEqual(model.ReadOnlyProperty, model2.ReadOnlyProperty);
-            Assert.AreEqual(model.ChildModelXml.ChildValue, model2.ChildModelXml.ChildValue);
+                Assert.That(model2.ReadOnlyProperty, Is.EqualTo(model.ReadOnlyProperty));
+            Assert.That(model2.ChildModelXml.ChildValue, Is.EqualTo(model.ChildModelXml.ChildValue));
         }
     }
 }

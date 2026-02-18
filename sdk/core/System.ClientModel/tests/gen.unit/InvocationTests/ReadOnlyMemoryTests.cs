@@ -1,4 +1,4 @@
-﻿// Copyright (c) Microsoft Corporation. All rights reserved.
+// Copyright (c) Microsoft Corporation. All rights reserved.
 // Licensed under the MIT License.
 
 using System.Collections.Generic;
@@ -31,7 +31,7 @@ namespace System.ClientModel.SourceGeneration.Tests.Unit.InvocationTests
             Assert.That(dict.TryGetValue($"{lookupName}.ReadOnlyMemory<{expectation.TypeName}>", out var romJsonModel), Is.True);
             Assert.That(romJsonModel!.Type.Name, Is.EqualTo($"ReadOnlyMemory<{expectation.TypeName}>"));
             Assert.That(romJsonModel.Type.Namespace, Is.EqualTo("System"));
-            Assert.IsNotNull(romJsonModel.Type.ItemType);
+            Assert.That(romJsonModel.Type.ItemType, Is.Not.Null);
             Assert.That(romJsonModel.Kind, Is.EqualTo(TypeBuilderKind.ReadOnlyMemory));
             Assert.That(romJsonModel.Type.TypeCaseName, Is.EqualTo($"ReadOnlyMemory_{expectation.TypeName}_"));
             Assert.That(romJsonModel.Type.CamelCaseName, Is.EqualTo($"readOnlyMemory_{expectation.TypeName}_"));

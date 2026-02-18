@@ -1,4 +1,4 @@
-﻿// Copyright (c) Microsoft Corporation. All rights reserved.
+// Copyright (c) Microsoft Corporation. All rights reserved.
 // Licensed under the MIT License.
 
 using System.ClientModel.Primitives;
@@ -40,7 +40,7 @@ public class OperationResultTests : SyncAsyncTestBase
         }
 
         Assert.That(completeAfterCount, Is.EqualTo(updateCount));
-        Assert.IsTrue(operation.HasCompleted);
+        Assert.That(operation.HasCompleted, Is.True);
         Assert.That(initialResponse, Is.Not.EqualTo(operation.GetRawResponse()));
     }
 
@@ -68,7 +68,7 @@ public class OperationResultTests : SyncAsyncTestBase
         }
 
         Assert.That(completeAfterCount, Is.EqualTo(updateCount));
-        Assert.IsTrue(operation.HasCompleted);
+        Assert.That(operation.HasCompleted, Is.True);
     }
 
     [Test]
@@ -98,10 +98,10 @@ public class OperationResultTests : SyncAsyncTestBase
                 Throws.InstanceOf<OperationCanceledException>());
         }
 
-        Assert.IsTrue(source.IsCancellationRequested);
+        Assert.That(source.IsCancellationRequested, Is.True);
 
         Assert.That(updateCount, Is.EqualTo(0));
-        Assert.IsFalse(operation.HasCompleted);
+        Assert.That(operation.HasCompleted, Is.False);
     }
 
     [Test]
@@ -137,8 +137,8 @@ public class OperationResultTests : SyncAsyncTestBase
         stopwatch.Stop();
 
         Assert.That(completeAfterCount, Is.EqualTo(updateCount));
-        Assert.IsTrue(operation.HasCompleted);
+        Assert.That(operation.HasCompleted, Is.True);
 
-        Assert.Greater(stopwatch.Elapsed, TimeSpan.FromSeconds(completeAfterCount * defaultWaitSeconds));
+        Assert.That(stopwatch.Elapsed, Is.GreaterThan(TimeSpan.FromSeconds(completeAfterCount * defaultWaitSeconds)));
     }
 }

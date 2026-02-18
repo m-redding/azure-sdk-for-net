@@ -63,8 +63,8 @@ foreach ($serviceDir in $ServiceDirectories) {
         $buildOutput = dotnet build $sln.FullName --no-restore 2>&1 | Out-String
         $exitCode = $LASTEXITCODE
 
-        # Also try with restore if no-restore failed
-        if ($exitCode -ne 0 -and $buildOutput -match "Run a NuGet package restore") {
+        # Also try with restore if no-restore failed (covers stale assets, version mismatches like CS1705, etc.)
+        if ($exitCode -ne 0) {
             Write-Host "    Retrying with restore..." -ForegroundColor Yellow
             $buildOutput = dotnet build $sln.FullName 2>&1 | Out-String
             $exitCode = $LASTEXITCODE
@@ -96,7 +96,7 @@ foreach ($serviceDir in $ServiceDirectories) {
             Solution    = $relativeSln
             Service     = $serviceDir
             ExitCode    = $exitCode
-            ErrorCount  = $errorLines.Count
+            ErrorCount  = @($errorLines).Count
             Errors      = $errorsByProject
         }
         $buildResults += $result
@@ -115,8 +115,8 @@ Write-Host "=" * 60 -ForegroundColor Cyan
 Write-Host "  BUILD SUMMARY" -ForegroundColor Cyan
 Write-Host "=" * 60 -ForegroundColor Cyan
 
-$successCount = ($buildResults | Where-Object { $_.ExitCode -eq 0 }).Count
-$failCount = ($buildResults | Where-Object { $_.ExitCode -ne 0 }).Count
+$successCount = @($buildResults | Where-Object { $_.ExitCode -eq 0 }).Count
+$failCount = @($buildResults | Where-Object { $_.ExitCode -ne 0 }).Count
 
 Write-Host "`n  Solutions built:  $($buildResults.Count)" -ForegroundColor White
 Write-Host "  Succeeded:        $successCount" -ForegroundColor Green

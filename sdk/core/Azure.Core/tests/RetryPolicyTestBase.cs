@@ -1,4 +1,4 @@
-﻿// Copyright (c) Microsoft Corporation. All rights reserved.
+// Copyright (c) Microsoft Corporation. All rights reserved.
 // Licensed under the MIT License.
 
 using System;
@@ -78,10 +78,10 @@ namespace Azure.Core.Tests
             RetryPolicyMock mockPolicy = (RetryPolicyMock)policy;
 
             await mockTransport.RequestGate.Cycle(new MockResponse(500));
-            Assert.GreaterOrEqual(message.ProcessingStartTime, beforeSend);
+            Assert.That(message.ProcessingStartTime, Is.GreaterThanOrEqualTo(beforeSend));
             Assert.That(message.ProcessingContext.RetryNumber, Is.EqualTo(0));
             await gate.Cycle();
-            Assert.IsTrue(mockPolicy.ShouldRetryCalled);
+            Assert.That(mockPolicy.ShouldRetryCalled, Is.True);
             mockPolicy.ShouldRetryCalled = false;
 
             var exception = new IOException();
@@ -92,15 +92,15 @@ namespace Azure.Core.Tests
             Assert.That(mockPolicy.LastException, Is.SameAs(exception));
             mockPolicy.LastException = null;
 
-            Assert.IsTrue(mockPolicy.ShouldRetryCalled);
+            Assert.That(mockPolicy.ShouldRetryCalled, Is.True);
             mockPolicy.ShouldRetryCalled = false;
 
             await mockTransport.RequestGate.Cycle(new MockResponse(200));
 
             await task.TimeoutAfterDefault();
-            Assert.IsFalse(mockPolicy.ShouldRetryCalled);
+            Assert.That(mockPolicy.ShouldRetryCalled, Is.False);
             Assert.That(message.ProcessingContext.RetryNumber, Is.EqualTo(2));
-            Assert.IsNull(mockPolicy.LastException);
+            Assert.That(mockPolicy.LastException, Is.Null);
         }
 
         [Test]
@@ -118,7 +118,7 @@ namespace Azure.Core.Tests
             Assert.That(message.ProcessingContext.RetryNumber, Is.EqualTo(0));
 
             await gate.Cycle();
-            Assert.IsTrue(mockPolicy.OnRequestSentCalled);
+            Assert.That(mockPolicy.OnRequestSentCalled, Is.True);
             mockPolicy.OnRequestSentCalled = false;
 
             var exception = new IOException();
@@ -126,7 +126,7 @@ namespace Azure.Core.Tests
             Assert.That(message.ProcessingContext.RetryNumber, Is.EqualTo(1));
 
             await gate.Cycle();
-            Assert.IsTrue(mockPolicy.OnRequestSentCalled);
+            Assert.That(mockPolicy.OnRequestSentCalled, Is.True);
             mockPolicy.OnRequestSentCalled = false;
 
             Assert.That(mockPolicy.LastException, Is.SameAs(exception));
@@ -135,9 +135,9 @@ namespace Azure.Core.Tests
             await mockTransport.RequestGate.Cycle(new MockResponse(200));
 
             await task.TimeoutAfterDefault();
-            Assert.IsTrue(mockPolicy.OnRequestSentCalled);
+            Assert.That(mockPolicy.OnRequestSentCalled, Is.True);
             Assert.That(message.ProcessingContext.RetryNumber, Is.EqualTo(2));
-            Assert.IsNull(mockPolicy.LastException);
+            Assert.That(mockPolicy.LastException, Is.Null);
         }
 
         [Test]
@@ -195,8 +195,8 @@ namespace Azure.Core.Tests
 
             AggregateException exception = Assert.ThrowsAsync<AggregateException>(async () => await task.TimeoutAfterDefault());
             Assert.That(exception.Message, Does.StartWith("Retry failed after 2 tries."));
-            Assert.IsInstanceOf<InvalidOperationException>(exception.InnerExceptions[0]);
-            Assert.IsInstanceOf<IOException>(exception.InnerExceptions[1]);
+            Assert.That(exception.InnerExceptions[0], Is.InstanceOf<InvalidOperationException>());
+            Assert.That(exception.InnerExceptions[1], Is.InstanceOf<IOException>());
         }
 
         [Test]
@@ -281,7 +281,7 @@ namespace Azure.Core.Tests
 
             Response response = await task.TimeoutAfterDefault();
 
-            Assert.Less(TimeSpan.FromHours(4), retryDelay);
+            Assert.That(TimeSpan.FromHours(4), Is.LessThan(retryDelay));
             Assert.That(response.Status, Is.EqualTo(501));
         }
 
@@ -304,7 +304,7 @@ namespace Azure.Core.Tests
 
             Response response = await task.TimeoutAfterDefault();
 
-            Assert.Less(TimeSpan.Zero, retryDelay);
+            Assert.That(TimeSpan.Zero, Is.LessThan(retryDelay));
             Assert.That(response.Status, Is.EqualTo(501));
         }
 
@@ -645,7 +645,7 @@ namespace Azure.Core.Tests
             Assert.That(e.Level, Is.EqualTo(EventLevel.Informational));
             Assert.That(e.EventName, Is.EqualTo("RequestRetrying"));
             Assert.That(e.GetProperty<string>("requestId"), Is.EqualTo(request.ClientRequestId));
-            Assert.IsTrue(e.GetProperty<double>("seconds") > 0);
+            Assert.That(e.GetProperty<double>("seconds") > 0, Is.True);
         }
 
         protected (HttpPipelinePolicy Policy, AsyncGate<TimeSpan, object> Gate) CreateRetryPolicy(int maxRetries = 3)

@@ -1,4 +1,4 @@
-﻿// Copyright (c) Microsoft Corporation. All rights reserved.
+// Copyright (c) Microsoft Corporation. All rights reserved.
 // Licensed under the MIT License.
 
 using System;
@@ -27,9 +27,9 @@ namespace Azure.Core.Experimental.Tests
         public void CanTestForNull()
         {
             Variant variant = Variant.Null;
-            Assert.True(variant.IsNull);
+            Assert.That(variant.IsNull, Is.True);
 
-            Assert.True(new Variant((object)null).IsNull);
+            Assert.That(new Variant((object)null).IsNull, Is.True);
         }
 
         [TestCaseSource(nameof(VariantValues))]
@@ -61,9 +61,9 @@ namespace Azure.Core.Experimental.Tests
             //   object ob = oa;
             //   list[0] = "2";
             //
-            //   Assert.AreEqual("2", list[0]);
-            //   Assert.AreEqual("2", ((List<string>)oa)[0]);
-            //   Assert.AreEqual("2", ((List<string>)ob)[0]);
+            //   Assert.That(list[0], Is.EqualTo("2"));
+            //   Assert.That(((List<string>)oa)[0], Is.EqualTo("2"));
+            //   Assert.That(((List<string>)ob)[0], Is.EqualTo("2"));
             //
             // Variant should do the same.
             // The following test validates this functionality.
@@ -98,13 +98,13 @@ namespace Azure.Core.Experimental.Tests
             Variant stringVariant = new(s);
 
             Assert.That(stringVariant, Is.EqualTo(Variant.Null));
-            Assert.IsNull(stringVariant.As<string>());
+            Assert.That(stringVariant.As<string>(), Is.Null);
 
             List<int> list = null;
             Variant listVariant = new(list);
 
             Assert.That(listVariant, Is.EqualTo(Variant.Null));
-            Assert.IsNull(listVariant.As<string>());
+            Assert.That(listVariant.As<string>(), Is.Null);
         }
 
         [Test]
@@ -124,7 +124,7 @@ namespace Azure.Core.Experimental.Tests
             Variant intVariant = new(i);
 
             Assert.That(intVariant, Is.EqualTo(Variant.Null));
-            Assert.IsNull(intVariant.As<int?>());
+            Assert.That(intVariant.As<int?>(), Is.Null);
         }
 
         #region Helpers

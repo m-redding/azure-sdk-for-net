@@ -1,4 +1,4 @@
-﻿// Copyright (c) Microsoft Corporation. All rights reserved.
+// Copyright (c) Microsoft Corporation. All rights reserved.
 // Licensed under the MIT License.
 
 using System.ClientModel.Internal;
@@ -29,8 +29,8 @@ namespace System.ClientModel.Tests.Internal
 
         public void DetectsTextContentTypes(string contentType, bool isText, string expectedEncoding)
         {
-            Assert.AreEqual(isText, ContentTypeUtilities.TryGetTextEncoding(contentType, out Encoding? encoding));
-            Assert.AreEqual(encoding?.EncodingName, expectedEncoding);
+            Assert.That(ContentTypeUtilities.TryGetTextEncoding(contentType, out Encoding? encoding), Is.EqualTo(isText));
+            Assert.That(expectedEncoding, Is.EqualTo(encoding?.EncodingName));
         }
     }
 }

@@ -1,4 +1,4 @@
-﻿// Copyright (c) Microsoft Corporation. All rights reserved.
+// Copyright (c) Microsoft Corporation. All rights reserved.
 // Licensed under the MIT License.
 
 using System;
@@ -55,7 +55,7 @@ namespace Azure.Core.Tests
         {
             AzureLocation loc = location;
             Assert.That(loc.Name, Is.EqualTo(location));
-            Assert.IsNull(loc.DisplayName);
+            Assert.That(loc.DisplayName, Is.Null);
         }
 
         [TestCase(true, "West Us", "West Us")]
@@ -89,16 +89,16 @@ namespace Azure.Core.Tests
             AzureLocation loc = AzureLocation.WestUS2;
 
             object intLoc = 5;
-            Assert.IsFalse(loc.Equals(intLoc));
+            Assert.That(loc.Equals(intLoc), Is.False);
 
             object nullLoc = null;
-            Assert.IsFalse(loc.Equals(nullLoc));
+            Assert.That(loc.Equals(nullLoc), Is.False);
 
             object sameLoc = loc;
             Assert.That(loc, Is.EqualTo(sameLoc));
 
             object loc2 = AzureLocation.EastUS2;
-            Assert.IsFalse(loc.Equals(loc2));
+            Assert.That(loc.Equals(loc2), Is.False);
         }
 
         [TestCase(true, "West Us", "West Us")]

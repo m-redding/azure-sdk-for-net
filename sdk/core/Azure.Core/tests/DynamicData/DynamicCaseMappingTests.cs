@@ -1,4 +1,4 @@
-﻿// Copyright (c) Microsoft Corporation. All rights reserved.
+// Copyright (c) Microsoft Corporation. All rights reserved.
 // Licensed under the MIT License.
 
 using System;
@@ -45,14 +45,14 @@ namespace Azure.Core.Tests
         {
             dynamic value = new BinaryData(testJson).ToDynamicFromJson();
 
-            Assert.IsNull(value.Camel);
-            Assert.IsNull(value.pascal);
-            Assert.IsNull(value.ParentCamel);
-            Assert.IsNull(value.parentCamel.NestedCamel);
-            Assert.IsNull(value.parentCamel.nestedPascal);
-            Assert.IsNull(value.parentPascal);
-            Assert.IsNull(value.ParentPascal.NestedCamel);
-            Assert.IsNull(value.ParentPascal.nestedPascal);
+            Assert.That(value.Camel, Is.Null);
+            Assert.That(value.pascal, Is.Null);
+            Assert.That(value.ParentCamel, Is.Null);
+            Assert.That(value.parentCamel.NestedCamel, Is.Null);
+            Assert.That(value.parentCamel.nestedPascal, Is.Null);
+            Assert.That(value.parentPascal, Is.Null);
+            Assert.That(value.ParentPascal.NestedCamel, Is.Null);
+            Assert.That(value.ParentPascal.nestedPascal, Is.Null);
         }
 
         [Test]
@@ -78,10 +78,10 @@ namespace Azure.Core.Tests
             DynamicDataOptions options = new() { PropertyNameFormat = JsonPropertyNames.CamelCase };
             dynamic value = new BinaryData(testJson).ToDynamicFromJson(options);
 
-            Assert.IsNull(value.pascal);
-            Assert.IsNull(value.parentCamel.nestedPascal);
-            Assert.IsNull(value.parentPascal);
-            Assert.IsNull(value.ParentPascal.nestedPascal);
+            Assert.That(value.pascal, Is.Null);
+            Assert.That(value.parentCamel.nestedPascal, Is.Null);
+            Assert.That(value.parentPascal, Is.Null);
+            Assert.That(value.ParentPascal.nestedPascal, Is.Null);
         }
 
         [Test]
@@ -167,9 +167,9 @@ namespace Azure.Core.Tests
             Assert.That((bool)value.parentCamel.NestedPascal, Is.EqualTo(true));
             Assert.That((string)value.ParentPascal.NestedPascal, Is.EqualTo("c"));
 
-            Assert.IsNull((string)value.pascal);
-            Assert.IsNull((bool?)value.parentCamel.nestedPascal);
-            Assert.IsNull((string)value.ParentPascal.nestedPascal);
+            Assert.That((string)value.pascal, Is.Null);
+            Assert.That((bool?)value.parentCamel.nestedPascal, Is.Null);
+            Assert.That((string)value.ParentPascal.nestedPascal, Is.Null);
         }
 
         [Test]
@@ -242,8 +242,8 @@ namespace Azure.Core.Tests
 
             DynamicDataOptions options = new() { PropertyNameFormat = JsonPropertyNames.CamelCase };
             dynamic dynamicJson = BinaryData.FromString(json).ToDynamicFromJson(options);
-            Assert.IsTrue(dynamicJson.root.child[0].item.leaf);
-            Assert.IsTrue(dynamicJson.Root.Child[0].Item.Leaf);
+            Assert.That(dynamicJson.root.child[0].item.leaf, Is.True);
+            Assert.That(dynamicJson.Root.Child[0].Item.Leaf, Is.True);
         }
 
         [Test]
@@ -265,19 +265,19 @@ namespace Azure.Core.Tests
             IEnumerable ary = (IEnumerable)jsonData;
             IEnumerator e = ary.GetEnumerator();
 
-            Assert.IsTrue(e.MoveNext());
+            Assert.That(e.MoveNext(), Is.True);
             dynamic item = e.Current;
             Assert.That((string)item.Name, Is.EqualTo("a"));
             Assert.That((string)item.Value.description, Is.EqualTo("description of a"));
             Assert.That((int)item.Value.index, Is.EqualTo(1));
 
-            Assert.IsTrue(e.MoveNext());
+            Assert.That(e.MoveNext(), Is.True);
             item = e.Current;
             Assert.That((string)item.Name, Is.EqualTo("b"));
             Assert.That((string)item.Value.description, Is.EqualTo("description of b"));
             Assert.That((int)item.Value.index, Is.EqualTo(2));
 
-            Assert.IsFalse(e.MoveNext());
+            Assert.That(e.MoveNext(), Is.False);
         }
 
         [Test]
@@ -300,19 +300,19 @@ namespace Azure.Core.Tests
             IEnumerable ary = (IEnumerable)jsonData;
             IEnumerator e = ary.GetEnumerator();
 
-            Assert.IsTrue(e.MoveNext());
+            Assert.That(e.MoveNext(), Is.True);
             dynamic item = e.Current;
             Assert.That((string)item.Name, Is.EqualTo("a"));
             Assert.That((string)item.Value.Description, Is.EqualTo("description of a"));
             Assert.That((int)item.Value.Index, Is.EqualTo(1));
 
-            Assert.IsTrue(e.MoveNext());
+            Assert.That(e.MoveNext(), Is.True);
             item = e.Current;
             Assert.That((string)item.Name, Is.EqualTo("b"));
             Assert.That((string)item.Value.Description, Is.EqualTo("description of b"));
             Assert.That((int)item.Value.Index, Is.EqualTo(2));
 
-            Assert.IsFalse(e.MoveNext());
+            Assert.That(e.MoveNext(), Is.False);
         }
 
         [Test]
@@ -334,15 +334,15 @@ namespace Azure.Core.Tests
             IEnumerable ary = (IEnumerable)jsonData.array;
             IEnumerator e = ary.GetEnumerator();
 
-            Assert.IsTrue(e.MoveNext());
+            Assert.That(e.MoveNext(), Is.True);
             dynamic item = e.Current;
             Assert.That((string)item.foo, Is.EqualTo("a"));
 
-            Assert.IsTrue(e.MoveNext());
+            Assert.That(e.MoveNext(), Is.True);
             item = e.Current;
             Assert.That((string)item.foo, Is.EqualTo("b"));
 
-            Assert.IsFalse(e.MoveNext());
+            Assert.That(e.MoveNext(), Is.False);
         }
 
         [Test]
@@ -365,15 +365,15 @@ namespace Azure.Core.Tests
             IEnumerable ary = (IEnumerable)jsonData.Array;
             IEnumerator e = ary.GetEnumerator();
 
-            Assert.IsTrue(e.MoveNext());
+            Assert.That(e.MoveNext(), Is.True);
             dynamic item = e.Current;
             Assert.That((string)item.Foo, Is.EqualTo("a"));
 
-            Assert.IsTrue(e.MoveNext());
+            Assert.That(e.MoveNext(), Is.True);
             item = e.Current;
             Assert.That((string)item.Foo, Is.EqualTo("b"));
 
-            Assert.IsFalse(e.MoveNext());
+            Assert.That(e.MoveNext(), Is.False);
         }
 
         [Test]
@@ -445,8 +445,8 @@ namespace Azure.Core.Tests
             Assert.That((int)value.Bar.B, Is.EqualTo(4));
 
             // And that they serialized to camelCase
-            Assert.AreEqual("""{"a":3}""", value.Foo.ToString());
-            Assert.AreEqual("""{"b":4}""", value.Bar.ToString());
+            Assert.That(value.Foo.ToString(), Is.EqualTo("""{"a":3}"""));
+            Assert.That(value.Bar.ToString(), Is.EqualTo("""{"b":4}"""));
         }
 
         [Test]
@@ -463,7 +463,7 @@ namespace Azure.Core.Tests
             Assert.That((int)value.Foo, Is.EqualTo(1));
             Assert.That((string)value.foo, Is.EqualTo("orig"));
             Assert.That((int)value.Bar, Is.EqualTo(2));
-            Assert.IsNull(value.bar);
+            Assert.That(value.bar, Is.Null);
 
             // Serialized model - existing property
             value.Foo = new
@@ -481,11 +481,11 @@ namespace Azure.Core.Tests
             Assert.That((int)value.Foo.A, Is.EqualTo(3));
             Assert.That((string)value.foo, Is.EqualTo("orig"));
             Assert.That((int)value.Bar.B, Is.EqualTo(4));
-            Assert.IsNull(value.bar);
+            Assert.That(value.bar, Is.Null);
 
             // And that they serialized to PascalCase
-            Assert.AreEqual("""{"A":3}""", value.Foo.ToString());
-            Assert.AreEqual("""{"B":4}""", value.Bar.ToString());
+            Assert.That(value.Foo.ToString(), Is.EqualTo("""{"A":3}"""));
+            Assert.That(value.Bar.ToString(), Is.EqualTo("""{"B":4}"""));
         }
 
         [Test]

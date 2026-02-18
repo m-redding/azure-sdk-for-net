@@ -34,7 +34,7 @@ public class UserAgentPolicyTests : SyncAsyncTestBase
         await pipeline.SendSyncOrAsync(message, IsAsync);
 
         // User-Agent header should not be present when user agent policy is not added
-        Assert.IsFalse(message.Request.Headers.TryGetValue("User-Agent", out _));
+        Assert.That(message.Request.Headers.TryGetValue("User-Agent", out _), Is.False);
     }
 
     [Test]
@@ -67,9 +67,9 @@ public class UserAgentPolicyTests : SyncAsyncTestBase
         await pipeline.SendSyncOrAsync(message, IsAsync);
 
         // User-Agent header should be present when user agent policy is included
-        Assert.IsNotNull(capturedRequest);
-        Assert.IsTrue(capturedRequest!.Headers.TryGetValue("User-Agent", out string? userAgent));
-        Assert.IsNotNull(userAgent);
+        Assert.That(capturedRequest, Is.Not.Null);
+        Assert.That(capturedRequest!.Headers.TryGetValue("User-Agent", out string? userAgent), Is.True);
+        Assert.That(userAgent, Is.Not.Null);
 
         // Should contain assembly name and version
         Assert.That(userAgent, Does.Contain("ClientModel.Tests"));
@@ -107,10 +107,10 @@ public class UserAgentPolicyTests : SyncAsyncTestBase
         // Send through pipeline to test user agent functionality
         pipeline.Send(message);
 
-        Assert.IsNotNull(capturedRequest);
-        Assert.IsTrue(capturedRequest!.Headers.TryGetValue("User-Agent", out string? userAgent));
-        Assert.IsNotNull(userAgent);
-        Assert.IsNotEmpty(userAgent);
+        Assert.That(capturedRequest, Is.Not.Null);
+        Assert.That(capturedRequest!.Headers.TryGetValue("User-Agent", out string? userAgent), Is.True);
+        Assert.That(userAgent, Is.Not.Null);
+        Assert.That(userAgent, Is.Not.Empty);
 
         // Should contain assembly name and version
         string assemblyName = assembly.GetName().Name!;
@@ -156,8 +156,8 @@ public class UserAgentPolicyTests : SyncAsyncTestBase
 
         pipeline.Send(message);
 
-        Assert.IsNotNull(capturedRequest);
-        Assert.IsTrue(capturedRequest!.Headers.TryGetValue("User-Agent", out string? userAgent));
+        Assert.That(capturedRequest, Is.Not.Null);
+        Assert.That(capturedRequest!.Headers.TryGetValue("User-Agent", out string? userAgent), Is.True);
         Assert.That(userAgent, Does.StartWith(applicationId));
     }
 
@@ -183,7 +183,7 @@ public class UserAgentPolicyTests : SyncAsyncTestBase
 
         // Test without application ID
         var policy = new UserAgentPolicy(assembly);
-        Assert.IsNotNull(policy);
+        Assert.That(policy, Is.Not.Null);
         Assert.That(policy.ApplicationId, Is.Null);
         Assert.That(policy.Assembly, Is.EqualTo(assembly));
 
@@ -204,7 +204,7 @@ public class UserAgentPolicyTests : SyncAsyncTestBase
         string applicationId = "TestApp/1.0";
 
         var policy = new UserAgentPolicy(assembly, applicationId);
-        Assert.IsNotNull(policy);
+        Assert.That(policy, Is.Not.Null);
         Assert.That(policy.ApplicationId, Is.EqualTo(applicationId));
         Assert.That(policy.Assembly, Is.EqualTo(assembly));
         var userAgent = policy.UserAgentValue;

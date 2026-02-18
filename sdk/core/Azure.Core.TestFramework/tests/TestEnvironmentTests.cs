@@ -1,4 +1,4 @@
-﻿// Copyright (c) Microsoft Corporation. All rights reserved.
+// Copyright (c) Microsoft Corporation. All rights reserved.
 // Licensed under the MIT License.
 
 using System;
@@ -150,12 +150,12 @@ namespace Azure.Core.TestFramework.Tests
             env.Mode = RecordedTestMode.Record;
             env.SetRecording(testRecording);
 
-            Assert.IsNull(env.MissingOptionalSecret);
+            Assert.That(env.MissingOptionalSecret, Is.Null);
 
             await testRecording.DisposeAsync();
             testRecording = await TestRecording.CreateAsync(RecordedTestMode.Playback, tempFile, proxy, new RecordedTestBaseTests(true));
 
-            Assert.IsNull(testRecording.GetVariable(nameof(env.MissingOptionalSecret), null));
+            Assert.That(testRecording.GetVariable(nameof(env.MissingOptionalSecret), null), Is.Null);
         }
 
         [Test]

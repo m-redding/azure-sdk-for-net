@@ -1,4 +1,4 @@
-﻿// Copyright (c) Microsoft Corporation. All rights reserved.
+// Copyright (c) Microsoft Corporation. All rights reserved.
 // Licensed under the MIT License.
 
 using System;
@@ -18,7 +18,7 @@ namespace Azure.Core.Tests
             var response = Response.FromValue(new TestPayload("test_name"), response: null);
             TestPayload value = response.Value;
 
-            Assert.IsNotNull(value);
+            Assert.That(value, Is.Not.Null);
             Assert.That(value.Name, Is.EqualTo("test_name"));
         }
 
@@ -28,7 +28,7 @@ namespace Azure.Core.Tests
             var response = Response.FromValue(new TestPayload("test_name"), response: null);
             TestPayload value = response;
 
-            Assert.IsNotNull(value);
+            Assert.That(value, Is.Not.Null);
             Assert.That(value.Name, Is.EqualTo("test_name"));
         }
 
@@ -37,7 +37,7 @@ namespace Azure.Core.Tests
         {
             Response<string> response = null!;
             string s = response;
-            Assert.IsNull(s);
+            Assert.That(s, Is.Null);
         }
 
         [Test]
@@ -70,7 +70,7 @@ namespace Azure.Core.Tests
                 throws = true;
             }
 
-            Assert.True(throws);
+            Assert.That(throws, Is.True);
         }
 
         [Test]
@@ -88,7 +88,7 @@ namespace Azure.Core.Tests
                 throws = true;
             }
 
-            Assert.True(throws);
+            Assert.That(throws, Is.True);
         }
 
         [Test]
@@ -148,11 +148,11 @@ namespace Azure.Core.Tests
         {
             var response = new MockResponse(500);
 
-            Assert.IsFalse(response.IsError);
+            Assert.That(response.IsError, Is.False);
 
             response.SetIsError(true);
 
-            Assert.IsTrue(response.IsError);
+            Assert.That(response.IsError, Is.True);
         }
 
         [Test]
@@ -160,11 +160,11 @@ namespace Azure.Core.Tests
         {
             var response = new Mock<Response>();
 
-            Assert.IsFalse(response.Object.IsError);
+            Assert.That(response.Object.IsError, Is.False);
 
             response.SetupGet(x => x.IsError).Returns(true);
 
-            Assert.IsTrue(response.Object.IsError);
+            Assert.That(response.Object.IsError, Is.True);
         }
 
         internal class TestPayload

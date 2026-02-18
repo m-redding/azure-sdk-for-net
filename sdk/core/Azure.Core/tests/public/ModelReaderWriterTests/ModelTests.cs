@@ -1,4 +1,4 @@
-﻿// Copyright (c) Microsoft Corporation. All rights reserved.
+// Copyright (c) Microsoft Corporation. All rights reserved.
 // Licensed under the MIT License.
 
 using System;
@@ -146,7 +146,7 @@ namespace Azure.Core.Tests.Public.ModelReaderWriterTests
                 }
                 finally
                 {
-                    Assert.IsTrue(gotException);
+                    Assert.That(gotException, Is.True);
                 }
 
                 gotException = false;
@@ -161,7 +161,7 @@ namespace Azure.Core.Tests.Public.ModelReaderWriterTests
                 }
                 finally
                 {
-                    Assert.IsTrue(gotException);
+                    Assert.That(gotException, Is.True);
                 }
             }
         }
@@ -182,7 +182,7 @@ namespace Azure.Core.Tests.Public.ModelReaderWriterTests
                 {
                     exceptionCaught = true;
                 }
-                Assert.IsTrue(exceptionCaught, "Expected InvalidOperationException to be thrown when deserializing wire format as json");
+                Assert.That(exceptionCaught, Is.True, "Expected InvalidOperationException to be thrown when deserializing wire format as json");
             }
         }
     }

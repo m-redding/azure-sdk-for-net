@@ -1,4 +1,4 @@
-﻿// Copyright (c) Microsoft Corporation. All rights reserved.
+// Copyright (c) Microsoft Corporation. All rights reserved.
 // Licensed under the MIT License.
 
 using System.ClientModel.Primitives;
@@ -162,7 +162,7 @@ public class ClientRetryPolicyTests : SyncAsyncTestBase
 
         // Retry-After header is larger - wait the Retry-After time, which
         // should be approx 100s, so test for > 20s.
-        Assert.GreaterOrEqual(delayMillis, 20 * 1000);
+        Assert.That(delayMillis, Is.GreaterThanOrEqualTo(20 * 1000));
     }
 
     [Test]
@@ -196,16 +196,16 @@ public class ClientRetryPolicyTests : SyncAsyncTestBase
             switch (retryCount)
             {
                 case 0:
-                    Assert.IsFalse(retryPolicy.ShouldRetryCalled);
+                    Assert.That(retryPolicy.ShouldRetryCalled, Is.False);
                     Assert.That(retryPolicy.LastException, Is.Null);
                     break;
                 case 1:
-                    Assert.IsTrue(retryPolicy.ShouldRetryCalled);
+                    Assert.That(retryPolicy.ShouldRetryCalled, Is.True);
                     Assert.That(retryPolicy.LastException, Is.Null);
                     retryPolicy.Reset();
                     break;
                 case 2:
-                    Assert.IsTrue(retryPolicy.ShouldRetryCalled);
+                    Assert.That(retryPolicy.ShouldRetryCalled, Is.True);
                     Assert.That(retryPolicy.LastException, Is.SameAs(retriableException));
                     retryPolicy.Reset();
                     break;
@@ -218,7 +218,7 @@ public class ClientRetryPolicyTests : SyncAsyncTestBase
         await pipeline.SendSyncOrAsync(message, IsAsync);
 
         // Validate last iteration through retry policy handling, i.e. after 200 response
-        Assert.IsFalse(retryPolicy.ShouldRetryCalled);
+        Assert.That(retryPolicy.ShouldRetryCalled, Is.False);
         Assert.That(retryPolicy.LastException, Is.Null);
 
         List<string> observations = ObservablePolicy.GetData(message);
@@ -265,19 +265,19 @@ public class ClientRetryPolicyTests : SyncAsyncTestBase
             switch (retryCount)
             {
                 case 0:
-                    Assert.IsTrue(retryPolicy.OnSendingRequestCalled);
-                    Assert.IsFalse(retryPolicy.OnRequestSentCalled);
+                    Assert.That(retryPolicy.OnSendingRequestCalled, Is.True);
+                    Assert.That(retryPolicy.OnRequestSentCalled, Is.False);
                     Assert.That(retryPolicy.LastException, Is.Null);
                     break;
                 case 1:
-                    Assert.IsTrue(retryPolicy.OnSendingRequestCalled);
-                    Assert.IsTrue(retryPolicy.OnRequestSentCalled);
+                    Assert.That(retryPolicy.OnSendingRequestCalled, Is.True);
+                    Assert.That(retryPolicy.OnRequestSentCalled, Is.True);
                     Assert.That(retryPolicy.LastException, Is.Null);
                     retryPolicy.Reset();
                     break;
                 case 2:
-                    Assert.IsTrue(retryPolicy.OnSendingRequestCalled);
-                    Assert.IsTrue(retryPolicy.OnRequestSentCalled);
+                    Assert.That(retryPolicy.OnSendingRequestCalled, Is.True);
+                    Assert.That(retryPolicy.OnRequestSentCalled, Is.True);
                     Assert.That(retryPolicy.LastException, Is.SameAs(retriableException));
                     retryPolicy.Reset();
                     break;
@@ -290,8 +290,8 @@ public class ClientRetryPolicyTests : SyncAsyncTestBase
         await pipeline.SendSyncOrAsync(message, IsAsync);
 
         // Validate last iteration through retry policy handling, i.e. after 200 response
-        Assert.IsFalse(retryPolicy.OnSendingRequestCalled);
-        Assert.IsTrue(retryPolicy.OnRequestSentCalled);
+        Assert.That(retryPolicy.OnSendingRequestCalled, Is.False);
+        Assert.That(retryPolicy.OnRequestSentCalled, Is.True);
         Assert.That(retryPolicy.LastException, Is.Null);
 
         List<string> observations = ObservablePolicy.GetData(message);
@@ -415,10 +415,10 @@ public class ClientRetryPolicyTests : SyncAsyncTestBase
         Assert.That(capturingPolicy.Delays.Count, Is.EqualTo(2));
 
         // Initial delay should be greater than zero
-        Assert.Greater(capturingPolicy.Delays[0], TimeSpan.Zero);
+        Assert.That(capturingPolicy.Delays[0], Is.GreaterThan(TimeSpan.Zero));
 
         // Subsequent delays should increase
-        Assert.Greater(capturingPolicy.Delays[1], capturingPolicy.Delays[0]);
+        Assert.That(capturingPolicy.Delays[1], Is.GreaterThan(capturingPolicy.Delays[0]));
     }
 
     #region Helpers

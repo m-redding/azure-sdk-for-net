@@ -1,4 +1,4 @@
-﻿// Copyright (c) Microsoft Corporation. All rights reserved.
+// Copyright (c) Microsoft Corporation. All rights reserved.
 // Licensed under the MIT License.
 
 using Azure.Core.TestFramework;
@@ -25,11 +25,11 @@ namespace Azure.Core.Tests
 
                     if (nonError == code)
                     {
-                        Assert.True(isNonError);
+                        Assert.That(isNonError, Is.True);
                     }
                     else
                     {
-                        Assert.False(isNonError);
+                        Assert.That(isNonError, Is.False);
                     }
                 }
             }

@@ -12,7 +12,7 @@ namespace Azure.Core.Tests
         public void UndefinedByDefault()
         {
             var dictionary = new ChangeTrackingDictionary<string, string>();
-            Assert.True(dictionary.IsUndefined);
+            Assert.That(dictionary.IsUndefined, Is.True);
         }
 
         [Test]
@@ -36,7 +36,7 @@ namespace Azure.Core.Tests
 
             Assert.Throws<KeyNotFoundException>(() => _ = dictionary["a"]);
 
-            Assert.True(dictionary.IsUndefined);
+            Assert.That(dictionary.IsUndefined, Is.True);
         }
 
         [Test]
@@ -46,7 +46,7 @@ namespace Azure.Core.Tests
             dictionary.Add("a", "b");
 
             Assert.That(dictionary["a"], Is.EqualTo("b"));
-            Assert.False(dictionary.IsUndefined);
+            Assert.That(dictionary.IsUndefined, Is.False);
         }
 
         [Test]
@@ -59,7 +59,7 @@ namespace Azure.Core.Tests
             dictionary.Remove(new KeyValuePair<string, string>("c", "d"));
 
             Assert.That(dictionary.Count, Is.EqualTo(0));
-            Assert.False(dictionary.IsUndefined);
+            Assert.That(dictionary.IsUndefined, Is.False);
         }
 
         [Test]
@@ -69,7 +69,7 @@ namespace Azure.Core.Tests
             dictionary.Clear();
 
             Assert.That(dictionary.Count, Is.EqualTo(0));
-            Assert.False(dictionary.IsUndefined);
+            Assert.That(dictionary.IsUndefined, Is.False);
         }
     }
 }

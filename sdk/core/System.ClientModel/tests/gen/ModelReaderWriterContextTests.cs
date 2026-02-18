@@ -18,7 +18,7 @@ namespace System.ClientModel.SourceGeneration.Tests
             Assert.That(model, Is.Not.Null);
             var ex = Assert.Throws<InvalidOperationException>(() => BasicContext.Default.GetTypeBuilder(typeof(string)));
             Assert.That(ex, Is.Not.Null);
-            Assert.AreEqual("No ModelReaderWriterTypeBuilder found for String.  See 'https://aka.ms/no-modelreaderwritertypebuilder-found' for more info.", ex!.Message);
+            Assert.That(ex!.Message, Is.EqualTo("No ModelReaderWriterTypeBuilder found for String.  See 'https://aka.ms/no-modelreaderwritertypebuilder-found' for more info."));
         }
 
         [Test]
@@ -30,7 +30,7 @@ namespace System.ClientModel.SourceGeneration.Tests
             Assert.That(model, Is.Not.Null);
             var ex = Assert.Throws<InvalidOperationException>(() => BasicContext.Default.GetTypeBuilder(typeof(string)));
             Assert.That(ex, Is.Not.Null);
-            Assert.AreEqual("No ModelReaderWriterTypeBuilder found for String.  See 'https://aka.ms/no-modelreaderwritertypebuilder-found' for more info.", ex!.Message);
+            Assert.That(ex!.Message, Is.EqualTo("No ModelReaderWriterTypeBuilder found for String.  See 'https://aka.ms/no-modelreaderwritertypebuilder-found' for more info."));
         }
 
         [Test]

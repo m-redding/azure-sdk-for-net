@@ -45,12 +45,12 @@ namespace Azure.Core.Tests
             var settings = configuration.GetClientSettings<TestClientSettings>("TestClient");
             var options = settings.Options;
 
-            Assert.IsNotNull(options);
+            Assert.That(options, Is.Not.Null);
             Assert.That(options.Diagnostics.ApplicationId, Is.EqualTo("MyApp"));
-            Assert.IsFalse(options.Diagnostics.IsLoggingEnabled);
-            Assert.IsFalse(options.Diagnostics.IsTelemetryEnabled);
-            Assert.IsFalse(options.Diagnostics.IsDistributedTracingEnabled);
-            Assert.IsTrue(options.Diagnostics.IsLoggingContentEnabled);
+            Assert.That(options.Diagnostics.IsLoggingEnabled, Is.False);
+            Assert.That(options.Diagnostics.IsTelemetryEnabled, Is.False);
+            Assert.That(options.Diagnostics.IsDistributedTracingEnabled, Is.False);
+            Assert.That(options.Diagnostics.IsLoggingContentEnabled, Is.True);
             Assert.That(options.Diagnostics.LoggedContentSizeLimit, Is.EqualTo(8192));
             Assert.That(options.Diagnostics.LoggedHeaderNames, Is.EqualTo(new[] { "custom-header-1", "custom-header-2" }).AsCollection);
             Assert.That(options.Diagnostics.LoggedQueryParameters, Is.EqualTo(new[] { "param1", "param2" }).AsCollection);
@@ -75,7 +75,7 @@ namespace Azure.Core.Tests
             var settings = configuration.GetClientSettings<TestClientSettings>("TestClient");
             var options = settings.Options;
 
-            Assert.IsNotNull(options);
+            Assert.That(options, Is.Not.Null);
 
             Assert.That(options.Retry.MaxRetries, Is.EqualTo(5));
             Assert.That(options.Retry.Delay, Is.EqualTo(TimeSpan.FromSeconds(2)));
@@ -103,11 +103,11 @@ namespace Azure.Core.Tests
             var settings = configuration.GetClientSettings<TestClientSettings>("TestClient");
             var options = settings.Options;
 
-            Assert.IsNotNull(options);
+            Assert.That(options, Is.Not.Null);
 
             Assert.That(options.Diagnostics.ApplicationId, Is.EqualTo("FullTestApp"));
-            Assert.IsFalse(options.Diagnostics.IsLoggingEnabled);
-            Assert.IsTrue(options.Diagnostics.IsTelemetryEnabled);
+            Assert.That(options.Diagnostics.IsLoggingEnabled, Is.False);
+            Assert.That(options.Diagnostics.IsTelemetryEnabled, Is.True);
             Assert.That(options.Retry.MaxRetries, Is.EqualTo(10));
             Assert.That(options.Retry.Delay, Is.EqualTo(TimeSpan.FromSeconds(1)));
         }
@@ -120,10 +120,10 @@ namespace Azure.Core.Tests
             var settings = configuration.GetClientSettings<TestClientSettings>("NonExistent");
             var options = settings.Options;
 
-            Assert.IsNotNull(options);
-            Assert.IsNotNull(options.Diagnostics);
-            Assert.IsNotNull(options.Retry);
-            Assert.IsTrue(options.Diagnostics.IsLoggingEnabled);
+            Assert.That(options, Is.Not.Null);
+            Assert.That(options.Diagnostics, Is.Not.Null);
+            Assert.That(options.Retry, Is.Not.Null);
+            Assert.That(options.Diagnostics.IsLoggingEnabled, Is.True);
             Assert.That(options.Retry.MaxRetries, Is.EqualTo(3));
         }
 
@@ -134,10 +134,10 @@ namespace Azure.Core.Tests
             var settings = configuration.GetClientSettings<TestClientSettings>("NonExistent");
             var options = settings.Options;
 
-            Assert.IsNotNull(options);
-            Assert.IsNotNull(options.Diagnostics);
-            Assert.IsNotNull(options.Retry);
-            Assert.IsTrue(options.Diagnostics.IsLoggingEnabled);
+            Assert.That(options, Is.Not.Null);
+            Assert.That(options.Diagnostics, Is.Not.Null);
+            Assert.That(options.Retry, Is.Not.Null);
+            Assert.That(options.Diagnostics.IsLoggingEnabled, Is.True);
             Assert.That(options.Retry.MaxRetries, Is.EqualTo(3));
         }
 
@@ -151,11 +151,11 @@ namespace Azure.Core.Tests
             var settings = configuration.GetClientSettings<TestClientSettings>("TestClient");
             var options = settings.Options;
 
-            Assert.IsNotNull(options);
+            Assert.That(options, Is.Not.Null);
 
-            Assert.IsNotNull(options.Diagnostics);
-            Assert.IsNotNull(options.Retry);
-            Assert.IsTrue(options.Diagnostics.IsLoggingEnabled);
+            Assert.That(options.Diagnostics, Is.Not.Null);
+            Assert.That(options.Retry, Is.Not.Null);
+            Assert.That(options.Diagnostics.IsLoggingEnabled, Is.True);
             Assert.That(options.Retry.MaxRetries, Is.EqualTo(3));
         }
 
@@ -175,16 +175,16 @@ namespace Azure.Core.Tests
             var settings = configuration.GetClientSettings<TestClientSettings>("TestClient");
             var options = settings.Options;
 
-            Assert.IsNotNull(options);
+            Assert.That(options, Is.Not.Null);
 
             // Configured values
             Assert.That(options.Diagnostics.ApplicationId, Is.EqualTo("PartialApp"));
             Assert.That(options.Retry.MaxRetries, Is.EqualTo(7));
 
             // Default values
-            Assert.IsTrue(options.Diagnostics.IsLoggingEnabled);
-            Assert.IsTrue(options.Diagnostics.IsTelemetryEnabled);
-            Assert.IsTrue(options.Diagnostics.IsDistributedTracingEnabled);
+            Assert.That(options.Diagnostics.IsLoggingEnabled, Is.True);
+            Assert.That(options.Diagnostics.IsTelemetryEnabled, Is.True);
+            Assert.That(options.Diagnostics.IsDistributedTracingEnabled, Is.True);
             Assert.That(options.Retry.Delay, Is.EqualTo(TimeSpan.FromSeconds(0.8)));
             Assert.That(options.Retry.Mode, Is.EqualTo(RetryMode.Exponential));
         }
@@ -214,14 +214,14 @@ namespace Azure.Core.Tests
             var settings1 = configuration.GetClientSettings<TestClientSettings>("Client1");
             var settings2 = configuration.GetClientSettings<TestClientSettings>("Client2");
 
-            Assert.IsNotNull(settings1.Options);
-            Assert.IsNotNull(settings2.Options);
+            Assert.That(settings1.Options, Is.Not.Null);
+            Assert.That(settings2.Options, Is.Not.Null);
 
             // Both should have the same diagnostics values from Shared section
             Assert.That(settings1.Options.Diagnostics.ApplicationId, Is.EqualTo("SharedApp"));
             Assert.That(settings2.Options.Diagnostics.ApplicationId, Is.EqualTo("SharedApp"));
-            Assert.IsFalse(settings1.Options.Diagnostics.IsLoggingEnabled);
-            Assert.IsFalse(settings2.Options.Diagnostics.IsLoggingEnabled);
+            Assert.That(settings1.Options.Diagnostics.IsLoggingEnabled, Is.False);
+            Assert.That(settings2.Options.Diagnostics.IsLoggingEnabled, Is.False);
             Assert.That(settings1.Options.Diagnostics.LoggedContentSizeLimit, Is.EqualTo(4096));
             Assert.That(settings2.Options.Diagnostics.LoggedContentSizeLimit, Is.EqualTo(4096));
 
@@ -250,7 +250,7 @@ namespace Azure.Core.Tests
             var settings = configuration.GetClientSettings<TestClientSettings>("TestClient");
             var options = settings.Options;
 
-            Assert.IsNotNull(options);
+            Assert.That(options, Is.Not.Null);
 
             // Null values should be filtered out
             Assert.That(options.Diagnostics.LoggedHeaderNames, Is.EqualTo(new[] { "header1", "header2" }).AsCollection);
@@ -273,11 +273,11 @@ namespace Azure.Core.Tests
             var settings = configuration.GetClientSettings<TestClientSettings>("TestClient");
             var options = settings.Options;
 
-            Assert.IsNotNull(options);
+            Assert.That(options, Is.Not.Null);
 
             // Empty collections should result in defaults being used
-            Assert.IsNotEmpty(options.Diagnostics.LoggedHeaderNames);
-            Assert.IsNotEmpty(options.Diagnostics.LoggedQueryParameters);
+            Assert.That(options.Diagnostics.LoggedHeaderNames, Is.Not.Empty);
+            Assert.That(options.Diagnostics.LoggedQueryParameters, Is.Not.Empty);
         }
 
         [Test]
@@ -295,7 +295,7 @@ namespace Azure.Core.Tests
             var settings = configuration.GetClientSettings<TestClientSettings>("TestClient");
             var options = settings.Options;
 
-            Assert.IsNotNull(options);
+            Assert.That(options, Is.Not.Null);
 
             // Invalid enum value should use default
             Assert.That(options.Retry.Mode, Is.EqualTo(RetryMode.Exponential));
@@ -316,7 +316,7 @@ namespace Azure.Core.Tests
             var settings = configuration.GetClientSettings<TestClientSettings>("TestClient");
             var options = settings.Options;
 
-            Assert.IsNotNull(options);
+            Assert.That(options, Is.Not.Null);
 
             // Invalid TimeSpan should use default
             Assert.That(options.Retry.Delay, Is.EqualTo(TimeSpan.FromSeconds(0.8)));
@@ -337,7 +337,7 @@ namespace Azure.Core.Tests
             var settings = configuration.GetClientSettings<TestClientSettings>("TestClient");
             var options = settings.Options;
 
-            Assert.IsNotNull(options);
+            Assert.That(options, Is.Not.Null);
 
             // Invalid int should use default
             Assert.That(options.Retry.MaxRetries, Is.EqualTo(3));
@@ -358,10 +358,10 @@ namespace Azure.Core.Tests
             var settings = configuration.GetClientSettings<TestClientSettings>("TestClient");
             var options = settings.Options;
 
-            Assert.IsNotNull(options);
+            Assert.That(options, Is.Not.Null);
 
             // Invalid bool should use default
-            Assert.IsTrue(options.Diagnostics.IsLoggingEnabled);
+            Assert.That(options.Diagnostics.IsLoggingEnabled, Is.True);
         }
 
         [Test]
@@ -387,11 +387,11 @@ namespace Azure.Core.Tests
                 var settings = configuration.GetClientSettings<TestClientSettings>("TestClient");
                 var options = settings.Options;
 
-                Assert.IsNotNull(options);
+                Assert.That(options, Is.Not.Null);
 
                 // Configuration values explicitly set should override environment variables
-                Assert.IsTrue(options.Diagnostics.IsTelemetryEnabled);
-                Assert.IsTrue(options.Diagnostics.IsDistributedTracingEnabled);
+                Assert.That(options.Diagnostics.IsTelemetryEnabled, Is.True);
+                Assert.That(options.Diagnostics.IsDistributedTracingEnabled, Is.True);
             }
             finally
             {
@@ -416,7 +416,7 @@ namespace Azure.Core.Tests
             var settings = configuration.GetClientSettings<TestClientSettings>("Azure:Client");
             var options = settings.Options;
 
-            Assert.IsNotNull(options);
+            Assert.That(options, Is.Not.Null);
             Assert.That(options.Diagnostics.ApplicationId, Is.EqualTo("NestedApp"));
             Assert.That(options.Retry.MaxRetries, Is.EqualTo(8));
         }
@@ -447,7 +447,7 @@ namespace Azure.Core.Tests
             var settings = configuration.GetClientSettings<TestClientSettings>("TestClient");
             var options = settings.Options;
 
-            Assert.IsNotNull(options);
+            Assert.That(options, Is.Not.Null);
 
             Assert.That(options.Diagnostics.LoggedHeaderNames, Is.EqualTo(headers).AsCollection);
             Assert.That(options.Diagnostics.LoggedQueryParameters, Is.EqualTo(parameters).AsCollection);
@@ -473,7 +473,7 @@ namespace Azure.Core.Tests
             var settings = configuration.GetClientSettings<TestClientSettings>("TestClient");
             var options = settings.Options;
 
-            Assert.IsNotNull(options);
+            Assert.That(options, Is.Not.Null);
             Assert.That(options.Diagnostics.IsLoggingEnabled, Is.EqualTo(expected));
         }
 
@@ -496,7 +496,7 @@ namespace Azure.Core.Tests
             var settings = configuration.GetClientSettings<TestClientSettings>("TestClient");
             var options = settings.Options;
 
-            Assert.IsNotNull(options);
+            Assert.That(options, Is.Not.Null);
             Assert.That(options.Retry.Delay, Is.EqualTo(expected));
         }
 
@@ -516,7 +516,7 @@ namespace Azure.Core.Tests
             var settings = configuration.GetClientSettings<TestClientSettings>("TestClient");
             var options = settings.Options;
 
-            Assert.IsNotNull(options);
+            Assert.That(options, Is.Not.Null);
             Assert.That(options.Retry.Mode, Is.EqualTo(expected));
         }
 
@@ -536,8 +536,8 @@ namespace Azure.Core.Tests
             var customDiagnostics = new TestDiagnosticsOptions();
             var options = new TestClientOptions(configuration.GetSection("TestClient"), customDiagnostics);
 
-            Assert.IsNotNull(options);
-            Assert.IsNotNull(options.Diagnostics);
+            Assert.That(options, Is.Not.Null);
+            Assert.That(options.Diagnostics, Is.Not.Null);
             Assert.That(options.Diagnostics, Is.SameAs(customDiagnostics));
             Assert.That(options.Diagnostics.GetType(), Is.EqualTo(typeof(TestDiagnosticsOptions)));
         }
@@ -549,10 +549,10 @@ namespace Azure.Core.Tests
             var customDiagnostics = new TestDiagnosticsOptions();
             var options = new TestClientOptions(configuration.GetSection("NonExistent"), customDiagnostics);
 
-            Assert.IsNotNull(options);
-            Assert.IsNotNull(options.Diagnostics);
+            Assert.That(options, Is.Not.Null);
+            Assert.That(options.Diagnostics, Is.Not.Null);
             Assert.That(options.Diagnostics, Is.SameAs(customDiagnostics));
-            Assert.IsInstanceOf<TestDiagnosticsOptions>(options.Diagnostics);
+            Assert.That(options.Diagnostics, Is.InstanceOf<TestDiagnosticsOptions>());
         }
 
         [Test]
@@ -569,8 +569,8 @@ namespace Azure.Core.Tests
 
             var options = new TestClientOptions(configuration.GetSection("TestClient"), null);
 
-            Assert.IsNotNull(options);
-            Assert.IsNotNull(options.Diagnostics);
+            Assert.That(options, Is.Not.Null);
+            Assert.That(options.Diagnostics, Is.Not.Null);
             Assert.That(options.Diagnostics.ApplicationId, Is.EqualTo("TestApp"));
         }
 

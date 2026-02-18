@@ -78,7 +78,7 @@ namespace System.ClientModel.Tests.ModelReaderWriterTests
             Assert.That(data2.Length, Is.EqualTo(data.Length));
             if (IsRoundTripOrderDeterministic)
             {
-                Assert.IsTrue(data.ToMemory().Span.SequenceEqual(data2.ToMemory().Span));
+                Assert.That(data.ToMemory().Span.SequenceEqual(data2.ToMemory().Span), Is.True);
             }
         }
 
@@ -91,7 +91,7 @@ namespace System.ClientModel.Tests.ModelReaderWriterTests
             var actualEnumerator = GetEnumerable(actual!).GetEnumerator();
             while (expectedEnumerator.MoveNext())
             {
-                Assert.IsTrue(actualEnumerator.MoveNext(), "Less items found in round trip collection");
+                Assert.That(actualEnumerator.MoveNext(), Is.True, "Less items found in round trip collection");
                 if (expectedEnumerator.Current is IEnumerable)
                 {
                     CompareEnumerable((IEnumerable)expectedEnumerator.Current, (IEnumerable)actualEnumerator.Current, format, layer + 1);
@@ -103,7 +103,7 @@ namespace System.ClientModel.Tests.ModelReaderWriterTests
             }
 
             //assert none left in round trip
-            Assert.IsFalse(actualEnumerator.MoveNext(), "More items found in round trip collection");
+            Assert.That(actualEnumerator.MoveNext(), Is.False, "More items found in round trip collection");
         }
 
         protected static IEnumerable GetEnumerable(object collection)

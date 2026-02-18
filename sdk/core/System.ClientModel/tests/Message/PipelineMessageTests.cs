@@ -1,4 +1,4 @@
-﻿// Copyright (c) Microsoft Corporation. All rights reserved.
+// Copyright (c) Microsoft Corporation. All rights reserved.
 // Licensed under the MIT License.
 
 using System.ClientModel.Primitives;
@@ -27,7 +27,7 @@ public class PipelineMessageTests : SyncAsyncTestBase
         options.AddHeader("MockHeader", "MockValue");
         message.Apply(options);
 
-        Assert.IsTrue(message.Request.Headers.TryGetValue("MockHeader", out string? value));
+        Assert.That(message.Request.Headers.TryGetValue("MockHeader", out string? value), Is.True);
         Assert.That(value, Is.EqualTo("MockValue"));
     }
 
@@ -45,11 +45,11 @@ public class PipelineMessageTests : SyncAsyncTestBase
         message.Apply(options);
 
         Assert.That(cts.Token, Is.EqualTo(message.CancellationToken));
-        Assert.IsFalse(message.CancellationToken.IsCancellationRequested);
+        Assert.That(message.CancellationToken.IsCancellationRequested, Is.False);
 
         cts.Cancel();
 
-        Assert.IsTrue(message.CancellationToken.IsCancellationRequested);
+        Assert.That(message.CancellationToken.IsCancellationRequested, Is.True);
     }
 
     [Test]
@@ -68,7 +68,7 @@ public class PipelineMessageTests : SyncAsyncTestBase
 
         message.SetProperty(GetType(), "MockProperty");
 
-        Assert.IsTrue(message.TryGetProperty(GetType(), out object? property));
+        Assert.That(message.TryGetProperty(GetType(), out object? property), Is.True);
         Assert.That(property, Is.EqualTo("MockProperty"));
     }
 
@@ -78,7 +78,7 @@ public class PipelineMessageTests : SyncAsyncTestBase
         ClientPipeline pipeline = ClientPipeline.Create();
         PipelineMessage message = pipeline.CreateMessage();
 
-        Assert.False(message.TryGetProperty(GetType(), out _));
+        Assert.That(message.TryGetProperty(GetType(), out _), Is.False);
     }
 
     [Test]

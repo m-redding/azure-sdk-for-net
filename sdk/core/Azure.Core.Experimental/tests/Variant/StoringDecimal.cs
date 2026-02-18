@@ -1,4 +1,4 @@
-﻿// Copyright (c) Microsoft Corporation. All rights reserved.
+// Copyright (c) Microsoft Corporation. All rights reserved.
 // Licensed under the MIT License.
 
 using NUnit.Framework;
@@ -32,7 +32,7 @@ namespace Azure.Core.Experimental.Tests
         {
             Variant value = new(testValue);
             bool success = value.TryGetValue(out decimal result);
-            Assert.True(success);
+            Assert.That(success, Is.True);
             Assert.That(result, Is.EqualTo(testValue));
 
             Assert.That(value.As<decimal>(), Is.EqualTo(testValue));
@@ -46,7 +46,7 @@ namespace Azure.Core.Experimental.Tests
             Variant value = new(source);
 
             bool success = value.TryGetValue(out decimal result);
-            Assert.True(success);
+            Assert.That(success, Is.True);
             Assert.That(result, Is.EqualTo(testValue));
 
             Assert.That(value.As<decimal>(), Is.EqualTo(testValue));
@@ -60,7 +60,7 @@ namespace Azure.Core.Experimental.Tests
             decimal source = testValue;
             Variant value = new(source);
             bool success = value.TryGetValue(out decimal? result);
-            Assert.True(success);
+            Assert.That(success, Is.True);
             Assert.That(result, Is.EqualTo(testValue));
 
             Assert.That((decimal?)value, Is.EqualTo(testValue));
@@ -71,7 +71,7 @@ namespace Azure.Core.Experimental.Tests
         {
             decimal? source = null;
             Variant value = source;
-            Assert.Null(value.Type);
+            Assert.That(value.Type, Is.Null);
             Assert.That(value.As<decimal?>(), Is.EqualTo(source));
             Assert.That(value.As<decimal?>().HasValue, Is.False);
         }

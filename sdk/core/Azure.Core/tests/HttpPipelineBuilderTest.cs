@@ -1,4 +1,4 @@
-﻿// Copyright (c) Microsoft Corporation. All rights reserved.
+// Copyright (c) Microsoft Corporation. All rights reserved.
 // Licensed under the MIT License.
 
 using System;
@@ -59,15 +59,15 @@ namespace Azure.Core.Tests
             options.AddPolicy(new CallbackPolicy(m =>
             {
                 perCallRan = true;
-                Assert.False(perRetryRan);
-                Assert.False(beforeTransportRan);
+                Assert.That(perRetryRan, Is.False);
+                Assert.That(beforeTransportRan, Is.False);
             }), HttpPipelinePosition.PerCall);
 
             options.AddPolicy(new CallbackPolicy(m =>
             {
                 perRetryRan = true;
-                Assert.True(perCallRan);
-                Assert.False(beforeTransportRan);
+                Assert.That(perCallRan, Is.True);
+                Assert.That(beforeTransportRan, Is.False);
             }), HttpPipelinePosition.PerRetry);
 
             // Intentionally add some null policies to ensure it does not break indexing
@@ -78,8 +78,8 @@ namespace Azure.Core.Tests
             options.AddPolicy(new CallbackPolicy(m =>
             {
                 beforeTransportRan = true;
-                Assert.True(perRetryRan);
-                Assert.True(perCallRan);
+                Assert.That(perRetryRan, Is.True);
+                Assert.That(perCallRan, Is.True);
             }), HttpPipelinePosition.BeforeTransport);
 
             options.Transport = transport;
@@ -92,9 +92,9 @@ namespace Azure.Core.Tests
 
             await pipeline.SendRequestAsync(request, CancellationToken.None);
 
-            Assert.True(perRetryRan);
-            Assert.True(perCallRan);
-            Assert.True(beforeTransportRan);
+            Assert.That(perRetryRan, Is.True);
+            Assert.That(perCallRan, Is.True);
+            Assert.That(beforeTransportRan, Is.True);
         }
 
         [Test]
@@ -121,7 +121,7 @@ namespace Azure.Core.Tests
                 informationalVersion = informationalVersion.Substring(0, i);
             }
 
-            Assert.True(request.Headers.TryGetValue("User-Agent", out string value));
+            Assert.That(request.Headers.TryGetValue("User-Agent", out string value), Is.True);
             Assert.That(value, Does.StartWith($"azsdk-net-Core.Tests/{informationalVersion} "));
         }
 
@@ -152,7 +152,7 @@ namespace Azure.Core.Tests
                 informationalVersion = informationalVersion.Substring(0, i);
             }
 
-            Assert.True(request.Headers.TryGetValue("User-Agent", out string value));
+            Assert.That(request.Headers.TryGetValue("User-Agent", out string value), Is.True);
 #if NETFRAMEWORK
             Assert.That(value, Does.StartWith($"azsdk-net-mscorlib/{informationalVersion} "));
 #else
@@ -168,7 +168,7 @@ namespace Azure.Core.Tests
 
             await SendGetRequest(transport, telemetryPolicy);
 
-            Assert.True(transport.SingleRequest.TryGetHeader("User-Agent", out var userAgent));
+            Assert.That(transport.SingleRequest.TryGetHeader("User-Agent", out var userAgent), Is.True);
             Assert.That(userAgent, Does.Match(Regex.Escape("azsdk-net-Core.Tests/") +
                                  "[.\\-0-9a-z]+" +
                                  Regex.Escape($" ({RuntimeInformation.FrameworkDescription}; {RuntimeInformation.OSDescription})")));
@@ -186,7 +186,7 @@ namespace Azure.Core.Tests
 
             await SendGetRequest(transport, telemetryPolicy);
 
-            Assert.True(transport.SingleRequest.TryGetHeader("User-Agent", out var userAgent));
+            Assert.That(transport.SingleRequest.TryGetHeader("User-Agent", out var userAgent), Is.True);
             Assert.That(userAgent, Does.StartWith(longApplicationId + " "));
         }
 
@@ -221,7 +221,7 @@ namespace Azure.Core.Tests
                 .Callback<HttpMessage>(message =>
                 {
                     Assert.That(message.Request.ClientRequestId, Is.EqualTo("ExternalClientId"));
-                    Assert.True(message.Request.TryGetHeader("x-ms-client-request-id", out string requestId));
+                    Assert.That(message.Request.TryGetHeader("x-ms-client-request-id", out string requestId), Is.True);
                     Assert.That(requestId, Is.EqualTo("ExternalClientId"));
                 }).Verifiable();
 
@@ -268,7 +268,7 @@ namespace Azure.Core.Tests
 
             policy.Verify();
 
-            Assert.True(transport.SingleRequest.Headers.TryGetValue("x-ms-client-request-id", out var value));
+            Assert.That(transport.SingleRequest.Headers.TryGetValue("x-ms-client-request-id", out var value), Is.True);
             Assert.That(value, Is.EqualTo("MyPolicyClientId"));
         }
 

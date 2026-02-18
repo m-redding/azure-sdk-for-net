@@ -1,4 +1,4 @@
-﻿// Copyright (c) Microsoft Corporation. All rights reserved.
+// Copyright (c) Microsoft Corporation. All rights reserved.
 // Licensed under the MIT License.
 
 using Azure.Core.TestFramework;
@@ -13,7 +13,7 @@ namespace Azure.Core.Tests
         {
             var request = new MockRequest();
             request.Headers.Add("If-Match", new ETag(original));
-            Assert.IsTrue(request.Headers.TryGetValue("If-Match", out string value));
+            Assert.That(request.Headers.TryGetValue("If-Match", out string value), Is.True);
             Assert.That(value, Is.EqualTo(expected));
         }
 
@@ -26,8 +26,8 @@ namespace Azure.Core.Tests
                 IfMatch = new ETag(original),
                 IfNoneMatch = new ETag(original)
             });
-            Assert.IsTrue(request.Headers.TryGetValue("If-Match", out string ifMatchValue));
-            Assert.IsTrue(request.Headers.TryGetValue("If-None-Match", out string ifNoneMatchValue));
+            Assert.That(request.Headers.TryGetValue("If-Match", out string ifMatchValue), Is.True);
+            Assert.That(request.Headers.TryGetValue("If-None-Match", out string ifNoneMatchValue), Is.True);
             Assert.That(ifMatchValue, Is.EqualTo(expected));
             Assert.That(ifNoneMatchValue, Is.EqualTo(expected));
         }
@@ -41,8 +41,8 @@ namespace Azure.Core.Tests
                 IfMatch = new ETag(original),
                 IfNoneMatch = new ETag(original)
             });
-            Assert.IsTrue(request.Headers.TryGetValue("If-Match", out string ifMatchValue));
-            Assert.IsTrue(request.Headers.TryGetValue("If-None-Match", out string ifNoneMatchValue));
+            Assert.That(request.Headers.TryGetValue("If-Match", out string ifMatchValue), Is.True);
+            Assert.That(request.Headers.TryGetValue("If-None-Match", out string ifNoneMatchValue), Is.True);
             Assert.That(ifMatchValue, Is.EqualTo(expected));
             Assert.That(ifNoneMatchValue, Is.EqualTo(expected));
         }

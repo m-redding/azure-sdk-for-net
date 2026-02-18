@@ -1,4 +1,4 @@
-﻿// Copyright (c) Microsoft Corporation. All rights reserved.
+// Copyright (c) Microsoft Corporation. All rights reserved.
 // Licensed under the MIT License.
 
 using System;
@@ -32,7 +32,7 @@ namespace Azure.Core.Tests
             DiagnosticScopeFactory clientDiagnostics = new DiagnosticScopeFactory("Azure.Clients", "Microsoft.Azure.Core.Cool.Tests", true, false, false);
             DiagnosticScope scope = clientDiagnostics.CreateScope("ClientName.ActivityName");
 
-            Assert.IsFalse(scope.IsEnabled);
+            Assert.That(scope.IsEnabled, Is.False);
 
             scope.Start();
             scope.Dispose();
@@ -78,7 +78,7 @@ namespace Azure.Core.Tests
                 {"linkAttribute", "linkAttributeValue"}
             });
 
-            Assert.IsTrue(scope.IsEnabled);
+            Assert.That(scope.IsEnabled, Is.True);
 
             scope.Start();
 
@@ -113,7 +113,7 @@ namespace Azure.Core.Tests
             DiagnosticScopeFactory clientDiagnostics = new DiagnosticScopeFactory("Azure.Clients", "Microsoft.Azure.Core.Cool.Tests", true, false, true);
 
             DiagnosticScope scope = clientDiagnostics.CreateScope("ActivityName");
-            Assert.IsTrue(scope.IsEnabled);
+            Assert.That(scope.IsEnabled, Is.True);
 
             scope.Start();
             scope.Dispose();
@@ -174,13 +174,13 @@ namespace Azure.Core.Tests
 
             if (suppressNestedScopes.GetValueOrDefault(true))
             {
-                Assert.IsFalse(nestedScope.IsEnabled);
+                Assert.That(nestedScope.IsEnabled, Is.False);
                 Assert.That(Activity.Current.OperationName, Is.EqualTo("ClientName.ActivityName"));
                 Assert.That(Activity.Current.DisplayName, Is.EqualTo("Activity Display Name"));
             }
             else
             {
-                Assert.IsTrue(nestedScope.IsEnabled);
+                Assert.That(nestedScope.IsEnabled, Is.True);
                 Assert.That(Activity.Current.OperationName, Is.EqualTo("ClientName.NestedActivityName"));
                 Assert.That(Activity.Current.DisplayName, Is.EqualTo("Nested Activity Display Name"));
             }
@@ -208,12 +208,12 @@ namespace Azure.Core.Tests
             nestedScope.Start();
             if (expectSuppression)
             {
-                Assert.IsFalse(nestedScope.IsEnabled);
+                Assert.That(nestedScope.IsEnabled, Is.False);
                 Assert.That(Activity.Current.OperationName, Is.EqualTo("ClientName.ActivityName"));
             }
             else
             {
-                Assert.IsTrue(nestedScope.IsEnabled);
+                Assert.That(nestedScope.IsEnabled, Is.True);
                 Assert.That(Activity.Current.OperationName, Is.EqualTo("ClientName.NestedActivityName"));
             }
             nestedScope.Dispose();
@@ -240,12 +240,12 @@ namespace Azure.Core.Tests
             nestedScope.Start();
             if (expectSuppression)
             {
-                Assert.IsFalse(nestedScope.IsEnabled);
+                Assert.That(nestedScope.IsEnabled, Is.False);
                 Assert.That(Activity.Current.OperationName, Is.EqualTo("ClientName.ActivityName"));
             }
             else
             {
-                Assert.IsTrue(nestedScope.IsEnabled);
+                Assert.That(nestedScope.IsEnabled, Is.True);
                 Assert.That(Activity.Current.OperationName, Is.EqualTo("ClientName.NestedActivityName"));
             }
             nestedScope.Dispose();
@@ -271,12 +271,12 @@ namespace Azure.Core.Tests
 
             if (suppressOuter && suppressNested)
             {
-                Assert.IsFalse(nestedScope.IsEnabled);
+                Assert.That(nestedScope.IsEnabled, Is.False);
                 Assert.That(Activity.Current.OperationName, Is.EqualTo("ClientName.ActivityName"));
             }
             else
             {
-                Assert.IsTrue(nestedScope.IsEnabled);
+                Assert.That(nestedScope.IsEnabled, Is.True);
                 Assert.That(Activity.Current.OperationName, Is.EqualTo("ClientName.NestedActivityName"));
             }
             nestedScope.Dispose();
@@ -296,19 +296,19 @@ namespace Azure.Core.Tests
             DiagnosticScope scope = clientDiagnostics.CreateScope("ClientName.ActivityName");
             scope.AddAttribute("sampled-out", "True");
             scope.Start();
-            Assert.IsNull(Activity.Current);
+            Assert.That(Activity.Current, Is.Null);
 
             using var activityListener2 = new TestActivitySourceListener("Azure.Clients2.ClientName");
             DiagnosticScopeFactory clientDiagnostics2 = new DiagnosticScopeFactory("Azure.Clients2", "Microsoft.Azure.Core.Cool.Tests", true, true, true);
             DiagnosticScope nestedScope = clientDiagnostics2.CreateScope("ClientName.NestedActivityName");
             nestedScope.Start();
-            Assert.IsTrue(nestedScope.IsEnabled);
+            Assert.That(nestedScope.IsEnabled, Is.True);
             Assert.That(Activity.Current.OperationName, Is.EqualTo("ClientName.NestedActivityName"));
             Assert.That(Activity.Current.Tags, Has.Member(new KeyValuePair<string, string>(DiagnosticScope.OpenTelemetrySchemaAttribute, DiagnosticScope.OpenTelemetrySchemaVersion)));
             Assert.That(Activity.Current.Tags, Has.No.Member(new KeyValuePair<string, string>("kind", "internal")));
             nestedScope.Dispose();
 
-            Assert.IsNull(Activity.Current);
+            Assert.That(Activity.Current, Is.Null);
         }
 
         [Test]
@@ -342,7 +342,7 @@ namespace Azure.Core.Tests
             Assert.That(activitySourceActivity.TagObjects.Single(o => o.Key == "Attribute3").Value, Is.EqualTo(3));
             Assert.That(activitySourceActivity.Tags, Has.Member(new KeyValuePair<string, string>(DiagnosticScope.OpenTelemetrySchemaAttribute, DiagnosticScope.OpenTelemetrySchemaVersion)));
 
-            Assert.Null(Activity.Current);
+            Assert.That(Activity.Current, Is.Null);
             Assert.That(startEvent.Key, Is.EqualTo("ClientName.ActivityName.Start"));
             Assert.That(stopEvent.Key, Is.EqualTo("ClientName.ActivityName.Stop"));
 
@@ -352,7 +352,7 @@ namespace Azure.Core.Tests
             Assert.That(diagnosticSourceActivity.Tags, Has.Member(new KeyValuePair<string, string>("Attribute2", "2")));
 
             // int attributes are returned by TagObjects, not Tags
-            Assert.IsEmpty(diagnosticSourceActivity.Tags.Where(kvp => kvp.Value == "Attribute3"));
+            Assert.That(diagnosticSourceActivity.Tags.Where(kvp => kvp.Value == "Attribute3"), Is.Empty);
 
             // Since both ActivitySource and DiagnosticSource listeners are used, we should see the az.schema_url tag set even in diagnostic source because they use the same
             // underlying activity.
@@ -472,8 +472,8 @@ namespace Azure.Core.Tests
             scope.SetTraceContext(traceparent, null);
             scope.Start();
 
-            Assert.IsNull(Activity.Current.ParentId);
-            Assert.IsNull(Activity.Current.TraceStateString);
+            Assert.That(Activity.Current.ParentId, Is.Null);
+            Assert.That(Activity.Current.TraceStateString, Is.Null);
         }
 
         [Test]
@@ -496,16 +496,16 @@ namespace Azure.Core.Tests
             scope.Start();
 
             var activity = activityListener.AssertAndRemoveActivity("ClientName.ActivityName");
-            Assert.IsEmpty(activityListener.Activities);
+            Assert.That(activityListener.Activities, Is.Empty);
 
             Assert.That(activity.Status, Is.EqualTo(ActivityStatusCode.Unset));
-            Assert.IsNull(activity.StatusDescription);
+            Assert.That(activity.StatusDescription, Is.Null);
 
             var exception = new Exception();
             scope.Failed(exception);
             scope.Dispose();
 
-            Assert.Null(Activity.Current);
+            Assert.That(Activity.Current, Is.Null);
 
             Assert.That(activity.StatusDescription, Is.EqualTo(exception.ToString()));
             Assert.That(activity.Status, Is.EqualTo(ActivityStatusCode.Error));
@@ -543,15 +543,15 @@ namespace Azure.Core.Tests
                 FieldInfo field1 = type1.GetField("_sampleOutActivity", BindingFlags.NonPublic | BindingFlags.Instance);
                 Activity activity = (Activity)field1.GetValue(activityadaptor);
 
-                Assert.IsNull(activity.GetTagItem("AttributeAfterStart"));
-                Assert.IsNotNull(activity.GetTagItem("AttributeBeforeStart"));
+                Assert.That(activity.GetTagItem("AttributeAfterStart"), Is.Null);
+                Assert.That(activity.GetTagItem("AttributeBeforeStart"), Is.Not.Null);
 
                 if (Activity.Current.IsAllDataRequested)
                 {
                     activeActivityCounts++;
                 }
                 scope.Dispose();
-                Assert.IsNull(Activity.Current);
+                Assert.That(Activity.Current, Is.Null);
             }
 
             Assert.That(activeActivityCounts, Is.EqualTo(0));
@@ -581,7 +581,7 @@ namespace Azure.Core.Tests
                     activeActivityCounts++;
                 }
                 scope.Dispose();
-                Assert.IsNull(Activity.Current);
+                Assert.That(Activity.Current, Is.Null);
             }
 
             Assert.That(activeActivityCounts, Is.EqualTo(4)); // 1 activity will be dropped due to sampler logic
@@ -599,7 +599,7 @@ namespace Azure.Core.Tests
             scope.Failed(new ArgumentException());
 
             Activity activity = testListener.AssertAndRemoveActivity("ActivityName");
-            Assert.IsEmpty(activity.Events);
+            Assert.That(activity.Events, Is.Empty);
             Assert.That(activity.Tags, Has.Member(new KeyValuePair<string, string>("error.type", typeof(ArgumentException).FullName)));
             Assert.That(activity.Status, Is.EqualTo(ActivityStatusCode.Error));
         }
@@ -616,7 +616,7 @@ namespace Azure.Core.Tests
             scope.Failed(new RequestFailedException(400, "error", "errorCode", new HttpRequestException()));
 
             Activity activity = testListener.AssertAndRemoveActivity("ActivityName");
-            Assert.IsEmpty(activity.Events);
+            Assert.That(activity.Events, Is.Empty);
             Assert.That(activity.Tags, Has.Member(new KeyValuePair<string, string>("error.type", "errorCode")));
             Assert.That(activity.Status, Is.EqualTo(ActivityStatusCode.Error));
         }
@@ -633,7 +633,7 @@ namespace Azure.Core.Tests
             scope.Failed("errorCode");
 
             Activity activity = testListener.AssertAndRemoveActivity("ActivityName");
-            Assert.IsEmpty(activity.Events);
+            Assert.That(activity.Events, Is.Empty);
             Assert.That(activity.Tags, Has.Member(new KeyValuePair<string, string>("error.type", "errorCode")));
             Assert.That(activity.Status, Is.EqualTo(ActivityStatusCode.Error));
         }

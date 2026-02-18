@@ -1,4 +1,4 @@
-﻿// Copyright (c) Microsoft Corporation. All rights reserved.
+// Copyright (c) Microsoft Corporation. All rights reserved.
 // Licensed under the MIT License.
 using NUnit.Framework;
 
@@ -66,7 +66,7 @@ namespace Azure.Core.Experimental.Tests
                 success = value.TryGetValue(out result);
             }
 
-            Assert.True(success);
+            Assert.That(success, Is.True);
             Assert.That(result, Is.EqualTo(testValue));
 
             Assert.That(value.As<bool>(), Is.EqualTo(testValue));
@@ -88,7 +88,7 @@ namespace Azure.Core.Experimental.Tests
                 success = value.TryGetValue(out result);
             }
 
-            Assert.True(success);
+            Assert.That(success, Is.True);
             Assert.That(result, Is.EqualTo(testValue));
 
             Assert.That(value.As<bool>(), Is.EqualTo(testValue));
@@ -103,7 +103,7 @@ namespace Azure.Core.Experimental.Tests
             bool source = testValue;
             Variant value = new(source);
             bool success = value.TryGetValue(out bool? result);
-            Assert.True(success);
+            Assert.That(success, Is.True);
             Assert.That(result, Is.EqualTo(testValue));
 
             Assert.That((bool?)value, Is.EqualTo(testValue));
@@ -118,9 +118,9 @@ namespace Azure.Core.Experimental.Tests
             Variant value = new(o);
 
             Assert.That(value.Type, Is.EqualTo(typeof(bool)));
-            Assert.True(value.TryGetValue(out bool result));
+            Assert.That(value.TryGetValue(out bool result), Is.True);
             Assert.That(result, Is.EqualTo(testValue));
-            Assert.True(value.TryGetValue(out bool? nullableResult));
+            Assert.That(value.TryGetValue(out bool? nullableResult), Is.True);
             Assert.That(nullableResult!.Value, Is.EqualTo(testValue));
 
             bool? n = testValue;
@@ -128,9 +128,9 @@ namespace Azure.Core.Experimental.Tests
             value = new(o);
 
             Assert.That(value.Type, Is.EqualTo(typeof(bool)));
-            Assert.True(value.TryGetValue(out result));
+            Assert.That(value.TryGetValue(out result), Is.True);
             Assert.That(result, Is.EqualTo(testValue));
-            Assert.True(value.TryGetValue(out nullableResult));
+            Assert.That(value.TryGetValue(out nullableResult), Is.True);
             Assert.That(nullableResult!.Value, Is.EqualTo(testValue));
         }
 
@@ -145,7 +145,7 @@ namespace Azure.Core.Experimental.Tests
                 value = source;
             }
 
-            Assert.Null(value.Type);
+            Assert.That(value.Type, Is.Null);
             Assert.That(value.As<bool?>(), Is.EqualTo(source));
             Assert.That(value.As<bool?>().HasValue, Is.False);
         }

@@ -188,7 +188,7 @@ public class BearerTokenPolicyTests : SyncAsyncTestBase
         // Act
         var message = await SendMessageAsync(pipeline);
 
-         Assert.IsFalse(message.Request.Headers.TryGetValue("Authorization", out var authHeader));
+         Assert.That(message.Request.Headers.TryGetValue("Authorization", out var authHeader), Is.False);
     }
 
     [Test]
@@ -204,7 +204,7 @@ public class BearerTokenPolicyTests : SyncAsyncTestBase
         var message = await SendMessageAsync(pipeline);
 
         // Assert - no authorization header should be set when token is null
-        Assert.IsFalse(message.Request.Headers.TryGetValue("Authorization", out _));
+        Assert.That(message.Request.Headers.TryGetValue("Authorization", out _), Is.False);
     }
 
     [Test]
@@ -345,14 +345,14 @@ public class BearerTokenPolicyTests : SyncAsyncTestBase
 
     private static void AssertNoAuthorization(PipelineMessage message, MockAuthenticationTokenProvider tokenProvider)
     {
-        Assert.IsFalse(message.Request.Headers.TryGetValue("Authorization", out _));
-        Assert.IsFalse(tokenProvider.GetTokenCalled);
-        Assert.IsFalse(tokenProvider.GetTokenAsyncCalled);
+        Assert.That(message.Request.Headers.TryGetValue("Authorization", out _), Is.False);
+        Assert.That(tokenProvider.GetTokenCalled, Is.False);
+        Assert.That(tokenProvider.GetTokenAsyncCalled, Is.False);
     }
 
     private static void AssertHasAuthorization(PipelineMessage message, string expectedToken = "Bearer mock_token_value")
     {
-        Assert.IsTrue(message.Request.Headers.TryGetValue("Authorization", out var authHeader));
+        Assert.That(message.Request.Headers.TryGetValue("Authorization", out var authHeader), Is.True);
         Assert.That(authHeader, Is.EqualTo(expectedToken));
     }
 
@@ -360,11 +360,11 @@ public class BearerTokenPolicyTests : SyncAsyncTestBase
     {
         if (shouldCallAsync && IsAsync)
         {
-            Assert.IsTrue(tokenProvider.GetTokenAsyncCalled);
+            Assert.That(tokenProvider.GetTokenAsyncCalled, Is.True);
         }
         else
         {
-            Assert.IsTrue(tokenProvider.GetTokenCalled);
+            Assert.That(tokenProvider.GetTokenCalled, Is.True);
         }
     }
 
@@ -372,11 +372,11 @@ public class BearerTokenPolicyTests : SyncAsyncTestBase
     {
         if (shouldCallAsync && IsAsync)
         {
-            Assert.IsTrue(tokenProvider.GetTokenAsyncCalled);
+            Assert.That(tokenProvider.GetTokenAsyncCalled, Is.True);
         }
         else
         {
-            Assert.IsTrue(tokenProvider.GetTokenCalled);
+            Assert.That(tokenProvider.GetTokenCalled, Is.True);
         }
     }
 }

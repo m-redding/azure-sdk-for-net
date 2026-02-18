@@ -1,4 +1,4 @@
-﻿// Copyright (c) Microsoft Corporation. All rights reserved.
+// Copyright (c) Microsoft Corporation. All rights reserved.
 // Licensed under the MIT License.
 
 using System.Threading;
@@ -22,7 +22,7 @@ namespace Azure.Core.Tests
 
             await SendGetRequest(transport, keyPolicy);
 
-            Assert.True(transport.SingleRequest.TryGetHeader(header, out var key));
+            Assert.That(transport.SingleRequest.TryGetHeader(header, out var key), Is.True);
             Assert.That(key, Is.EqualTo(keyValue));
         }
 
@@ -37,7 +37,7 @@ namespace Azure.Core.Tests
 
             await SendGetRequest(transport, keyPolicy);
 
-            Assert.True(transport.SingleRequest.TryGetHeader(header, out var key));
+            Assert.That(transport.SingleRequest.TryGetHeader(header, out var key), Is.True);
             Assert.That(key, Is.EqualTo($"{prefix} {keyValue}"));
         }
 
@@ -57,7 +57,7 @@ namespace Azure.Core.Tests
                 await pipeline.SendRequestAsync(request, CancellationToken.None);
             }
 
-            Assert.True(transport.Requests[0].TryGetHeader(header, out var key));
+            Assert.That(transport.Requests[0].TryGetHeader(header, out var key), Is.True);
             Assert.That(key, Is.EqualTo(keyValue));
         }
 
@@ -78,7 +78,7 @@ namespace Azure.Core.Tests
                 await pipeline.SendRequestAsync(request, CancellationToken.None);
             }
 
-            Assert.True(transport.Requests[0].TryGetHeader(header, out var key));
+            Assert.That(transport.Requests[0].TryGetHeader(header, out var key), Is.True);
             Assert.That(key, Is.EqualTo($"{prefix} {keyValue}"));
         }
     }

@@ -1,4 +1,4 @@
-﻿// Copyright (c) Microsoft Corporation. All rights reserved.
+// Copyright (c) Microsoft Corporation. All rights reserved.
 // Licensed under the MIT License.
 
 using System;
@@ -26,9 +26,9 @@ namespace Azure.Core.Tests
         public void DefaultPropertyInitialization()
         {
             var operationInternal = new OperationInternal<int>(TestOperation.Succeeded(42), ClientDiagnostics, InitialResponse);
-            Assert.IsNotNull(operationInternal.RawResponse);
-            Assert.False(operationInternal.HasCompleted);
-            Assert.False(operationInternal.HasValue);
+            Assert.That(operationInternal.RawResponse, Is.Not.Null);
+            Assert.That(operationInternal.HasCompleted, Is.False);
+            Assert.That(operationInternal.HasValue, Is.False);
             Assert.Throws<InvalidOperationException>(() => _ = operationInternal.Value);
         }
 
@@ -38,8 +38,8 @@ namespace Azure.Core.Tests
             var operationInternal = new OperationInternal<int>(TestOperation.Succeeded(42), ClientDiagnostics, InitialResponse);
 
             Assert.That(operationInternal.RawResponse, Is.EqualTo(InitialResponse));
-            Assert.False(operationInternal.HasCompleted);
-            Assert.False(operationInternal.HasValue);
+            Assert.That(operationInternal.HasCompleted, Is.False);
+            Assert.That(operationInternal.HasValue, Is.False);
             Assert.Throws<InvalidOperationException>(() => _ = operationInternal.Value);
         }
 
@@ -48,8 +48,8 @@ namespace Azure.Core.Tests
         {
             var operationInternal = OperationInternal<int>.Succeeded(InitialResponse, 1);
 
-            Assert.IsTrue(operationInternal.HasCompleted);
-            Assert.IsTrue(operationInternal.HasValue);
+            Assert.That(operationInternal.HasCompleted, Is.True);
+            Assert.That(operationInternal.HasValue, Is.True);
             Assert.That(operationInternal.Value, Is.EqualTo(1));
         }
 
@@ -58,8 +58,8 @@ namespace Azure.Core.Tests
         {
             var operationInternal = OperationInternal<int>.Failed(InitialResponse, new RequestFailedException(InitialResponse));
 
-            Assert.IsTrue(operationInternal.HasCompleted);
-            Assert.IsFalse(operationInternal.HasValue);
+            Assert.That(operationInternal.HasCompleted, Is.True);
+            Assert.That(operationInternal.HasValue, Is.False);
             Assert.Throws<RequestFailedException>(() => _ = operationInternal.Value);
         }
 
@@ -73,8 +73,8 @@ namespace Azure.Core.Tests
                 : operationInternal.UpdateStatus(CancellationToken.None);
 
             Assert.That(operationInternal.RawResponse, Is.EqualTo(operationResponse));
-            Assert.False(operationInternal.HasCompleted);
-            Assert.False(operationInternal.HasValue);
+            Assert.That(operationInternal.HasCompleted, Is.False);
+            Assert.That(operationInternal.HasValue, Is.False);
             Assert.Throws<InvalidOperationException>(() => _ = operationInternal.Value);
         }
 
@@ -88,8 +88,8 @@ namespace Azure.Core.Tests
                 : operationInternal.UpdateStatus(CancellationToken.None);
 
             Assert.That(operationInternal.RawResponse, Is.EqualTo(operationResponse));
-            Assert.True(operationInternal.HasCompleted);
-            Assert.True(operationInternal.HasValue);
+            Assert.That(operationInternal.HasCompleted, Is.True);
+            Assert.That(operationInternal.HasValue, Is.True);
             Assert.That(operationInternal.Value, Is.EqualTo(42));
         }
 
@@ -110,8 +110,8 @@ namespace Azure.Core.Tests
             }
 
             Assert.That(operationInternal.RawResponse.Status, Is.EqualTo(418));
-            Assert.True(operationInternal.HasCompleted);
-            Assert.False(operationInternal.HasValue);
+            Assert.That(operationInternal.HasCompleted, Is.True);
+            Assert.That(operationInternal.HasValue, Is.False);
             RequestFailedException valueException = Assert.Throws<RequestFailedException>(() => _ = operationInternal.Value);
             Assert.That(valueException, Is.EqualTo(thrownException));
         }
@@ -127,8 +127,8 @@ namespace Azure.Core.Tests
 
             Assert.That(thrownException, Is.EqualTo(CustomException));
 
-            Assert.IsNotNull(operationInternal.RawResponse);
-            Assert.False(operationInternal.HasValue);
+            Assert.That(operationInternal.RawResponse, Is.Not.Null);
+            Assert.That(operationInternal.HasValue, Is.False);
             Assert.Throws<InvalidOperationException>(() => _ = operationInternal.Value);
         }
 
@@ -301,8 +301,8 @@ namespace Azure.Core.Tests
                 : await operationInternal.WaitForCompletionResponseAsync(TimeSpan.Zero, CancellationToken.None);
 
             Assert.That(operationResponse, Is.EqualTo(operationInternal.RawResponse));
-            Assert.True(operationInternal.HasCompleted);
-            Assert.True(operationInternal.HasValue);
+            Assert.That(operationInternal.HasCompleted, Is.True);
+            Assert.That(operationInternal.HasValue, Is.True);
             Assert.That(operationInternal.Value, Is.EqualTo(expectedValue));
         }
 
@@ -325,11 +325,11 @@ namespace Azure.Core.Tests
             // if there is a suggested time, it should be used instead of the zero polling interval
             if (hasSuggest)
             {
-                Assert.IsTrue(stopwatch.Elapsed > TimeSpan.FromSeconds(1));
+                Assert.That(stopwatch.Elapsed > TimeSpan.FromSeconds(1), Is.True);
             }
             else
             {
-                Assert.IsTrue(stopwatch.Elapsed < TimeSpan.FromSeconds(1));
+                Assert.That(stopwatch.Elapsed < TimeSpan.FromSeconds(1), Is.True);
             }
         }
 

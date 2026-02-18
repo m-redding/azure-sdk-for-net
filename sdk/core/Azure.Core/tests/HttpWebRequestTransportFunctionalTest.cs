@@ -1,4 +1,4 @@
-﻿// Copyright (c) Microsoft Corporation. All rights reserved.
+// Copyright (c) Microsoft Corporation. All rights reserved.
 // Licensed under the MIT License.
 
 using System.Net;
@@ -37,7 +37,7 @@ namespace Azure.Core.Tests
 
             var servicePoint = ServicePointManager.FindServicePoint(testServer.Address);
 
-            Assert.GreaterOrEqual(servicePoint.ConnectionLimit, 50);
+            Assert.That(servicePoint.ConnectionLimit, Is.GreaterThanOrEqualTo(50));
             Assert.That(servicePoint.ConnectionLeaseTimeout, Is.EqualTo(300_000));
         }
     }

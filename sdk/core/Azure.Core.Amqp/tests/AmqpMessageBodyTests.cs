@@ -1,4 +1,4 @@
-﻿// Copyright (c) Microsoft Corporation. All rights reserved.
+// Copyright (c) Microsoft Corporation. All rights reserved.
 // Licensed under the MIT License.
 
 using System;
@@ -58,14 +58,14 @@ namespace Azure.Core.Amqp.Tests
         {
             var body = new AmqpMessageBody(Array.Empty<ReadOnlyMemory<byte>>());
             Assert.That(body.BodyType, Is.EqualTo(AmqpMessageBodyType.Data));
-            Assert.IsTrue(body.TryGetData(out var data));
-            Assert.NotNull(data);
+            Assert.That(body.TryGetData(out var data), Is.True);
+            Assert.That(data, Is.Not.Null);
 
             Assert.That(body.TryGetValue(out var value), Is.False);
-            Assert.IsNull(value);
+            Assert.That(value, Is.Null);
 
             Assert.That(body.TryGetSequence(out var sequence), Is.False);
-            Assert.IsNull(sequence);
+            Assert.That(sequence, Is.Null);
         }
 
         [Test]
@@ -73,14 +73,14 @@ namespace Azure.Core.Amqp.Tests
         {
             var body = AmqpMessageBody.FromData(Array.Empty<ReadOnlyMemory<byte>>());
             Assert.That(body.BodyType, Is.EqualTo(AmqpMessageBodyType.Data));
-            Assert.IsTrue(body.TryGetData(out var data));
-            Assert.NotNull(data);
+            Assert.That(body.TryGetData(out var data), Is.True);
+            Assert.That(data, Is.Not.Null);
 
             Assert.That(body.TryGetValue(out var value), Is.False);
-            Assert.IsNull(value);
+            Assert.That(value, Is.Null);
 
             Assert.That(body.TryGetSequence(out var sequence), Is.False);
-            Assert.IsNull(sequence);
+            Assert.That(sequence, Is.Null);
         }
 
         [Test]
@@ -89,14 +89,14 @@ namespace Azure.Core.Amqp.Tests
         {
             var body = AmqpMessageBody.FromValue(input);
             Assert.That(body.BodyType, Is.EqualTo(AmqpMessageBodyType.Value));
-            Assert.IsTrue(body.TryGetValue(out var output));
+            Assert.That(body.TryGetValue(out var output), Is.True);
             Assert.That(output, Is.EqualTo(input));
 
             Assert.That(body.TryGetData(out var data), Is.False);
-            Assert.IsNull(data);
+            Assert.That(data, Is.Null);
 
             Assert.That(body.TryGetSequence(out var sequence), Is.False);
-            Assert.IsNull(sequence);
+            Assert.That(sequence, Is.Null);
         }
 
         [Test]
@@ -105,7 +105,7 @@ namespace Azure.Core.Amqp.Tests
             var sequence = new List<object>[] { new List<object> { 1, "two" }, new List<object> { 3, "four" } };
             var body = AmqpMessageBody.FromSequence(sequence);
             Assert.That(body.BodyType, Is.EqualTo(AmqpMessageBodyType.Sequence));
-            Assert.IsTrue(body.TryGetSequence(out var outSequence));
+            Assert.That(body.TryGetSequence(out var outSequence), Is.True);
             var outList = outSequence.ToList();
             Assert.That(outList[0][0], Is.EqualTo(1));
             Assert.That(outList[0][1], Is.EqualTo("two"));
@@ -113,10 +113,10 @@ namespace Azure.Core.Amqp.Tests
             Assert.That(outList[1][1], Is.EqualTo("four"));
 
             Assert.That(body.TryGetData(out var data), Is.False);
-            Assert.IsNull(data);
+            Assert.That(data, Is.Null);
 
             Assert.That(body.TryGetValue(out var value), Is.False);
-            Assert.IsNull(value);
+            Assert.That(value, Is.Null);
         }
 
         [Test]

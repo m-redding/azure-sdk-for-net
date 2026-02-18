@@ -1,4 +1,4 @@
-﻿// Copyright (c) Microsoft Corporation. All rights reserved.
+// Copyright (c) Microsoft Corporation. All rights reserved.
 // Licensed under the MIT License.
 
 using System;
@@ -45,7 +45,7 @@ namespace Azure.Core.Tests
             response.ContentStream = new MemoryStream();
             response.Dispose();
 
-            Assert.False(disposeTrackingContent.IsDisposed);
+            Assert.That(disposeTrackingContent.IsDisposed, Is.False);
         }
 
         [Test]
@@ -103,7 +103,7 @@ namespace Azure.Core.Tests
 
             await ExecuteRequest(request, transport);
 
-            Assert.Null(httpMessageContent);
+            Assert.That(httpMessageContent, Is.Null);
         }
 
         [TestCaseSource(nameof(HeadersWithValuesAndType))]
@@ -117,11 +117,11 @@ namespace Azure.Core.Tests
                     if (contentHeader)
                     {
                         responseMessage.Content = new StreamContent(new MemoryStream());
-                        Assert.True(responseMessage.Content.Headers.TryAddWithoutValidation(headerName, headerValue));
+                        Assert.That(responseMessage.Content.Headers.TryAddWithoutValidation(headerName, headerValue), Is.True);
                     }
                     else
                     {
-                        Assert.True(responseMessage.Headers.TryAddWithoutValidation(headerName, headerValue));
+                        Assert.That(responseMessage.Headers.TryAddWithoutValidation(headerName, headerValue), Is.True);
                     }
 
                     return Task.FromResult(responseMessage);
@@ -135,12 +135,12 @@ namespace Azure.Core.Tests
             Response response = await ExecuteRequest(request, transport);
             response.ContentStream = new MemoryStream();
 
-            Assert.True(response.Headers.Contains(headerName));
+            Assert.That(response.Headers.Contains(headerName), Is.True);
 
-            Assert.True(response.Headers.TryGetValue(headerName, out var value));
+            Assert.That(response.Headers.TryGetValue(headerName, out var value), Is.True);
             Assert.That(value, Is.EqualTo(headerValue));
 
-            Assert.True(response.Headers.TryGetValues(headerName, out IEnumerable<string> values));
+            Assert.That(response.Headers.TryGetValues(headerName, out IEnumerable<string> values), Is.True);
             Assert.That(values, Is.EqualTo(new[] { headerValue }).AsCollection);
 
             Assert.That(response.Headers, Has.Member(new HttpHeader(headerName, headerValue)));

@@ -1,4 +1,4 @@
-﻿// Copyright (c) Microsoft Corporation. All rights reserved.
+// Copyright (c) Microsoft Corporation. All rights reserved.
 // Licensed under the MIT License.
 
 using System;
@@ -235,8 +235,8 @@ namespace Azure.Core.Tests
             var model = new TestJsonModel { Name = "test", Value = 42 };
             var content = RequestContent.Create(model);
 
-            Assert.IsTrue(content.TryComputeLength(out long length));
-            Assert.Greater(length, 0);
+            Assert.That(content.TryComputeLength(out long length), Is.True);
+            Assert.That(length, Is.GreaterThan(0));
         }
 
         [Test]
