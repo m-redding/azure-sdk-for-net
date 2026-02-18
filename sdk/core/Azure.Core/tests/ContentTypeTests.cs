@@ -12,8 +12,8 @@ namespace Azure.Core.Tests
         {
             ContentType contentType = default;
             Assert.That(contentType.ToString(), Is.Empty);
-            Assert.That(contentType, Is.EqualTo(null));
-            Assert.That(contentType, Is.EqualTo(new ContentType()));
+            Assert.That(contentType.Equals(null), Is.True);
+            Assert.That(contentType.Equals(new ContentType()), Is.True);
 
             string aj = "application/json";
             contentType = ContentType.ApplicationJson;

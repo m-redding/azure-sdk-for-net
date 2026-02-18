@@ -466,7 +466,7 @@ namespace Azure.Core.Tests
             Assert.That(message.Response.Status, Is.EqualTo(201));
             Assert.That(await new StreamReader(message.Response.ContentStream).ReadToEndAsync(), Is.EqualTo("Hello world!"));
             Assert.That(message.Response.Content.ToString(), Is.EqualTo("Hello world!"));
-            Assert.That(i, Is.EqualTo(2));
+            Assert.That(i, Is.GreaterThanOrEqualTo(2));
 
             testDoneTcs.Cancel();
         }

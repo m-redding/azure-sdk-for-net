@@ -603,7 +603,9 @@
   </ItemGroup>
 
   <!-- NUnit 4 migration: core, template -->
-  <ItemGroup Condition="$(MSBuildProjectDirectory.Contains('\sdk\core\')) or $(MSBuildProjectDirectory.Contains('\sdk\template\'))">
+  <ItemGroup Condition="('$(IsTestProject)' == 'true' or '$(IsTestSupportProject)' == 'true')
+     and (MSBuildProjectDirectory.Contains('\sdk\core\') or MSBuildProjectDirectory.Contains('\sdk\template\'))">
     <PackageReference Update="NUnit" Version="4.4.0" />
+    <PackageReference Update="NUnit3TestAdapter" Version="5.1.0" />
   </ItemGroup>
 </Project>
