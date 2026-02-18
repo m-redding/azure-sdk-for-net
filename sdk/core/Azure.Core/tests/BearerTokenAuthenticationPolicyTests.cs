@@ -30,7 +30,7 @@ namespace Azure.Core.Tests
             await SendGetRequest(transport, policy, uri: new Uri("https://example.com"));
 
             Assert.True(transport.SingleRequest.Headers.TryGetValue("Authorization", out string authValue));
-            Assert.AreEqual("Bearer token", authValue);
+            Assert.That(authValue, Is.EqualTo("Bearer token"));
         }
 
         [Test]
@@ -53,8 +53,8 @@ namespace Azure.Core.Tests
             Assert.True(transport.Requests[0].Headers.TryGetValue("Authorization", out string auth1Value));
             Assert.True(transport.Requests[1].Headers.TryGetValue("Authorization", out string auth2Value));
 
-            Assert.AreEqual("Bearer token1", auth1Value);
-            Assert.AreEqual("Bearer token2", auth2Value);
+            Assert.That(auth1Value, Is.EqualTo("Bearer token1"));
+            Assert.That(auth2Value, Is.EqualTo("Bearer token2"));
         }
 
         [Test]
@@ -77,8 +77,8 @@ namespace Azure.Core.Tests
             Assert.True(transport.Requests[0].Headers.TryGetValue("Authorization", out string auth1Value));
             Assert.True(transport.Requests[1].Headers.TryGetValue("Authorization", out string auth2Value));
 
-            Assert.AreEqual("Bearer token1", auth1Value);
-            Assert.AreEqual("Bearer token2", auth2Value);
+            Assert.That(auth1Value, Is.EqualTo("Bearer token1"));
+            Assert.That(auth2Value, Is.EqualTo("Bearer token2"));
         }
 
         [Test]
@@ -97,8 +97,8 @@ namespace Azure.Core.Tests
             Assert.True(transport.Requests[0].Headers.TryGetValue("Authorization", out string auth1Value));
             Assert.True(transport.Requests[1].Headers.TryGetValue("Authorization", out string auth2Value));
 
-            Assert.AreSame(auth1Value, auth1Value);
-            Assert.AreEqual("Bearer token", auth2Value);
+            Assert.That(auth1Value, Is.SameAs(auth1Value));
+            Assert.That(auth2Value, Is.EqualTo("Bearer token"));
         }
 
         [Test]
@@ -150,7 +150,7 @@ namespace Azure.Core.Tests
             for (int i = 1; i < requestTasks.Length; i++)
             {
                 Assert.True(transport.Requests[i].Headers.TryGetValue("Authorization", out string authValue));
-                Assert.AreEqual(auth1Value, authValue);
+                Assert.That(authValue, Is.EqualTo(auth1Value));
             }
         }
 
@@ -181,7 +181,7 @@ namespace Azure.Core.Tests
             Assert.True(transport.Requests[0].Headers.TryGetValue("Authorization", out string auth1Value));
             Assert.True(transport.Requests[1].Headers.TryGetValue("Authorization", out string auth2Value));
 
-            Assert.AreEqual(auth1Value, auth2Value);
+            Assert.That(auth2Value, Is.EqualTo(auth1Value));
         }
 
         [Test]
@@ -213,13 +213,13 @@ namespace Azure.Core.Tests
             await Task.WhenAll(firstRequestTask, secondRequestTask);
             await Task.Delay(1000);
 
-            Assert.AreEqual(1, callCount);
+            Assert.That(callCount, Is.EqualTo(1));
             requestMre.Reset();
 
             var failedTask = SendGetRequest(transport, policy, uri: new Uri("https://example.com/3/failed"));
             requestMre.Wait();
 
-            Assert.AreEqual(2, callCount);
+            Assert.That(callCount, Is.EqualTo(2));
             Assert.ThrowsAsync<InvalidOperationException>(async () => await failedTask);
 
             requestMre.Reset();
@@ -236,10 +236,10 @@ namespace Azure.Core.Tests
             Assert.True(transport.Requests[2].Headers.TryGetValue("Authorization", out string auth3Value));
             Assert.True(transport.Requests[3].Headers.TryGetValue("Authorization", out string auth4Value));
 
-            Assert.AreEqual(3, callCount);
-            Assert.AreEqual(auth1Value, auth2Value);
-            Assert.AreNotEqual(auth2Value, auth3Value);
-            Assert.AreEqual(auth3Value, auth4Value);
+            Assert.That(callCount, Is.EqualTo(3));
+            Assert.That(auth2Value, Is.EqualTo(auth1Value));
+            Assert.That(auth3Value, Is.Not.EqualTo(auth2Value));
+            Assert.That(auth4Value, Is.EqualTo(auth3Value));
         }
 
         [Test]
@@ -282,9 +282,9 @@ namespace Azure.Core.Tests
             Assert.True(transport.Requests[2].Headers.TryGetValue("Authorization", out string auth3Value));
             Assert.True(transport.Requests[3].Headers.TryGetValue("Authorization", out string auth4Value));
 
-            Assert.AreEqual(auth1Value, auth2Value);
-            Assert.AreEqual(auth2Value, auth3Value);
-            Assert.AreNotEqual(auth3Value, auth4Value);
+            Assert.That(auth2Value, Is.EqualTo(auth1Value));
+            Assert.That(auth3Value, Is.EqualTo(auth2Value));
+            Assert.That(auth4Value, Is.Not.EqualTo(auth3Value));
             Assert.GreaterOrEqual(callCount, 2);
         }
 
@@ -328,9 +328,9 @@ namespace Azure.Core.Tests
             Assert.True(transport.Requests[2].Headers.TryGetValue("Authorization", out string auth3Value));
             Assert.True(transport.Requests[3].Headers.TryGetValue("Authorization", out string auth4Value));
 
-            Assert.AreEqual(auth1Value, auth2Value);
-            Assert.AreEqual(auth2Value, auth3Value);
-            Assert.AreNotEqual(auth3Value, auth4Value);
+            Assert.That(auth2Value, Is.EqualTo(auth1Value));
+            Assert.That(auth3Value, Is.EqualTo(auth2Value));
+            Assert.That(auth4Value, Is.Not.EqualTo(auth3Value));
             Assert.GreaterOrEqual(callCount, 2);
         }
 
@@ -367,16 +367,16 @@ namespace Azure.Core.Tests
             responseMre.Set();
             requestMre.Wait();
 
-            Assert.AreEqual(2, callCount);
+            Assert.That(callCount, Is.EqualTo(2));
 
             Assert.True(transport.Requests[0].Headers.TryGetValue("Authorization", out string auth1Value));
             Assert.True(transport.Requests[1].Headers.TryGetValue("Authorization", out string auth2Value));
             Assert.True(transport.Requests[2].Headers.TryGetValue("Authorization", out string auth3Value));
             Assert.True(transport.Requests[3].Headers.TryGetValue("Authorization", out string auth4Value));
 
-            Assert.AreEqual(auth1Value, auth2Value);
-            Assert.AreEqual(auth2Value, auth3Value);
-            Assert.AreEqual(auth3Value, auth4Value);
+            Assert.That(auth2Value, Is.EqualTo(auth1Value));
+            Assert.That(auth3Value, Is.EqualTo(auth2Value));
+            Assert.That(auth4Value, Is.EqualTo(auth3Value));
         }
 
         [Test]
@@ -416,8 +416,8 @@ namespace Azure.Core.Tests
             Assert.True(transport.Requests[1].Headers.TryGetValue("Authorization", out string auth1Value));
             Assert.True(transport.Requests[2].Headers.TryGetValue("Authorization", out string auth2Value));
 
-            Assert.AreNotEqual(authValue, auth1Value);
-            Assert.AreEqual(auth1Value, auth2Value);
+            Assert.That(auth1Value, Is.Not.EqualTo(authValue));
+            Assert.That(auth2Value, Is.EqualTo(auth1Value));
         }
 
         [Test]
@@ -480,11 +480,11 @@ namespace Azure.Core.Tests
 
             if (getTokenCallCount == 1)
             {
-                Assert.AreEqual(firstRequestTask.Exception.InnerException, secondRequestTask.Exception.InnerException);
+                Assert.That(secondRequestTask.Exception.InnerException, Is.EqualTo(firstRequestTask.Exception.InnerException));
             }
             else
             {
-                Assert.AreEqual(getTokenCallCount, 2);
+                Assert.That(getTokenCallCount, Is.EqualTo(2));
             }
         }
 
@@ -530,7 +530,7 @@ namespace Azure.Core.Tests
 
             Assert.IsTrue(firstRequestTask.IsFaulted);
             Assert.IsTrue(secondRequestTask.IsFaulted);
-            Assert.AreEqual(firstRequestTask.Exception.InnerException, secondRequestTask.Exception.InnerException);
+            Assert.That(secondRequestTask.Exception.InnerException, Is.EqualTo(firstRequestTask.Exception.InnerException));
         }
 
         [Test]
@@ -595,12 +595,12 @@ namespace Azure.Core.Tests
             Assert.True(transport.Requests[3].Headers.TryGetValue("Authorization", out string auth4Value));
             Assert.True(transport.Requests[4].Headers.TryGetValue("Authorization", out string auth5Value));
 
-            Assert.AreEqual(auth1Value, auth2Value);
-            Assert.AreEqual(auth2Value, auth3Value);
-            Assert.AreEqual(auth3Value, auth4Value);
-            Assert.AreEqual(auth4Value, auth5Value);
+            Assert.That(auth2Value, Is.EqualTo(auth1Value));
+            Assert.That(auth3Value, Is.EqualTo(auth2Value));
+            Assert.That(auth4Value, Is.EqualTo(auth3Value));
+            Assert.That(auth5Value, Is.EqualTo(auth4Value));
 
-            Assert.AreEqual(2, getTokenRequestTimes.Count);
+            Assert.That(getTokenRequestTimes.Count, Is.EqualTo(2));
             var getTokenRequestTimesList = getTokenRequestTimes.ToList();
             Assert.True(getTokenRequestTimesList[1] - getTokenRequestTimesList[0] > tokenRefreshRetryDelay);
         }
@@ -898,18 +898,18 @@ namespace Azure.Core.Tests
             var policy = new ChallengeBasedAuthenticationTestPolicy(credential, "scope");
 
             await SendGetRequest(transport, policy, uri: new("https://example.com/1/Original"));
-            Assert.AreEqual("de763a21-49f7-4b08-a8e1-52c8fbc103b4", tenantId);
+            Assert.That(tenantId, Is.EqualTo("de763a21-49f7-4b08-a8e1-52c8fbc103b4"));
             // This is initially 2 because the pipeline tries to pre-authenticate, then again when the test policy authenticates on a 401.
-            Assert.AreEqual(2, callCount);
+            Assert.That(callCount, Is.EqualTo(2));
 
             await SendGetRequest(transport, policy, uri: new("https://example.com/1/Original"));
-            Assert.AreEqual("de763a21-49f7-4b08-a8e1-52c8fbc103b4", tenantId);
-            Assert.AreEqual(2, callCount);
+            Assert.That(tenantId, Is.EqualTo("de763a21-49f7-4b08-a8e1-52c8fbc103b4"));
+            Assert.That(callCount, Is.EqualTo(2));
 
             await SendGetRequest(transport, policy, uri: new("https://example.com/1/Original"));
-            Assert.AreEqual("72f988bf-86f1-41af-91ab-2d7cd011db47", tenantId);
+            Assert.That(tenantId, Is.EqualTo("72f988bf-86f1-41af-91ab-2d7cd011db47"));
             // An additional call to TokenCredential.GetTokenAsync is expected now that the tenant has changed.
-            Assert.AreEqual(3, callCount);
+            Assert.That(callCount, Is.EqualTo(3));
         }
 
         [Test]
@@ -987,7 +987,7 @@ namespace Azure.Core.Tests
             {
                 claims = r.Claims;
                 Interlocked.Increment(ref callCount);
-                Assert.AreEqual(true, r.IsCaeEnabled);
+                Assert.That(r.IsCaeEnabled, Is.EqualTo(true));
 
                 return new(callCount.ToString(), DateTimeOffset.Now.AddHours(2));
             }, IsAsync);
@@ -1003,8 +1003,8 @@ namespace Azure.Core.Tests
             }, System.Diagnostics.Tracing.EventLevel.Error);
 
             var response = await SendGetRequest(transport, policy, uri: new("https://example.com/1/Original"));
-            Assert.AreEqual(expectedClaims, claims);
-            Assert.AreEqual(expectedResponseCode, response.Status);
+            Assert.That(claims, Is.EqualTo(expectedClaims));
+            Assert.That(response.Status, Is.EqualTo(expectedResponseCode));
 
             var response2 = await SendGetRequest(transport, policy, uri: new("https://example.com/1/Original"));
             if (expectedClaims != null)

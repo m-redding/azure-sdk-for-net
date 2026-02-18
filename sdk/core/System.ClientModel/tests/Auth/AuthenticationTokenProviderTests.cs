@@ -277,18 +277,18 @@ public class AuthenticationTokenProviderTests
             // Create a mock handler that returns the predefined response
             var mockHandler = new MockHttpMessageHandler(req =>
             {
-                Assert.AreEqual(req.RequestUri?.ToString(), "https://myauthserver.com/token");
+                Assert.That(req.RequestUri?.ToString(), Is.EqualTo("https://myauthserver.com/token"));
                 // Extract the Authorization header
                 var authHeader = req.Headers.Authorization;
                 Assert.IsNotNull(authHeader, "Authorization header is missing");
-                Assert.AreEqual("Basic", authHeader?.Scheme, "Authorization scheme should be 'Basic'");
+                Assert.That(authHeader?.Scheme, Is.EqualTo("Basic"), "Authorization scheme should be 'Basic'");
 
                 // Decode the Base64 parameter
                 byte[] credentialBytes = Convert.FromBase64String(authHeader!.Parameter!);
                 string decodedCredentials = Encoding.ASCII.GetString(credentialBytes);
 
                 // Verify the decoded credentials
-                Assert.AreEqual($"{_clientId}:{_clientSecret}", decodedCredentials, "Decoded credentials don't match expected values");
+                Assert.That(decodedCredentials, Is.EqualTo($"{_clientId}:{_clientSecret}"), "Decoded credentials don't match expected values");
 
                 // Validate form content
                 var content = req?.Content?.ReadAsStringAsync().GetAwaiter().GetResult();

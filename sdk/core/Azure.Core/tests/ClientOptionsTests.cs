@@ -49,7 +49,7 @@ namespace Azure.Core.Tests
                 DiagnosticsOptions.DefaultApplicationId = "Global-application-id";
 
                 var testOptions = new TestClientOptions();
-                Assert.AreEqual("Global-application-id", testOptions.Diagnostics.ApplicationId);
+                Assert.That(testOptions.Diagnostics.ApplicationId, Is.EqualTo("Global-application-id"));
             }
             finally
             {
@@ -158,8 +158,8 @@ namespace Azure.Core.Tests
             var expected = set(Core.ClientOptions.Default);
             var testOptions = new TestClientOptions();
 
-            Assert.AreNotEqual(initial, expected);
-            Assert.AreEqual(expected, get(testOptions));
+            Assert.That(expected, Is.Not.EqualTo(initial));
+            Assert.That(get(testOptions), Is.EqualTo(expected));
         }
 
         public static IEnumerable<object[]> ClientOptionsTestValues()
@@ -225,7 +225,7 @@ namespace Azure.Core.Tests
             {
                 Assert.NotNull(target.Diagnostics);
                 Assert.That(target.Diagnostics, Is.TypeOf(typeof(TestDiagnosticsOptions)));
-                Assert.AreNotEqual(target.Diagnostics, ClientOptions.Default.Diagnostics);
+                Assert.That(ClientOptions.Default.Diagnostics, Is.Not.EqualTo(target.Diagnostics));
             }
             else
             {
@@ -237,7 +237,7 @@ namespace Azure.Core.Tests
         public void DefaultMaxApplicationIdLengthIs24()
         {
             var options = new TestClientOptionsWithCustomMaxApplicationIdLength();
-            Assert.AreEqual(24, options.GetMaxApplicationIdLength());
+            Assert.That(options.GetMaxApplicationIdLength(), Is.EqualTo(24));
         }
 
         [Test]
@@ -248,7 +248,7 @@ namespace Azure.Core.Tests
 
             options.Diagnostics.ApplicationId = longApplicationId;
 
-            Assert.AreEqual(longApplicationId, options.Diagnostics.ApplicationId);
+            Assert.That(options.Diagnostics.ApplicationId, Is.EqualTo(longApplicationId));
         }
 
         [TestCase(23)]
@@ -267,7 +267,7 @@ namespace Azure.Core.Tests
         {
             var options = new TestClientOptionsWithCustomMaxApplicationIdLength(1000);
 
-            Assert.AreEqual(1000, options.GetMaxApplicationIdLength());
+            Assert.That(options.GetMaxApplicationIdLength(), Is.EqualTo(1000));
         }
 
         private class TestClientOptions : ClientOptions

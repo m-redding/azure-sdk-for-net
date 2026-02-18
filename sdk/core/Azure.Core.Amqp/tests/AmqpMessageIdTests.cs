@@ -14,10 +14,10 @@ namespace Azure.Core.Amqp.Tests
         public void CanCreateFromString()
         {
             var messageId = new AmqpMessageId("messageId");
-            Assert.AreEqual("messageId", messageId.ToString());
+            Assert.That(messageId.ToString(), Is.EqualTo("messageId"));
 
-            Assert.True(messageId.Equals(new AmqpMessageId("messageId")));
-            Assert.True(messageId.Equals((object)new AmqpMessageId("messageId")));
+            Assert.That(messageId, Is.EqualTo(new AmqpMessageId("messageId")));
+            Assert.That(messageId, Is.EqualTo((object)new AmqpMessageId("messageId")));
             Assert.False(messageId.Equals(new AmqpMessageId("messageId2")));
 
             Assert.True(messageId.Equals("messageId"));

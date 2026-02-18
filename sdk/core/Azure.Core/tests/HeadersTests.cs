@@ -16,8 +16,8 @@ namespace Azure.Core.Tests
         {
             var header = new HttpHeader("Header", "Value");
 
-            Assert.AreEqual("Header", header.Name);
-            Assert.AreEqual("Value", header.Value);
+            Assert.That(header.Name, Is.EqualTo("Header"));
+            Assert.That(header.Value, Is.EqualTo("Value"));
         }
 
         [Test]
@@ -26,8 +26,8 @@ namespace Azure.Core.Tests
             var header = new HttpHeader("Header", "Value");
             var header2 = new HttpHeader("header", "Value");
 
-            Assert.AreEqual(header, header2);
-            Assert.AreEqual(header.GetHashCode(), header2.GetHashCode());
+            Assert.That(header2, Is.EqualTo(header));
+            Assert.That(header2.GetHashCode(), Is.EqualTo(header.GetHashCode()));
         }
 
         [Test]
@@ -36,7 +36,7 @@ namespace Azure.Core.Tests
             var mockResponse = new MockResponse(200);
             mockResponse.AddHeader(new HttpHeader("Date", "Sun, 29 Sep 2013 01:02:03 GMT"));
 
-            Assert.AreEqual(new DateTimeOffset(2013, 9, 29, 1, 2, 3, TimeSpan.Zero), mockResponse.Headers.Date);
+            Assert.That(mockResponse.Headers.Date, Is.EqualTo(new DateTimeOffset(2013, 9, 29, 1, 2, 3, TimeSpan.Zero)));
         }
 
         [Test]
@@ -45,7 +45,7 @@ namespace Azure.Core.Tests
             var mockResponse = new MockResponse(200);
             mockResponse.AddHeader(new HttpHeader("x-ms-date", "Sun, 29 Sep 2013 01:02:03 GMT"));
 
-            Assert.AreEqual(new DateTimeOffset(2013, 9, 29, 1, 2, 3, TimeSpan.Zero), mockResponse.Headers.Date);
+            Assert.That(mockResponse.Headers.Date, Is.EqualTo(new DateTimeOffset(2013, 9, 29, 1, 2, 3, TimeSpan.Zero)));
         }
 
         [Test]
@@ -55,7 +55,7 @@ namespace Azure.Core.Tests
             mockResponse.AddHeader(new HttpHeader("x-ms-date", "Sun, 29 Sep 2013 01:02:03 GMT"));
             mockResponse.AddHeader(new HttpHeader("Date", "Sun, 29 Sep 2013 09:02:03 GMT"));
 
-            Assert.AreEqual(new DateTimeOffset(2013, 9, 29, 9, 2, 3, TimeSpan.Zero), mockResponse.Headers.Date);
+            Assert.That(mockResponse.Headers.Date, Is.EqualTo(new DateTimeOffset(2013, 9, 29, 9, 2, 3, TimeSpan.Zero)));
         }
 
         [Test]
@@ -64,7 +64,7 @@ namespace Azure.Core.Tests
             var mockResponse = new MockResponse(200);
             mockResponse.AddHeader(new HttpHeader("ETag", "\"ABCD\""));
 
-            Assert.AreEqual(new ETag("ABCD"), mockResponse.Headers.ETag);
+            Assert.That(mockResponse.Headers.ETag, Is.EqualTo(new ETag("ABCD")));
         }
 
         [Test]
@@ -73,7 +73,7 @@ namespace Azure.Core.Tests
             var mockResponse = new MockResponse(200);
             mockResponse.AddHeader(new HttpHeader("Content-Length", "100"));
 
-            Assert.AreEqual(100, mockResponse.Headers.ContentLength);
+            Assert.That(mockResponse.Headers.ContentLength, Is.EqualTo(100));
         }
 
         [Test]
@@ -108,12 +108,12 @@ namespace Azure.Core.Tests
             var bigResponse = new MockResponse(200);
             bigResponse.AddHeader(new HttpHeader("Content-Length", size.ToString()));
 
-            Assert.AreEqual(size, bigResponse.Headers.ContentLengthLong);
+            Assert.That(bigResponse.Headers.ContentLengthLong, Is.EqualTo(size));
 
             var smallResponse = new MockResponse(200);
             smallResponse.AddHeader(new HttpHeader("Content-Length", "100"));
 
-            Assert.AreEqual(100, smallResponse.Headers.ContentLengthLong);
+            Assert.That(smallResponse.Headers.ContentLengthLong, Is.EqualTo(100));
         }
 
         [Test]
@@ -129,7 +129,7 @@ namespace Azure.Core.Tests
             var mockResponse = new MockResponse(200);
             mockResponse.AddHeader(new HttpHeader("Content-Type", "text/xml"));
 
-            Assert.AreEqual("text/xml", mockResponse.Headers.ContentType);
+            Assert.That(mockResponse.Headers.ContentType, Is.EqualTo("text/xml"));
         }
 
         [Test]
@@ -145,7 +145,7 @@ namespace Azure.Core.Tests
             var mockResponse = new MockResponse(200);
             mockResponse.AddHeader(new HttpHeader("x-ms-request-id", "abcde"));
 
-            Assert.AreEqual("abcde", mockResponse.Headers.RequestId);
+            Assert.That(mockResponse.Headers.RequestId, Is.EqualTo("abcde"));
         }
 
         [Test]

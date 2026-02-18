@@ -49,7 +49,7 @@ namespace Azure.Core.Tests
 
             MutableJsonChange? change = changeTracker.GetFirstMergePatchChange(ReadOnlySpan<char>.Empty, out int length);
 
-            Assert.AreEqual(3, length);
+            Assert.That(length, Is.EqualTo(3));
 
             while (change != null)
             {
@@ -58,9 +58,9 @@ namespace Azure.Core.Tests
             }
 
             // Note, descendants are ignored
-            Assert.AreEqual(2, changes.Count);
-            Assert.AreEqual("a", changes[0].Path);
-            Assert.AreEqual("b", changes[1].Path);
+            Assert.That(changes.Count, Is.EqualTo(2));
+            Assert.That(changes[0].Path, Is.EqualTo("a"));
+            Assert.That(changes[1].Path, Is.EqualTo("b"));
         }
 
         #region Helpers

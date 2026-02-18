@@ -38,8 +38,8 @@ $"pn29yMivL7r48dlo{lineEnding}" +
 $"-----END CERTIFICATE-----";
 
             Assert.IsTrue(PemReader.TryRead(pem.AsSpan(), out PemReader.PemField field));
-            Assert.AreEqual("CERTIFICATE", field.Label.ToString());
-            Assert.AreEqual(s_rsaCertificateBytes, field.FromBase64Data());
+            Assert.That(field.Label.ToString(), Is.EqualTo("CERTIFICATE"));
+            Assert.That(field.FromBase64Data(), Is.EqualTo(s_rsaCertificateBytes));
         }
 
         [Test]
@@ -122,8 +122,8 @@ pn29yMivL7r48dlo";
         public void ReadWithExtraneousData()
         {
             Assert.IsTrue(PemReader.TryRead(RsaPemPrivateKey.AsSpan(), out PemReader.PemField field));
-            Assert.AreEqual("PRIVATE KEY", field.Label.ToString());
-            Assert.AreEqual(s_rsaPrivateKeyBytes, field.FromBase64Data());
+            Assert.That(field.Label.ToString(), Is.EqualTo("PRIVATE KEY"));
+            Assert.That(field.FromBase64Data(), Is.EqualTo(s_rsaPrivateKeyBytes));
         }
 
         [Test]
@@ -133,63 +133,63 @@ pn29yMivL7r48dlo";
 
             // Expect to find the private key first.
             Assert.IsTrue(PemReader.TryRead(data, out PemReader.PemField field));
-            Assert.AreEqual("PRIVATE KEY", field.Label.ToString());
-            Assert.AreEqual(s_rsaPrivateKeyBytes, field.FromBase64Data());
+            Assert.That(field.Label.ToString(), Is.EqualTo("PRIVATE KEY"));
+            Assert.That(field.FromBase64Data(), Is.EqualTo(s_rsaPrivateKeyBytes));
 
             // Expect to find the certificate second.
             data = data.Slice(field.Start + field.Length);
 
             Assert.IsTrue(PemReader.TryRead(data, out field));
-            Assert.AreEqual("CERTIFICATE", field.Label.ToString());
-            Assert.AreEqual(s_rsaCertificateBytes, field.FromBase64Data());
+            Assert.That(field.Label.ToString(), Is.EqualTo("CERTIFICATE"));
+            Assert.That(field.FromBase64Data(), Is.EqualTo(s_rsaCertificateBytes));
         }
 
         [Test]
         public void LoadCertificate()
         {
             using X509Certificate2 certificate = PemReader.LoadCertificate(RsaPem.AsSpan(), keyType: PemReader.KeyType.RSA);
-            Assert.AreEqual("CN=Azure SDK", certificate.Subject);
+            Assert.That(certificate.Subject, Is.EqualTo("CN=Azure SDK"));
             Assert.IsTrue(certificate.HasPrivateKey);
-            Assert.AreEqual(2048, certificate.GetRSAPrivateKey().KeySize);
+            Assert.That(certificate.GetRSAPrivateKey().KeySize, Is.EqualTo(2048));
         }
 
         [Test]
         public void LoadCertificateAutomatically()
         {
             using X509Certificate2 certificate = PemReader.LoadCertificate(RsaPem.AsSpan());
-            Assert.AreEqual("CN=Azure SDK", certificate.Subject);
+            Assert.That(certificate.Subject, Is.EqualTo("CN=Azure SDK"));
             Assert.IsTrue(certificate.HasPrivateKey);
-            Assert.AreEqual(2048, certificate.GetRSAPrivateKey().KeySize);
+            Assert.That(certificate.GetRSAPrivateKey().KeySize, Is.EqualTo(2048));
         }
 
         [Test]
         public void LoadCertificateWithPublicKey()
         {
             using X509Certificate2 certificate = PemReader.LoadCertificate(RsaPemPrivateKey.AsSpan(), s_rsaCertificateBytes, keyType: PemReader.KeyType.RSA);
-            Assert.AreEqual("CN=Azure SDK", certificate.Subject);
+            Assert.That(certificate.Subject, Is.EqualTo("CN=Azure SDK"));
             Assert.IsTrue(certificate.HasPrivateKey);
-            Assert.AreEqual(2048, certificate.GetRSAPrivateKey().KeySize);
+            Assert.That(certificate.GetRSAPrivateKey().KeySize, Is.EqualTo(2048));
         }
 
         [Test]
         public void LoadCertificateWithoutPublicKey()
         {
             Exception ex = Assert.Throws<InvalidDataException>(() => PemReader.LoadCertificate(RsaPemPrivateKey.AsSpan(), keyType: PemReader.KeyType.RSA));
-            Assert.AreEqual("The certificate is missing the public key", ex.Message);
+            Assert.That(ex.Message, Is.EqualTo("The certificate is missing the public key"));
         }
 
         [Test]
         public void LoadCertificateWithoutPrivateKey()
         {
             Exception ex = Assert.Throws<InvalidDataException>(() => PemReader.LoadCertificate(RsaPemCertificate.AsSpan(), keyType: PemReader.KeyType.RSA));
-            Assert.AreEqual("The certificate is missing the private key", ex.Message);
+            Assert.That(ex.Message, Is.EqualTo("The certificate is missing the private key"));
         }
 
         [Test]
         public void LoadCertificateWithOnlyPublicKeyAllowed()
         {
             using X509Certificate2 certificate = PemReader.LoadCertificate(RsaPemCertificate.AsSpan(), s_rsaCertificateBytes, keyType: PemReader.KeyType.RSA, allowCertificateOnly: true);
-            Assert.AreEqual("CN=Azure SDK", certificate.Subject);
+            Assert.That(certificate.Subject, Is.EqualTo("CN=Azure SDK"));
             Assert.IsFalse(certificate.HasPrivateKey);
         }
 
@@ -197,7 +197,7 @@ pn29yMivL7r48dlo";
         public void LoadCertificateWithNoKeys()
         {
             Exception ex = Assert.Throws<InvalidDataException>(() => PemReader.LoadCertificate(Span<char>.Empty));
-            Assert.AreEqual("The certificate is missing the public key", ex.Message);
+            Assert.That(ex.Message, Is.EqualTo("The certificate is missing the public key"));
         }
 
         [Test]
@@ -212,7 +212,7 @@ pn29yMivL7r48dlo";
             byte[] ciphertext = publicKey.Encrypt(plaintext, RSAEncryptionPadding.Pkcs1);
 
             byte[] decrypted = privateKey.Decrypt(ciphertext, RSAEncryptionPadding.Pkcs1);
-            Assert.AreEqual(plaintext, decrypted);
+            Assert.That(decrypted, Is.EqualTo(plaintext));
         }
 
         [Test]
@@ -221,18 +221,18 @@ pn29yMivL7r48dlo";
             string pem = RsaPemCertificate + "\n" + RsaPemPrivateKey;
 
             using X509Certificate2 certificate = PemReader.LoadCertificate(pem.AsSpan(), keyType: PemReader.KeyType.RSA);
-            Assert.AreEqual("CN=Azure SDK", certificate.Subject);
+            Assert.That(certificate.Subject, Is.EqualTo("CN=Azure SDK"));
             Assert.IsTrue(certificate.HasPrivateKey);
-            Assert.AreEqual(2048, certificate.GetRSAPrivateKey().KeySize);
+            Assert.That(certificate.GetRSAPrivateKey().KeySize, Is.EqualTo(2048));
         }
 
         [Test]
         public void LoadCertificatePemOverridesCer()
         {
             using X509Certificate2 certificate = PemReader.LoadCertificate(RsaPem.AsSpan(), Encoding.UTF8.GetBytes("This is not a certificate"), keyType: PemReader.KeyType.RSA);
-            Assert.AreEqual("CN=Azure SDK", certificate.Subject);
+            Assert.That(certificate.Subject, Is.EqualTo("CN=Azure SDK"));
             Assert.IsTrue(certificate.HasPrivateKey);
-            Assert.AreEqual(2048, certificate.GetRSAPrivateKey().KeySize);
+            Assert.That(certificate.GetRSAPrivateKey().KeySize, Is.EqualTo(2048));
         }
 
         [Test]

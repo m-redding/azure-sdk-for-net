@@ -17,7 +17,7 @@ namespace Azure.Core.Tests
         {
             var range = new HttpRange(offset, count);
 
-            Assert.AreEqual("bytes=" + expected, range.ToString());
+            Assert.That(range.ToString(), Is.EqualTo("bytes=" + expected));
         }
 
         [Test]
@@ -29,13 +29,13 @@ namespace Azure.Core.Tests
             var r5_10 = new HttpRange(5, 10);
             var r5_10_copy = new HttpRange(5, 10);
 
-            Assert.AreEqual(r5_10, r5_10_copy);
-            Assert.IsTrue(r5_10 == r5_10_copy);
+            Assert.That(r5_10_copy, Is.EqualTo(r5_10));
+            Assert.That(r5_10, Is.EqualTo(r5_10_copy));
             Assert.IsFalse(r5_10 == nullRange);
             Assert.IsFalse(r5_10 == nullStart);
             Assert.IsFalse(r5_10 == nullEnd);
 
-            Assert.IsFalse(r5_10 != r5_10_copy);
+            Assert.That(r5_10, Is.EqualTo(r5_10_copy));
             Assert.IsTrue(r5_10 != nullRange);
             Assert.IsTrue(r5_10 != nullStart);
             Assert.IsTrue(r5_10 != nullEnd);

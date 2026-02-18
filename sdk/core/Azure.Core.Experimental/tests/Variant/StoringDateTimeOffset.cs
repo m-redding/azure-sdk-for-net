@@ -20,13 +20,13 @@ namespace Azure.Core.Experimental.Tests
         public void DateTimeOffsetImplicit([ValueSource("DateTimeOffsetData")] DateTimeOffset testValue)
         {
             Variant value = testValue;
-            Assert.AreEqual(testValue, value.As<DateTimeOffset>());
-            Assert.AreEqual(typeof(DateTimeOffset), value.Type);
+            Assert.That(value.As<DateTimeOffset>(), Is.EqualTo(testValue));
+            Assert.That(value.Type, Is.EqualTo(typeof(DateTimeOffset)));
 
             DateTimeOffset? source = testValue;
             value = source;
-            Assert.AreEqual(source, value.As<DateTimeOffset?>());
-            Assert.AreEqual(typeof(DateTimeOffset), value.Type);
+            Assert.That(value.As<DateTimeOffset?>(), Is.EqualTo(source));
+            Assert.That(value.Type, Is.EqualTo(typeof(DateTimeOffset)));
         }
 
         [Test]
@@ -35,10 +35,10 @@ namespace Azure.Core.Experimental.Tests
             Variant value = new(testValue);
             bool success = value.TryGetValue(out DateTimeOffset result);
             Assert.True(success);
-            Assert.AreEqual(testValue, result);
+            Assert.That(result, Is.EqualTo(testValue));
 
-            Assert.AreEqual(testValue, value.As<DateTimeOffset>());
-            Assert.AreEqual(testValue, (DateTimeOffset)value);
+            Assert.That(value.As<DateTimeOffset>(), Is.EqualTo(testValue));
+            Assert.That((DateTimeOffset)value, Is.EqualTo(testValue));
         }
 
         [Test]
@@ -49,11 +49,11 @@ namespace Azure.Core.Experimental.Tests
 
             bool success = value.TryGetValue(out DateTimeOffset result);
             Assert.True(success);
-            Assert.AreEqual(testValue, result);
+            Assert.That(result, Is.EqualTo(testValue));
 
-            Assert.AreEqual(testValue, value.As<DateTimeOffset>());
+            Assert.That(value.As<DateTimeOffset>(), Is.EqualTo(testValue));
 
-            Assert.AreEqual(testValue, (DateTimeOffset)value);
+            Assert.That((DateTimeOffset)value, Is.EqualTo(testValue));
         }
 
         [Test]
@@ -63,9 +63,9 @@ namespace Azure.Core.Experimental.Tests
             Variant value = new(source);
             bool success = value.TryGetValue(out DateTimeOffset? result);
             Assert.True(success);
-            Assert.AreEqual(testValue, result);
+            Assert.That(result, Is.EqualTo(testValue));
 
-            Assert.AreEqual(testValue, (DateTimeOffset?)value);
+            Assert.That((DateTimeOffset?)value, Is.EqualTo(testValue));
         }
 
         [Test]
@@ -74,8 +74,8 @@ namespace Azure.Core.Experimental.Tests
             DateTimeOffset? source = null;
             Variant value = source;
             Assert.Null(value.Type);
-            Assert.AreEqual(source, value.As<DateTimeOffset?>());
-            Assert.False(value.As<DateTimeOffset?>().HasValue);
+            Assert.That(value.As<DateTimeOffset?>(), Is.EqualTo(source));
+            Assert.That(value.As<DateTimeOffset?>().HasValue, Is.False);
         }
 
         [Test]
@@ -83,14 +83,14 @@ namespace Azure.Core.Experimental.Tests
         {
             Variant value = new(testValue);
             object o = value.As<object>();
-            Assert.AreEqual(typeof(DateTimeOffset), o.GetType());
-            Assert.AreEqual(testValue, (DateTimeOffset)o);
+            Assert.That(o.GetType(), Is.EqualTo(typeof(DateTimeOffset)));
+            Assert.That((DateTimeOffset)o, Is.EqualTo(testValue));
 
             DateTimeOffset? n = testValue;
             value = new(n);
             o = value.As<object>();
-            Assert.AreEqual(typeof(DateTimeOffset), o.GetType());
-            Assert.AreEqual(testValue, (DateTimeOffset)o);
+            Assert.That(o.GetType(), Is.EqualTo(typeof(DateTimeOffset)));
+            Assert.That((DateTimeOffset)o, Is.EqualTo(testValue));
         }
     }
 }

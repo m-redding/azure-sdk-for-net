@@ -30,11 +30,11 @@ namespace Azure.Core.Tests
             Assert.Greater(updateCalled, 0);
             Assert.IsTrue(operation.HasCompleted);
             Assert.IsTrue(operation.HasValue);
-            Assert.AreEqual(testResponse, operation.GetRawResponse());
+            Assert.That(operation.GetRawResponse(), Is.EqualTo(testResponse));
 
-            Assert.AreEqual(new[] { 1, 2, 3, 4 }, operation.GetValues().ToArray());
-            Assert.AreEqual(new[] { 1, 2, 3, 4 }, await operation.GetValuesAsync().ToEnumerableAsync());
-            Assert.AreEqual(new[] { 1, 2, 3, 4 }, await operation.Value.ToEnumerableAsync());
+            Assert.That(operation.GetValues().ToArray(), Is.EqualTo(new[] { 1, 2, 3, 4 }));
+            Assert.That(await operation.GetValuesAsync().ToEnumerableAsync(), Is.EqualTo(new[] { 1, 2, 3, 4 }));
+            Assert.That(await operation.Value.ToEnumerableAsync(), Is.EqualTo(new[] { 1, 2, 3, 4 }));
         }
 
         [Test]

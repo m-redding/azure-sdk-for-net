@@ -24,7 +24,7 @@ namespace Azure.Core.Tests
             message.SetProperty("someName", "value");
 
             Assert.True(message.TryGetProperty("someName", out object value));
-            Assert.AreEqual("value", value);
+            Assert.That(value, Is.EqualTo("value"));
         }
 
         [Test]
@@ -42,7 +42,7 @@ namespace Azure.Core.Tests
             message.SetProperty(typeof(string), "value");
 
             Assert.True(message.TryGetProperty(typeof(string), out object value));
-            Assert.AreEqual("value", value);
+            Assert.That(value, Is.EqualTo("value"));
         }
 
         [Test]
@@ -57,24 +57,24 @@ namespace Azure.Core.Tests
             message.SetProperty(typeof(T4), new T4() { Value = 4444 });
 
             message.TryGetProperty(typeof(T1), out var value);
-            Assert.AreEqual(1111, ((T1)value).Value);
+            Assert.That(((T1)value).Value, Is.EqualTo(1111));
             message.TryGetProperty(typeof(T2), out value);
-            Assert.AreEqual(2222, ((T2)value).Value);
+            Assert.That(((T2)value).Value, Is.EqualTo(2222));
             message.TryGetProperty(typeof(T3), out value);
-            Assert.AreEqual(3333, ((T3)value).Value);
+            Assert.That(((T3)value).Value, Is.EqualTo(3333));
             message.TryGetProperty(typeof(T4), out value);
-            Assert.AreEqual(4444, ((T4)value).Value);
+            Assert.That(((T4)value).Value, Is.EqualTo(4444));
 
             for (int i = 0; i < readLoops; i++)
             {
                 t3.Value = i;
                 message.SetProperty(typeof(T3), t3);
                 message.TryGetProperty(typeof(T3), out value);
-                Assert.AreEqual(i, ((T3)value).Value);
+                Assert.That(((T3)value).Value, Is.EqualTo(i));
             }
 
             message.TryGetProperty(typeof(T4), out value);
-            Assert.AreEqual(4444, ((T4)value).Value);
+            Assert.That(((T4)value).Value, Is.EqualTo(4444));
         }
 
         [Test]

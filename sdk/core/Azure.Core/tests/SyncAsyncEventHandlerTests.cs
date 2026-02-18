@@ -250,7 +250,7 @@ namespace Azure.Core.Tests
             client.Working += test.Handle;
             await client.DoWorkAsync();
 
-            Assert.AreEqual(2, test.RaisedCount);
+            Assert.That(test.RaisedCount, Is.EqualTo(2));
         }
 
         [Test]
@@ -264,7 +264,7 @@ namespace Azure.Core.Tests
             client.Working -= test.Handle;
             await client.DoWorkAsync();
 
-            Assert.AreEqual(1, test.RaisedCount);
+            Assert.That(test.RaisedCount, Is.EqualTo(1));
         }
 
         [Test]
@@ -304,7 +304,7 @@ namespace Azure.Core.Tests
                         diagnosticListener.Scopes.FirstOrDefault(
                             s => s.Name == $"{nameof(TestClient)}.{nameof(TestClient.Working)}");
 
-                    Assert.AreEqual($"{nameof(TestClient)}.{nameof(TestClient.DoWork)}", Activity.Current.OperationName);
+                    Assert.That(Activity.Current.OperationName, Is.EqualTo($"{nameof(TestClient)}.{nameof(TestClient.DoWork)}"));
                     Assert.IsNull(scope);
                     return Task.CompletedTask;
                 };
@@ -440,9 +440,9 @@ namespace Azure.Core.Tests
             Assert.IsTrue(third.Completed);
 
             await client.DoWorkAsync();
-            Assert.AreEqual(1, first.CompletedCount);
-            Assert.AreEqual(2, second.CompletedCount);
-            Assert.AreEqual(2, third.CompletedCount);
+            Assert.That(first.CompletedCount, Is.EqualTo(1));
+            Assert.That(second.CompletedCount, Is.EqualTo(2));
+            Assert.That(third.CompletedCount, Is.EqualTo(2));
         }
 
         [Test]
@@ -470,7 +470,7 @@ namespace Azure.Core.Tests
             client.Working += makeHandler("1", "2");
             client.Working += makeHandler("<", ">");
             await client.DoWorkAsync();
-            Assert.AreEqual("ab12<>", text.ToString());
+            Assert.That(text.ToString(), Is.EqualTo("ab12<>"));
         }
         #endregion
 
@@ -502,8 +502,8 @@ namespace Azure.Core.Tests
             client.Working += third.Handle;
             await client.DoWorkAsync();
 
-            Assert.AreSame(first.LastEventArgs, second.LastEventArgs);
-            Assert.AreSame(first.LastEventArgs, third.LastEventArgs);
+            Assert.That(second.LastEventArgs, Is.SameAs(first.LastEventArgs));
+            Assert.That(third.LastEventArgs, Is.SameAs(first.LastEventArgs));
         }
 
         [Test]
@@ -518,8 +518,8 @@ namespace Azure.Core.Tests
             int result = await client.DoWorkAsync();
             Assert.True(before.Completed);
             Assert.True(after.Completed);
-            Assert.AreSame(original, after.LastEventArgs.Client);
-            Assert.AreEqual(result, after.LastEventArgs.Result);
+            Assert.That(after.LastEventArgs.Client, Is.SameAs(original));
+            Assert.That(after.LastEventArgs.Result, Is.EqualTo(result));
         }
         #endregion
 
@@ -607,7 +607,7 @@ namespace Azure.Core.Tests
             catch (AggregateException ex)
             {
                 Assert.IsInstanceOf<InvalidOperationException>(ex.InnerException);
-                Assert.AreEqual("Boom!", ex.InnerException.Message);
+                Assert.That(ex.InnerException.Message, Is.EqualTo("Boom!"));
             }
 
             Assert.IsTrue(test.Raised);
@@ -635,7 +635,7 @@ namespace Azure.Core.Tests
             catch (AggregateException ex)
             {
                 Assert.IsInstanceOf<InvalidOperationException>(ex.InnerException);
-                Assert.AreEqual("Boom!", ex.InnerException.Message);
+                Assert.That(ex.InnerException.Message, Is.EqualTo("Boom!"));
             }
 
             Assert.IsTrue(first.Raised);
@@ -667,10 +667,10 @@ namespace Azure.Core.Tests
             catch (AggregateException ex)
             {
                 var messages = ex.InnerExceptions.Select(e => e.Message).ToList();
-                Assert.Contains(nameof(TestClient.Working), messages);
-                Assert.Contains("Bar", messages);
-                Assert.Contains("Baz", messages);
-                Assert.AreEqual(3, messages.Count);
+                Assert.That(messages, Does.Contain(nameof(TestClient.Working)));
+                Assert.That(messages, Does.Contain("Bar"));
+                Assert.That(messages, Does.Contain("Baz"));
+                Assert.That(messages.Count, Is.EqualTo(3));
             }
 
             Assert.IsTrue(first.Raised);

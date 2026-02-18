@@ -28,7 +28,7 @@ public class PipelineMessageTests : SyncAsyncTestBase
         message.Apply(options);
 
         Assert.IsTrue(message.Request.Headers.TryGetValue("MockHeader", out string? value));
-        Assert.AreEqual("MockValue", value);
+        Assert.That(value, Is.EqualTo("MockValue"));
     }
 
     [Test]
@@ -44,7 +44,7 @@ public class PipelineMessageTests : SyncAsyncTestBase
         options.CancellationToken = cts.Token;
         message.Apply(options);
 
-        Assert.AreEqual(message.CancellationToken, cts.Token);
+        Assert.That(cts.Token, Is.EqualTo(message.CancellationToken));
         Assert.IsFalse(message.CancellationToken.IsCancellationRequested);
 
         cts.Cancel();
@@ -69,7 +69,7 @@ public class PipelineMessageTests : SyncAsyncTestBase
         message.SetProperty(GetType(), "MockProperty");
 
         Assert.IsTrue(message.TryGetProperty(GetType(), out object? property));
-        Assert.AreEqual("MockProperty", property);
+        Assert.That(property, Is.EqualTo("MockProperty"));
     }
 
     [Test]
@@ -89,8 +89,8 @@ public class PipelineMessageTests : SyncAsyncTestBase
 
         message.SetProperty(GetType(), "value");
 
-        Assert.True(message.TryGetProperty(GetType(), out object? value));
-        Assert.AreEqual("value", value);
+        Assert.That(message.TryGetProperty(GetType(), out object? value), Is.True);
+        Assert.That(value, Is.EqualTo("value"));
     }
 
     [Test]
@@ -107,24 +107,24 @@ public class PipelineMessageTests : SyncAsyncTestBase
         message.SetProperty(typeof(T4), new T4() { Value = 4444 });
 
         message.TryGetProperty(typeof(T1), out var value);
-        Assert.AreEqual(1111, ((T1)value!).Value);
+        Assert.That(((T1)value!).Value, Is.EqualTo(1111));
         message.TryGetProperty(typeof(T2), out value);
-        Assert.AreEqual(2222, ((T2)value!).Value);
+        Assert.That(((T2)value!).Value, Is.EqualTo(2222));
         message.TryGetProperty(typeof(T3), out value);
-        Assert.AreEqual(3333, ((T3)value!).Value);
+        Assert.That(((T3)value!).Value, Is.EqualTo(3333));
         message.TryGetProperty(typeof(T4), out value);
-        Assert.AreEqual(4444, ((T4)value!).Value);
+        Assert.That(((T4)value!).Value, Is.EqualTo(4444));
 
         for (int i = 0; i < readLoops; i++)
         {
             t3.Value = i;
             message.SetProperty(typeof(T3), t3);
             message.TryGetProperty(typeof(T3), out value);
-            Assert.AreEqual(i, ((T3)value!).Value);
+            Assert.That(((T3)value!).Value, Is.EqualTo(i));
         }
 
         message.TryGetProperty(typeof(T4), out value);
-        Assert.AreEqual(4444, ((T4)value!).Value);
+        Assert.That(((T4)value!).Value, Is.EqualTo(4444));
     }
 
     [Test]
@@ -153,10 +153,10 @@ public class PipelineMessageTests : SyncAsyncTestBase
 
             response = message.ExtractResponse();
 
-            Assert.IsNull(message.Response);
+            Assert.That(message.Response, Is.Null);
         }
 
-        Assert.NotNull(response!.ContentStream);
+        Assert.That(response!.ContentStream, Is.Not.Null);
 
         byte[] clientBytes = new byte[serverBytes.Length];
         int readLength = 0;
@@ -165,8 +165,8 @@ public class PipelineMessageTests : SyncAsyncTestBase
             readLength += await response.ContentStream!.ReadAsync(clientBytes, 0, serverBytes.Length);
         }
 
-        Assert.AreEqual(serverBytes.Length, readLength);
-        CollectionAssert.AreEqual(serverBytes, clientBytes);
+        Assert.That(readLength, Is.EqualTo(serverBytes.Length));
+        Assert.That(clientBytes, Is.EqualTo(serverBytes).AsCollection);
     }
 
     #region Helpers

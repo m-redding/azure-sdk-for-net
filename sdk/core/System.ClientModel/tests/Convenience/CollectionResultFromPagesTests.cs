@@ -23,7 +23,7 @@ public class CollectionResultFromPagesTests
 
         CollectionResult<int> collection = CollectionResult<int>.FromPages(pages);
 
-        Assert.AreEqual(new[] { 1, 2, 3, 4 }, collection.ToList());
+        Assert.That(collection.ToList(), Is.EqualTo(new[] { 1, 2, 3, 4 }));
     }
 
     [Test]
@@ -36,7 +36,7 @@ public class CollectionResultFromPagesTests
 
         CollectionResult<int> collection = CollectionResult<int>.FromPages(pages);
 
-        Assert.AreEqual(new[] { 10, 20, 30 }, collection.ToList());
+        Assert.That(collection.ToList(), Is.EqualTo(new[] { 10, 20, 30 }));
     }
 
     [Test]
@@ -63,7 +63,7 @@ public class CollectionResultFromPagesTests
 
         List<ClientResult> rawPages = collection.GetRawPages().ToList();
 
-        Assert.AreEqual(3, rawPages.Count);
+        Assert.That(rawPages.Count, Is.EqualTo(3));
     }
 
     [Test]
@@ -80,7 +80,7 @@ public class CollectionResultFromPagesTests
         List<ClientResult> rawPages = collection.GetRawPages().ToList();
 
         Assert.IsNotNull(collection.GetContinuationToken(rawPages[0]));
-        Assert.IsNull(collection.GetContinuationToken(rawPages[1]));
+        Assert.That(collection.GetContinuationToken(rawPages[1]), Is.Null);
     }
 
     [Test]
@@ -95,8 +95,8 @@ public class CollectionResultFromPagesTests
 
         List<ClientResult> rawPages = collection.GetRawPages().ToList();
 
-        Assert.AreEqual(1, rawPages.Count);
-        Assert.IsNull(collection.GetContinuationToken(rawPages[0]));
+        Assert.That(rawPages.Count, Is.EqualTo(1));
+        Assert.That(collection.GetContinuationToken(rawPages[0]), Is.Null);
     }
 
     [Test]
@@ -119,7 +119,7 @@ public class CollectionResultFromPagesTests
 
         CollectionResult<string> collection = CollectionResult<string>.FromPages(pages);
 
-        Assert.AreEqual(new[] { "a", "b", "c" }, collection.ToList());
+        Assert.That(collection.ToList(), Is.EqualTo(new[] { "a", "b", "c" }));
     }
 
     #endregion
@@ -139,7 +139,7 @@ public class CollectionResultFromPagesTests
 
         List<int> values = await ToListAsync(collection);
 
-        Assert.AreEqual(new[] { 1, 2, 3, 4 }, values);
+        Assert.That(values, Is.EqualTo(new[] { 1, 2, 3, 4 }));
     }
 
     [Test]
@@ -154,7 +154,7 @@ public class CollectionResultFromPagesTests
 
         List<int> values = await ToListAsync(collection);
 
-        Assert.AreEqual(new[] { 10, 20, 30 }, values);
+        Assert.That(values, Is.EqualTo(new[] { 10, 20, 30 }));
     }
 
     [Test]
@@ -183,7 +183,7 @@ public class CollectionResultFromPagesTests
 
         List<ClientResult> rawPages = await ToListAsync(collection.GetRawPagesAsync());
 
-        Assert.AreEqual(3, rawPages.Count);
+        Assert.That(rawPages.Count, Is.EqualTo(3));
     }
 
     [Test]
@@ -200,7 +200,7 @@ public class CollectionResultFromPagesTests
         List<ClientResult> rawPages = await ToListAsync(collection.GetRawPagesAsync());
 
         Assert.IsNotNull(collection.GetContinuationToken(rawPages[0]));
-        Assert.IsNull(collection.GetContinuationToken(rawPages[1]));
+        Assert.That(collection.GetContinuationToken(rawPages[1]), Is.Null);
     }
 
     [Test]
@@ -215,8 +215,8 @@ public class CollectionResultFromPagesTests
 
         List<ClientResult> rawPages = await ToListAsync(collection.GetRawPagesAsync());
 
-        Assert.AreEqual(1, rawPages.Count);
-        Assert.IsNull(collection.GetContinuationToken(rawPages[0]));
+        Assert.That(rawPages.Count, Is.EqualTo(1));
+        Assert.That(collection.GetContinuationToken(rawPages[0]), Is.Null);
     }
 
     [Test]
@@ -241,7 +241,7 @@ public class CollectionResultFromPagesTests
 
         List<string> values = await ToListAsync(collection);
 
-        Assert.AreEqual(new[] { "a", "b", "c" }, values);
+        Assert.That(values, Is.EqualTo(new[] { "a", "b", "c" }));
     }
 
     #endregion

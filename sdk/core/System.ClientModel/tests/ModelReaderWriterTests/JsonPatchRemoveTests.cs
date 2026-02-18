@@ -21,8 +21,8 @@ namespace System.ClientModel.Tests.ModelReaderWriterTests
             Assert.IsFalse(jp.IsRemoved("$.x"u8));
             Assert.IsFalse(jp.IsRemoved("$.y"u8));
 
-            Assert.AreEqual(true, jp.GetBoolean("$.x"u8));
-            Assert.AreEqual(false, jp.GetBoolean("$.y"u8));
+            Assert.That(jp.GetBoolean("$.x"u8), Is.EqualTo(true));
+            Assert.That(jp.GetBoolean("$.y"u8), Is.EqualTo(false));
 
             jp.Remove("$.x"u8);
             jp.Remove("$.y"u8);
@@ -33,15 +33,15 @@ namespace System.ClientModel.Tests.ModelReaderWriterTests
             Assert.IsTrue(jp.IsRemoved("$.y"u8));
 
             var ex = Assert.Throws<KeyNotFoundException>(() => jp.GetBoolean("$.x"u8));
-            Assert.AreEqual($"No value found at JSON path '$.x'.", ex!.Message);
+            Assert.That(ex!.Message, Is.EqualTo($"No value found at JSON path '$.x'."));
             ex = Assert.Throws<KeyNotFoundException>(() => jp.GetBoolean("$.y"u8));
-            Assert.AreEqual($"No value found at JSON path '$.y'.", ex!.Message);
+            Assert.That(ex!.Message, Is.EqualTo($"No value found at JSON path '$.y'."));
             ex = Assert.Throws<KeyNotFoundException>(() => jp.GetNullableValue<bool>("$.x"u8));
-            Assert.AreEqual($"No value found at JSON path '$.x'.", ex!.Message);
+            Assert.That(ex!.Message, Is.EqualTo($"No value found at JSON path '$.x'."));
             ex = Assert.Throws<KeyNotFoundException>(() => jp.GetNullableValue<bool>("$.y"u8));
-            Assert.AreEqual($"No value found at JSON path '$.y'.", ex!.Message);
+            Assert.That(ex!.Message, Is.EqualTo($"No value found at JSON path '$.y'."));
 
-            Assert.AreEqual("{}", jp.ToString("J"));
+            Assert.That(jp.ToString("J"), Is.EqualTo("{}"));
         }
 
         [Test]
@@ -52,8 +52,8 @@ namespace System.ClientModel.Tests.ModelReaderWriterTests
             Assert.IsFalse(jp.IsRemoved("$.x"u8));
             Assert.IsFalse(jp.IsRemoved("$.y"u8));
 
-            Assert.AreEqual(true, jp.GetBoolean("$.x"u8));
-            Assert.AreEqual(false, jp.GetBoolean("$.y"u8));
+            Assert.That(jp.GetBoolean("$.x"u8), Is.EqualTo(true));
+            Assert.That(jp.GetBoolean("$.y"u8), Is.EqualTo(false));
 
             jp.Remove("$.x"u8);
             jp.Remove("$.y"u8);
@@ -64,15 +64,15 @@ namespace System.ClientModel.Tests.ModelReaderWriterTests
             Assert.IsTrue(jp.IsRemoved("$.y"u8));
 
             var ex = Assert.Throws<KeyNotFoundException>(() => jp.GetBoolean("$.x"u8));
-            Assert.AreEqual($"No value found at JSON path '$.x'.", ex!.Message);
+            Assert.That(ex!.Message, Is.EqualTo($"No value found at JSON path '$.x'."));
             ex = Assert.Throws<KeyNotFoundException>(() => jp.GetBoolean("$.y"u8));
-            Assert.AreEqual($"No value found at JSON path '$.y'.", ex!.Message);
+            Assert.That(ex!.Message, Is.EqualTo($"No value found at JSON path '$.y'."));
             ex = Assert.Throws<KeyNotFoundException>(() => jp.GetNullableValue<bool>("$.x"u8));
-            Assert.AreEqual($"No value found at JSON path '$.x'.", ex!.Message);
+            Assert.That(ex!.Message, Is.EqualTo($"No value found at JSON path '$.x'."));
             ex = Assert.Throws<KeyNotFoundException>(() => jp.GetNullableValue<bool>("$.y"u8));
-            Assert.AreEqual($"No value found at JSON path '$.y'.", ex!.Message);
+            Assert.That(ex!.Message, Is.EqualTo($"No value found at JSON path '$.y'."));
 
-            Assert.AreEqual("{}", jp.ToString("J"));
+            Assert.That(jp.ToString("J"), Is.EqualTo("{}"));
         }
 
         [Test]
@@ -85,8 +85,8 @@ namespace System.ClientModel.Tests.ModelReaderWriterTests
             Assert.IsFalse(jp.IsRemoved("$.x"u8));
             Assert.IsFalse(jp.IsRemoved("$.y"u8));
 
-            Assert.AreEqual((byte)1, jp.GetByte("$.x"u8));
-            Assert.AreEqual((byte)2, jp.GetByte("$.y"u8));
+            Assert.That(jp.GetByte("$.x"u8), Is.EqualTo((byte)1));
+            Assert.That(jp.GetByte("$.y"u8), Is.EqualTo((byte)2));
 
             jp.Remove("$.x"u8);
             jp.Remove("$.y"u8);
@@ -97,15 +97,15 @@ namespace System.ClientModel.Tests.ModelReaderWriterTests
             Assert.IsTrue(jp.IsRemoved("$.y"u8));
 
             var ex = Assert.Throws<KeyNotFoundException>(() => jp.GetByte("$.x"u8));
-            Assert.AreEqual($"No value found at JSON path '$.x'.", ex!.Message);
+            Assert.That(ex!.Message, Is.EqualTo($"No value found at JSON path '$.x'."));
             ex = Assert.Throws<KeyNotFoundException>(() => jp.GetByte("$.y"u8));
-            Assert.AreEqual($"No value found at JSON path '$.y'.", ex!.Message);
+            Assert.That(ex!.Message, Is.EqualTo($"No value found at JSON path '$.y'."));
             ex = Assert.Throws<KeyNotFoundException>(() => jp.GetNullableValue<byte>("$.x"u8));
-            Assert.AreEqual($"No value found at JSON path '$.x'.", ex!.Message);
+            Assert.That(ex!.Message, Is.EqualTo($"No value found at JSON path '$.x'."));
             ex = Assert.Throws<KeyNotFoundException>(() => jp.GetNullableValue<byte>("$.y"u8));
-            Assert.AreEqual($"No value found at JSON path '$.y'.", ex!.Message);
+            Assert.That(ex!.Message, Is.EqualTo($"No value found at JSON path '$.y'."));
 
-            Assert.AreEqual("{}", jp.ToString("J"));
+            Assert.That(jp.ToString("J"), Is.EqualTo("{}"));
         }
 
         [Test]
@@ -116,8 +116,8 @@ namespace System.ClientModel.Tests.ModelReaderWriterTests
             Assert.IsFalse(jp.IsRemoved("$.x"u8));
             Assert.IsFalse(jp.IsRemoved("$.y"u8));
 
-            Assert.AreEqual((byte)1, jp.GetByte("$.x"u8));
-            Assert.AreEqual((byte)2, jp.GetByte("$.y"u8));
+            Assert.That(jp.GetByte("$.x"u8), Is.EqualTo((byte)1));
+            Assert.That(jp.GetByte("$.y"u8), Is.EqualTo((byte)2));
 
             jp.Remove("$.x"u8);
             jp.Remove("$.y"u8);
@@ -128,15 +128,15 @@ namespace System.ClientModel.Tests.ModelReaderWriterTests
             Assert.IsTrue(jp.IsRemoved("$.y"u8));
 
             var ex = Assert.Throws<KeyNotFoundException>(() => jp.GetByte("$.x"u8));
-            Assert.AreEqual($"No value found at JSON path '$.x'.", ex!.Message);
+            Assert.That(ex!.Message, Is.EqualTo($"No value found at JSON path '$.x'."));
             ex = Assert.Throws<KeyNotFoundException>(() => jp.GetByte("$.y"u8));
-            Assert.AreEqual($"No value found at JSON path '$.y'.", ex!.Message);
+            Assert.That(ex!.Message, Is.EqualTo($"No value found at JSON path '$.y'."));
             ex = Assert.Throws<KeyNotFoundException>(() => jp.GetNullableValue<byte>("$.x"u8));
-            Assert.AreEqual($"No value found at JSON path '$.x'.", ex!.Message);
+            Assert.That(ex!.Message, Is.EqualTo($"No value found at JSON path '$.x'."));
             ex = Assert.Throws<KeyNotFoundException>(() => jp.GetNullableValue<byte>("$.y"u8));
-            Assert.AreEqual($"No value found at JSON path '$.y'.", ex!.Message);
+            Assert.That(ex!.Message, Is.EqualTo($"No value found at JSON path '$.y'."));
 
-            Assert.AreEqual("{}", jp.ToString("J"));
+            Assert.That(jp.ToString("J"), Is.EqualTo("{}"));
         }
 
         [Test]
@@ -149,8 +149,8 @@ namespace System.ClientModel.Tests.ModelReaderWriterTests
             Assert.IsFalse(jp.IsRemoved("$.x"u8));
             Assert.IsFalse(jp.IsRemoved("$.y"u8));
 
-            Assert.AreEqual(1.23m, jp.GetDecimal("$.x"u8));
-            Assert.AreEqual(4.56m, jp.GetDecimal("$.y"u8));
+            Assert.That(jp.GetDecimal("$.x"u8), Is.EqualTo(1.23m));
+            Assert.That(jp.GetDecimal("$.y"u8), Is.EqualTo(4.56m));
 
             jp.Remove("$.x"u8);
             jp.Remove("$.y"u8);
@@ -161,15 +161,15 @@ namespace System.ClientModel.Tests.ModelReaderWriterTests
             Assert.IsTrue(jp.IsRemoved("$.y"u8));
 
             var ex = Assert.Throws<KeyNotFoundException>(() => jp.GetDecimal("$.x"u8));
-            Assert.AreEqual($"No value found at JSON path '$.x'.", ex!.Message);
+            Assert.That(ex!.Message, Is.EqualTo($"No value found at JSON path '$.x'."));
             ex = Assert.Throws<KeyNotFoundException>(() => jp.GetDecimal("$.y"u8));
-            Assert.AreEqual($"No value found at JSON path '$.y'.", ex!.Message);
+            Assert.That(ex!.Message, Is.EqualTo($"No value found at JSON path '$.y'."));
             ex = Assert.Throws<KeyNotFoundException>(() => jp.GetNullableValue<decimal>("$.x"u8));
-            Assert.AreEqual($"No value found at JSON path '$.x'.", ex!.Message);
+            Assert.That(ex!.Message, Is.EqualTo($"No value found at JSON path '$.x'."));
             ex = Assert.Throws<KeyNotFoundException>(() => jp.GetNullableValue<decimal>("$.y"u8));
-            Assert.AreEqual($"No value found at JSON path '$.y'.", ex!.Message);
+            Assert.That(ex!.Message, Is.EqualTo($"No value found at JSON path '$.y'."));
 
-            Assert.AreEqual("{}", jp.ToString("J"));
+            Assert.That(jp.ToString("J"), Is.EqualTo("{}"));
         }
 
         [Test]
@@ -180,8 +180,8 @@ namespace System.ClientModel.Tests.ModelReaderWriterTests
             Assert.IsFalse(jp.IsRemoved("$.x"u8));
             Assert.IsFalse(jp.IsRemoved("$.y"u8));
 
-            Assert.AreEqual(1.23m, jp.GetDecimal("$.x"u8));
-            Assert.AreEqual(4.56m, jp.GetDecimal("$.y"u8));
+            Assert.That(jp.GetDecimal("$.x"u8), Is.EqualTo(1.23m));
+            Assert.That(jp.GetDecimal("$.y"u8), Is.EqualTo(4.56m));
 
             jp.Remove("$.x"u8);
             jp.Remove("$.y"u8);
@@ -192,15 +192,15 @@ namespace System.ClientModel.Tests.ModelReaderWriterTests
             Assert.IsTrue(jp.IsRemoved("$.y"u8));
 
             var ex = Assert.Throws<KeyNotFoundException>(() => jp.GetDecimal("$.x"u8));
-            Assert.AreEqual($"No value found at JSON path '$.x'.", ex!.Message);
+            Assert.That(ex!.Message, Is.EqualTo($"No value found at JSON path '$.x'."));
             ex = Assert.Throws<KeyNotFoundException>(() => jp.GetDecimal("$.y"u8));
-            Assert.AreEqual($"No value found at JSON path '$.y'.", ex!.Message);
+            Assert.That(ex!.Message, Is.EqualTo($"No value found at JSON path '$.y'."));
             ex = Assert.Throws<KeyNotFoundException>(() => jp.GetNullableValue<decimal>("$.x"u8));
-            Assert.AreEqual($"No value found at JSON path '$.x'.", ex!.Message);
+            Assert.That(ex!.Message, Is.EqualTo($"No value found at JSON path '$.x'."));
             ex = Assert.Throws<KeyNotFoundException>(() => jp.GetNullableValue<decimal>("$.y"u8));
-            Assert.AreEqual($"No value found at JSON path '$.y'.", ex!.Message);
+            Assert.That(ex!.Message, Is.EqualTo($"No value found at JSON path '$.y'."));
 
-            Assert.AreEqual("{}", jp.ToString("J"));
+            Assert.That(jp.ToString("J"), Is.EqualTo("{}"));
         }
 
         [Test]
@@ -213,8 +213,8 @@ namespace System.ClientModel.Tests.ModelReaderWriterTests
             Assert.IsFalse(jp.IsRemoved("$.x"u8));
             Assert.IsFalse(jp.IsRemoved("$.y"u8));
 
-            Assert.AreEqual(1.23, jp.GetDouble("$.x"u8));
-            Assert.AreEqual(4.56, jp.GetDouble("$.y"u8));
+            Assert.That(jp.GetDouble("$.x"u8), Is.EqualTo(1.23));
+            Assert.That(jp.GetDouble("$.y"u8), Is.EqualTo(4.56));
 
             jp.Remove("$.x"u8);
             jp.Remove("$.y"u8);
@@ -225,15 +225,15 @@ namespace System.ClientModel.Tests.ModelReaderWriterTests
             Assert.IsTrue(jp.IsRemoved("$.y"u8));
 
             var ex = Assert.Throws<KeyNotFoundException>(() => jp.GetDouble("$.x"u8));
-            Assert.AreEqual($"No value found at JSON path '$.x'.", ex!.Message);
+            Assert.That(ex!.Message, Is.EqualTo($"No value found at JSON path '$.x'."));
             ex = Assert.Throws<KeyNotFoundException>(() => jp.GetDouble("$.y"u8));
-            Assert.AreEqual($"No value found at JSON path '$.y'.", ex!.Message);
+            Assert.That(ex!.Message, Is.EqualTo($"No value found at JSON path '$.y'."));
             ex = Assert.Throws<KeyNotFoundException>(() => jp.GetNullableValue<double>("$.x"u8));
-            Assert.AreEqual($"No value found at JSON path '$.x'.", ex!.Message);
+            Assert.That(ex!.Message, Is.EqualTo($"No value found at JSON path '$.x'."));
             ex = Assert.Throws<KeyNotFoundException>(() => jp.GetNullableValue<double>("$.y"u8));
-            Assert.AreEqual($"No value found at JSON path '$.y'.", ex!.Message);
+            Assert.That(ex!.Message, Is.EqualTo($"No value found at JSON path '$.y'."));
 
-            Assert.AreEqual("{}", jp.ToString("J"));
+            Assert.That(jp.ToString("J"), Is.EqualTo("{}"));
         }
 
         [Test]
@@ -244,8 +244,8 @@ namespace System.ClientModel.Tests.ModelReaderWriterTests
             Assert.IsFalse(jp.IsRemoved("$.x"u8));
             Assert.IsFalse(jp.IsRemoved("$.y"u8));
 
-            Assert.AreEqual(1.23, jp.GetDouble("$.x"u8));
-            Assert.AreEqual(4.56, jp.GetDouble("$.y"u8));
+            Assert.That(jp.GetDouble("$.x"u8), Is.EqualTo(1.23));
+            Assert.That(jp.GetDouble("$.y"u8), Is.EqualTo(4.56));
 
             jp.Remove("$.x"u8);
             jp.Remove("$.y"u8);
@@ -256,15 +256,15 @@ namespace System.ClientModel.Tests.ModelReaderWriterTests
             Assert.IsTrue(jp.IsRemoved("$.y"u8));
 
             var ex = Assert.Throws<KeyNotFoundException>(() => jp.GetDouble("$.x"u8));
-            Assert.AreEqual($"No value found at JSON path '$.x'.", ex!.Message);
+            Assert.That(ex!.Message, Is.EqualTo($"No value found at JSON path '$.x'."));
             ex = Assert.Throws<KeyNotFoundException>(() => jp.GetDouble("$.y"u8));
-            Assert.AreEqual($"No value found at JSON path '$.y'.", ex!.Message);
+            Assert.That(ex!.Message, Is.EqualTo($"No value found at JSON path '$.y'."));
             ex = Assert.Throws<KeyNotFoundException>(() => jp.GetNullableValue<double>("$.x"u8));
-            Assert.AreEqual($"No value found at JSON path '$.x'.", ex!.Message);
+            Assert.That(ex!.Message, Is.EqualTo($"No value found at JSON path '$.x'."));
             ex = Assert.Throws<KeyNotFoundException>(() => jp.GetNullableValue<double>("$.y"u8));
-            Assert.AreEqual($"No value found at JSON path '$.y'.", ex!.Message);
+            Assert.That(ex!.Message, Is.EqualTo($"No value found at JSON path '$.y'."));
 
-            Assert.AreEqual("{}", jp.ToString("J"));
+            Assert.That(jp.ToString("J"), Is.EqualTo("{}"));
         }
 
         [Test]
@@ -277,8 +277,8 @@ namespace System.ClientModel.Tests.ModelReaderWriterTests
             Assert.IsFalse(jp.IsRemoved("$.x"u8));
             Assert.IsFalse(jp.IsRemoved("$.y"u8));
 
-            Assert.AreEqual(1.23f, jp.GetFloat("$.x"u8));
-            Assert.AreEqual(4.56f, jp.GetFloat("$.y"u8));
+            Assert.That(jp.GetFloat("$.x"u8), Is.EqualTo(1.23f));
+            Assert.That(jp.GetFloat("$.y"u8), Is.EqualTo(4.56f));
 
             jp.Remove("$.x"u8);
             jp.Remove("$.y"u8);
@@ -289,15 +289,15 @@ namespace System.ClientModel.Tests.ModelReaderWriterTests
             Assert.IsTrue(jp.IsRemoved("$.y"u8));
 
             var ex = Assert.Throws<KeyNotFoundException>(() => jp.GetFloat("$.x"u8));
-            Assert.AreEqual($"No value found at JSON path '$.x'.", ex!.Message);
+            Assert.That(ex!.Message, Is.EqualTo($"No value found at JSON path '$.x'."));
             ex = Assert.Throws<KeyNotFoundException>(() => jp.GetFloat("$.y"u8));
-            Assert.AreEqual($"No value found at JSON path '$.y'.", ex!.Message);
+            Assert.That(ex!.Message, Is.EqualTo($"No value found at JSON path '$.y'."));
             ex = Assert.Throws<KeyNotFoundException>(() => jp.GetNullableValue<float>("$.x"u8));
-            Assert.AreEqual($"No value found at JSON path '$.x'.", ex!.Message);
+            Assert.That(ex!.Message, Is.EqualTo($"No value found at JSON path '$.x'."));
             ex = Assert.Throws<KeyNotFoundException>(() => jp.GetNullableValue<float>("$.y"u8));
-            Assert.AreEqual($"No value found at JSON path '$.y'.", ex!.Message);
+            Assert.That(ex!.Message, Is.EqualTo($"No value found at JSON path '$.y'."));
 
-            Assert.AreEqual("{}", jp.ToString("J"));
+            Assert.That(jp.ToString("J"), Is.EqualTo("{}"));
         }
 
         [Test]
@@ -308,8 +308,8 @@ namespace System.ClientModel.Tests.ModelReaderWriterTests
             Assert.IsFalse(jp.IsRemoved("$.x"u8));
             Assert.IsFalse(jp.IsRemoved("$.y"u8));
 
-            Assert.AreEqual(1.23f, jp.GetFloat("$.x"u8));
-            Assert.AreEqual(4.56f, jp.GetFloat("$.y"u8));
+            Assert.That(jp.GetFloat("$.x"u8), Is.EqualTo(1.23f));
+            Assert.That(jp.GetFloat("$.y"u8), Is.EqualTo(4.56f));
 
             jp.Remove("$.x"u8);
             jp.Remove("$.y"u8);
@@ -320,15 +320,15 @@ namespace System.ClientModel.Tests.ModelReaderWriterTests
             Assert.IsTrue(jp.IsRemoved("$.y"u8));
 
             var ex = Assert.Throws<KeyNotFoundException>(() => jp.GetFloat("$.x"u8));
-            Assert.AreEqual($"No value found at JSON path '$.x'.", ex!.Message);
+            Assert.That(ex!.Message, Is.EqualTo($"No value found at JSON path '$.x'."));
             ex = Assert.Throws<KeyNotFoundException>(() => jp.GetFloat("$.y"u8));
-            Assert.AreEqual($"No value found at JSON path '$.y'.", ex!.Message);
+            Assert.That(ex!.Message, Is.EqualTo($"No value found at JSON path '$.y'."));
             ex = Assert.Throws<KeyNotFoundException>(() => jp.GetNullableValue<float>("$.x"u8));
-            Assert.AreEqual($"No value found at JSON path '$.x'.", ex!.Message);
+            Assert.That(ex!.Message, Is.EqualTo($"No value found at JSON path '$.x'."));
             ex = Assert.Throws<KeyNotFoundException>(() => jp.GetNullableValue<float>("$.y"u8));
-            Assert.AreEqual($"No value found at JSON path '$.y'.", ex!.Message);
+            Assert.That(ex!.Message, Is.EqualTo($"No value found at JSON path '$.y'."));
 
-            Assert.AreEqual("{}", jp.ToString("J"));
+            Assert.That(jp.ToString("J"), Is.EqualTo("{}"));
         }
 
         [Test]
@@ -341,8 +341,8 @@ namespace System.ClientModel.Tests.ModelReaderWriterTests
             Assert.IsFalse(jp.IsRemoved("$.x"u8));
             Assert.IsFalse(jp.IsRemoved("$.y"u8));
 
-            Assert.AreEqual(1, jp.GetInt32("$.x"u8));
-            Assert.AreEqual(2, jp.GetInt32("$.y"u8));
+            Assert.That(jp.GetInt32("$.x"u8), Is.EqualTo(1));
+            Assert.That(jp.GetInt32("$.y"u8), Is.EqualTo(2));
 
             jp.Remove("$.x"u8);
             jp.Remove("$.y"u8);
@@ -353,15 +353,15 @@ namespace System.ClientModel.Tests.ModelReaderWriterTests
             Assert.IsTrue(jp.IsRemoved("$.y"u8));
 
             var ex = Assert.Throws<KeyNotFoundException>(() => jp.GetInt32("$.x"u8));
-            Assert.AreEqual($"No value found at JSON path '$.x'.", ex!.Message);
+            Assert.That(ex!.Message, Is.EqualTo($"No value found at JSON path '$.x'."));
             ex = Assert.Throws<KeyNotFoundException>(() => jp.GetInt32("$.y"u8));
-            Assert.AreEqual($"No value found at JSON path '$.y'.", ex!.Message);
+            Assert.That(ex!.Message, Is.EqualTo($"No value found at JSON path '$.y'."));
             ex = Assert.Throws<KeyNotFoundException>(() => jp.GetNullableValue<int>("$.x"u8));
-            Assert.AreEqual($"No value found at JSON path '$.x'.", ex!.Message);
+            Assert.That(ex!.Message, Is.EqualTo($"No value found at JSON path '$.x'."));
             ex = Assert.Throws<KeyNotFoundException>(() => jp.GetNullableValue<int>("$.y"u8));
-            Assert.AreEqual($"No value found at JSON path '$.y'.", ex!.Message);
+            Assert.That(ex!.Message, Is.EqualTo($"No value found at JSON path '$.y'."));
 
-            Assert.AreEqual("{}", jp.ToString("J"));
+            Assert.That(jp.ToString("J"), Is.EqualTo("{}"));
         }
 
         [Test]
@@ -372,8 +372,8 @@ namespace System.ClientModel.Tests.ModelReaderWriterTests
             Assert.IsFalse(jp.IsRemoved("$.x"u8));
             Assert.IsFalse(jp.IsRemoved("$.y"u8));
 
-            Assert.AreEqual(1, jp.GetInt32("$.x"u8));
-            Assert.AreEqual(2, jp.GetInt32("$.y"u8));
+            Assert.That(jp.GetInt32("$.x"u8), Is.EqualTo(1));
+            Assert.That(jp.GetInt32("$.y"u8), Is.EqualTo(2));
 
             jp.Remove("$.x"u8);
             jp.Remove("$.y"u8);
@@ -384,15 +384,15 @@ namespace System.ClientModel.Tests.ModelReaderWriterTests
             Assert.IsTrue(jp.IsRemoved("$.y"u8));
 
             var ex = Assert.Throws<KeyNotFoundException>(() => jp.GetInt32("$.x"u8));
-            Assert.AreEqual($"No value found at JSON path '$.x'.", ex!.Message);
+            Assert.That(ex!.Message, Is.EqualTo($"No value found at JSON path '$.x'."));
             ex = Assert.Throws<KeyNotFoundException>(() => jp.GetInt32("$.y"u8));
-            Assert.AreEqual($"No value found at JSON path '$.y'.", ex!.Message);
+            Assert.That(ex!.Message, Is.EqualTo($"No value found at JSON path '$.y'."));
             ex = Assert.Throws<KeyNotFoundException>(() => jp.GetNullableValue<int>("$.x"u8));
-            Assert.AreEqual($"No value found at JSON path '$.x'.", ex!.Message);
+            Assert.That(ex!.Message, Is.EqualTo($"No value found at JSON path '$.x'."));
             ex = Assert.Throws<KeyNotFoundException>(() => jp.GetNullableValue<int>("$.y"u8));
-            Assert.AreEqual($"No value found at JSON path '$.y'.", ex!.Message);
+            Assert.That(ex!.Message, Is.EqualTo($"No value found at JSON path '$.y'."));
 
-            Assert.AreEqual("{}", jp.ToString("J"));
+            Assert.That(jp.ToString("J"), Is.EqualTo("{}"));
         }
 
         [Test]
@@ -405,8 +405,8 @@ namespace System.ClientModel.Tests.ModelReaderWriterTests
             Assert.IsFalse(jp.IsRemoved("$.x"u8));
             Assert.IsFalse(jp.IsRemoved("$.y"u8));
 
-            Assert.AreEqual(1234567890123L, jp.GetInt64("$.x"u8));
-            Assert.AreEqual(9876543210123L, jp.GetInt64("$.y"u8));
+            Assert.That(jp.GetInt64("$.x"u8), Is.EqualTo(1234567890123L));
+            Assert.That(jp.GetInt64("$.y"u8), Is.EqualTo(9876543210123L));
 
             jp.Remove("$.x"u8);
             jp.Remove("$.y"u8);
@@ -417,15 +417,15 @@ namespace System.ClientModel.Tests.ModelReaderWriterTests
             Assert.IsTrue(jp.IsRemoved("$.y"u8));
 
             var ex = Assert.Throws<KeyNotFoundException>(() => jp.GetInt64("$.x"u8));
-            Assert.AreEqual($"No value found at JSON path '$.x'.", ex!.Message);
+            Assert.That(ex!.Message, Is.EqualTo($"No value found at JSON path '$.x'."));
             ex = Assert.Throws<KeyNotFoundException>(() => jp.GetInt64("$.y"u8));
-            Assert.AreEqual($"No value found at JSON path '$.y'.", ex!.Message);
+            Assert.That(ex!.Message, Is.EqualTo($"No value found at JSON path '$.y'."));
             ex = Assert.Throws<KeyNotFoundException>(() => jp.GetNullableValue<long>("$.x"u8));
-            Assert.AreEqual($"No value found at JSON path '$.x'.", ex!.Message);
+            Assert.That(ex!.Message, Is.EqualTo($"No value found at JSON path '$.x'."));
             ex = Assert.Throws<KeyNotFoundException>(() => jp.GetNullableValue<long>("$.y"u8));
-            Assert.AreEqual($"No value found at JSON path '$.y'.", ex!.Message);
+            Assert.That(ex!.Message, Is.EqualTo($"No value found at JSON path '$.y'."));
 
-            Assert.AreEqual("{}", jp.ToString("J"));
+            Assert.That(jp.ToString("J"), Is.EqualTo("{}"));
         }
 
         [Test]
@@ -436,8 +436,8 @@ namespace System.ClientModel.Tests.ModelReaderWriterTests
             Assert.IsFalse(jp.IsRemoved("$.x"u8));
             Assert.IsFalse(jp.IsRemoved("$.y"u8));
 
-            Assert.AreEqual(1234567890123L, jp.GetInt64("$.x"u8));
-            Assert.AreEqual(9876543210123L, jp.GetInt64("$.y"u8));
+            Assert.That(jp.GetInt64("$.x"u8), Is.EqualTo(1234567890123L));
+            Assert.That(jp.GetInt64("$.y"u8), Is.EqualTo(9876543210123L));
 
             jp.Remove("$.x"u8);
             jp.Remove("$.y"u8);
@@ -448,15 +448,15 @@ namespace System.ClientModel.Tests.ModelReaderWriterTests
             Assert.IsTrue(jp.IsRemoved("$.y"u8));
 
             var ex = Assert.Throws<KeyNotFoundException>(() => jp.GetInt64("$.x"u8));
-            Assert.AreEqual($"No value found at JSON path '$.x'.", ex!.Message);
+            Assert.That(ex!.Message, Is.EqualTo($"No value found at JSON path '$.x'."));
             ex = Assert.Throws<KeyNotFoundException>(() => jp.GetInt64("$.y"u8));
-            Assert.AreEqual($"No value found at JSON path '$.y'.", ex!.Message);
+            Assert.That(ex!.Message, Is.EqualTo($"No value found at JSON path '$.y'."));
             ex = Assert.Throws<KeyNotFoundException>(() => jp.GetNullableValue<long>("$.x"u8));
-            Assert.AreEqual($"No value found at JSON path '$.x'.", ex!.Message);
+            Assert.That(ex!.Message, Is.EqualTo($"No value found at JSON path '$.x'."));
             ex = Assert.Throws<KeyNotFoundException>(() => jp.GetNullableValue<long>("$.y"u8));
-            Assert.AreEqual($"No value found at JSON path '$.y'.", ex!.Message);
+            Assert.That(ex!.Message, Is.EqualTo($"No value found at JSON path '$.y'."));
 
-            Assert.AreEqual("{}", jp.ToString("J"));
+            Assert.That(jp.ToString("J"), Is.EqualTo("{}"));
         }
 
         [Test]
@@ -469,8 +469,8 @@ namespace System.ClientModel.Tests.ModelReaderWriterTests
             Assert.IsFalse(jp.IsRemoved("$.x"u8));
             Assert.IsFalse(jp.IsRemoved("$.y"u8));
 
-            Assert.AreEqual((sbyte)7, jp.GetInt8("$.x"u8));
-            Assert.AreEqual((sbyte)-3, jp.GetInt8("$.y"u8));
+            Assert.That(jp.GetInt8("$.x"u8), Is.EqualTo((sbyte)7));
+            Assert.That(jp.GetInt8("$.y"u8), Is.EqualTo((sbyte)-3));
 
             jp.Remove("$.x"u8);
             jp.Remove("$.y"u8);
@@ -481,15 +481,15 @@ namespace System.ClientModel.Tests.ModelReaderWriterTests
             Assert.IsTrue(jp.IsRemoved("$.y"u8));
 
             var ex = Assert.Throws<KeyNotFoundException>(() => jp.GetInt8("$.x"u8));
-            Assert.AreEqual($"No value found at JSON path '$.x'.", ex!.Message);
+            Assert.That(ex!.Message, Is.EqualTo($"No value found at JSON path '$.x'."));
             ex = Assert.Throws<KeyNotFoundException>(() => jp.GetInt8("$.y"u8));
-            Assert.AreEqual($"No value found at JSON path '$.y'.", ex!.Message);
+            Assert.That(ex!.Message, Is.EqualTo($"No value found at JSON path '$.y'."));
             ex = Assert.Throws<KeyNotFoundException>(() => jp.GetNullableValue<sbyte>("$.x"u8));
-            Assert.AreEqual($"No value found at JSON path '$.x'.", ex!.Message);
+            Assert.That(ex!.Message, Is.EqualTo($"No value found at JSON path '$.x'."));
             ex = Assert.Throws<KeyNotFoundException>(() => jp.GetNullableValue<sbyte>("$.y"u8));
-            Assert.AreEqual($"No value found at JSON path '$.y'.", ex!.Message);
+            Assert.That(ex!.Message, Is.EqualTo($"No value found at JSON path '$.y'."));
 
-            Assert.AreEqual("{}", jp.ToString("J"));
+            Assert.That(jp.ToString("J"), Is.EqualTo("{}"));
         }
 
         [Test]
@@ -500,8 +500,8 @@ namespace System.ClientModel.Tests.ModelReaderWriterTests
             Assert.IsFalse(jp.IsRemoved("$.x"u8));
             Assert.IsFalse(jp.IsRemoved("$.y"u8));
 
-            Assert.AreEqual((sbyte)7, jp.GetInt8("$.x"u8));
-            Assert.AreEqual((sbyte)-3, jp.GetInt8("$.y"u8));
+            Assert.That(jp.GetInt8("$.x"u8), Is.EqualTo((sbyte)7));
+            Assert.That(jp.GetInt8("$.y"u8), Is.EqualTo((sbyte)-3));
 
             jp.Remove("$.x"u8);
             jp.Remove("$.y"u8);
@@ -512,15 +512,15 @@ namespace System.ClientModel.Tests.ModelReaderWriterTests
             Assert.IsTrue(jp.IsRemoved("$.y"u8));
 
             var ex = Assert.Throws<KeyNotFoundException>(() => jp.GetInt8("$.x"u8));
-            Assert.AreEqual($"No value found at JSON path '$.x'.", ex!.Message);
+            Assert.That(ex!.Message, Is.EqualTo($"No value found at JSON path '$.x'."));
             ex = Assert.Throws<KeyNotFoundException>(() => jp.GetInt8("$.y"u8));
-            Assert.AreEqual($"No value found at JSON path '$.y'.", ex!.Message);
+            Assert.That(ex!.Message, Is.EqualTo($"No value found at JSON path '$.y'."));
             ex = Assert.Throws<KeyNotFoundException>(() => jp.GetNullableValue<sbyte>("$.x"u8));
-            Assert.AreEqual($"No value found at JSON path '$.x'.", ex!.Message);
+            Assert.That(ex!.Message, Is.EqualTo($"No value found at JSON path '$.x'."));
             ex = Assert.Throws<KeyNotFoundException>(() => jp.GetNullableValue<sbyte>("$.y"u8));
-            Assert.AreEqual($"No value found at JSON path '$.y'.", ex!.Message);
+            Assert.That(ex!.Message, Is.EqualTo($"No value found at JSON path '$.y'."));
 
-            Assert.AreEqual("{}", jp.ToString("J"));
+            Assert.That(jp.ToString("J"), Is.EqualTo("{}"));
         }
 
         [Test]
@@ -533,8 +533,8 @@ namespace System.ClientModel.Tests.ModelReaderWriterTests
             Assert.IsFalse(jp.IsRemoved("$.x"u8));
             Assert.IsFalse(jp.IsRemoved("$.y"u8));
 
-            Assert.AreEqual((short)32000, jp.GetInt16("$.x"u8));
-            Assert.AreEqual((short)-123, jp.GetInt16("$.y"u8));
+            Assert.That(jp.GetInt16("$.x"u8), Is.EqualTo((short)32000));
+            Assert.That(jp.GetInt16("$.y"u8), Is.EqualTo((short)-123));
 
             jp.Remove("$.x"u8);
             jp.Remove("$.y"u8);
@@ -545,15 +545,15 @@ namespace System.ClientModel.Tests.ModelReaderWriterTests
             Assert.IsTrue(jp.IsRemoved("$.y"u8));
 
             var ex = Assert.Throws<KeyNotFoundException>(() => jp.GetInt16("$.x"u8));
-            Assert.AreEqual($"No value found at JSON path '$.x'.", ex!.Message);
+            Assert.That(ex!.Message, Is.EqualTo($"No value found at JSON path '$.x'."));
             ex = Assert.Throws<KeyNotFoundException>(() => jp.GetInt16("$.y"u8));
-            Assert.AreEqual($"No value found at JSON path '$.y'.", ex!.Message);
+            Assert.That(ex!.Message, Is.EqualTo($"No value found at JSON path '$.y'."));
             ex = Assert.Throws<KeyNotFoundException>(() => jp.GetNullableValue<short>("$.x"u8));
-            Assert.AreEqual($"No value found at JSON path '$.x'.", ex!.Message);
+            Assert.That(ex!.Message, Is.EqualTo($"No value found at JSON path '$.x'."));
             ex = Assert.Throws<KeyNotFoundException>(() => jp.GetNullableValue<short>("$.y"u8));
-            Assert.AreEqual($"No value found at JSON path '$.y'.", ex!.Message);
+            Assert.That(ex!.Message, Is.EqualTo($"No value found at JSON path '$.y'."));
 
-            Assert.AreEqual("{}", jp.ToString("J"));
+            Assert.That(jp.ToString("J"), Is.EqualTo("{}"));
         }
 
         [Test]
@@ -564,8 +564,8 @@ namespace System.ClientModel.Tests.ModelReaderWriterTests
             Assert.IsFalse(jp.IsRemoved("$.x"u8));
             Assert.IsFalse(jp.IsRemoved("$.y"u8));
 
-            Assert.AreEqual((short)32000, jp.GetInt16("$.x"u8));
-            Assert.AreEqual((short)-123, jp.GetInt16("$.y"u8));
+            Assert.That(jp.GetInt16("$.x"u8), Is.EqualTo((short)32000));
+            Assert.That(jp.GetInt16("$.y"u8), Is.EqualTo((short)-123));
 
             jp.Remove("$.x"u8);
             jp.Remove("$.y"u8);
@@ -576,15 +576,15 @@ namespace System.ClientModel.Tests.ModelReaderWriterTests
             Assert.IsTrue(jp.IsRemoved("$.y"u8));
 
             var ex = Assert.Throws<KeyNotFoundException>(() => jp.GetInt16("$.x"u8));
-            Assert.AreEqual($"No value found at JSON path '$.x'.", ex!.Message);
+            Assert.That(ex!.Message, Is.EqualTo($"No value found at JSON path '$.x'."));
             ex = Assert.Throws<KeyNotFoundException>(() => jp.GetInt16("$.y"u8));
-            Assert.AreEqual($"No value found at JSON path '$.y'.", ex!.Message);
+            Assert.That(ex!.Message, Is.EqualTo($"No value found at JSON path '$.y'."));
             ex = Assert.Throws<KeyNotFoundException>(() => jp.GetNullableValue<short>("$.x"u8));
-            Assert.AreEqual($"No value found at JSON path '$.x'.", ex!.Message);
+            Assert.That(ex!.Message, Is.EqualTo($"No value found at JSON path '$.x'."));
             ex = Assert.Throws<KeyNotFoundException>(() => jp.GetNullableValue<short>("$.y"u8));
-            Assert.AreEqual($"No value found at JSON path '$.y'.", ex!.Message);
+            Assert.That(ex!.Message, Is.EqualTo($"No value found at JSON path '$.y'."));
 
-            Assert.AreEqual("{}", jp.ToString("J"));
+            Assert.That(jp.ToString("J"), Is.EqualTo("{}"));
         }
 
         [Test]
@@ -597,8 +597,8 @@ namespace System.ClientModel.Tests.ModelReaderWriterTests
             Assert.IsFalse(jp.IsRemoved("$.x"u8));
             Assert.IsFalse(jp.IsRemoved("$.y"u8));
 
-            Assert.AreEqual(10u, jp.GetUInt32("$.x"u8));
-            Assert.AreEqual(20u, jp.GetUInt32("$.y"u8));
+            Assert.That(jp.GetUInt32("$.x"u8), Is.EqualTo(10u));
+            Assert.That(jp.GetUInt32("$.y"u8), Is.EqualTo(20u));
 
             jp.Remove("$.x"u8);
             jp.Remove("$.y"u8);
@@ -609,15 +609,15 @@ namespace System.ClientModel.Tests.ModelReaderWriterTests
             Assert.IsTrue(jp.IsRemoved("$.y"u8));
 
             var ex = Assert.Throws<KeyNotFoundException>(() => jp.GetUInt32("$.x"u8));
-            Assert.AreEqual($"No value found at JSON path '$.x'.", ex!.Message);
+            Assert.That(ex!.Message, Is.EqualTo($"No value found at JSON path '$.x'."));
             ex = Assert.Throws<KeyNotFoundException>(() => jp.GetUInt32("$.y"u8));
-            Assert.AreEqual($"No value found at JSON path '$.y'.", ex!.Message);
+            Assert.That(ex!.Message, Is.EqualTo($"No value found at JSON path '$.y'."));
             ex = Assert.Throws<KeyNotFoundException>(() => jp.GetNullableValue<uint>("$.x"u8));
-            Assert.AreEqual($"No value found at JSON path '$.x'.", ex!.Message);
+            Assert.That(ex!.Message, Is.EqualTo($"No value found at JSON path '$.x'."));
             ex = Assert.Throws<KeyNotFoundException>(() => jp.GetNullableValue<uint>("$.y"u8));
-            Assert.AreEqual($"No value found at JSON path '$.y'.", ex!.Message);
+            Assert.That(ex!.Message, Is.EqualTo($"No value found at JSON path '$.y'."));
 
-            Assert.AreEqual("{}", jp.ToString("J"));
+            Assert.That(jp.ToString("J"), Is.EqualTo("{}"));
         }
 
         [Test]
@@ -628,8 +628,8 @@ namespace System.ClientModel.Tests.ModelReaderWriterTests
             Assert.IsFalse(jp.IsRemoved("$.x"u8));
             Assert.IsFalse(jp.IsRemoved("$.y"u8));
 
-            Assert.AreEqual(10u, jp.GetUInt32("$.x"u8));
-            Assert.AreEqual(20u, jp.GetUInt32("$.y"u8));
+            Assert.That(jp.GetUInt32("$.x"u8), Is.EqualTo(10u));
+            Assert.That(jp.GetUInt32("$.y"u8), Is.EqualTo(20u));
 
             jp.Remove("$.x"u8);
             jp.Remove("$.y"u8);
@@ -640,15 +640,15 @@ namespace System.ClientModel.Tests.ModelReaderWriterTests
             Assert.IsTrue(jp.IsRemoved("$.y"u8));
 
             var ex = Assert.Throws<KeyNotFoundException>(() => jp.GetUInt32("$.x"u8));
-            Assert.AreEqual($"No value found at JSON path '$.x'.", ex!.Message);
+            Assert.That(ex!.Message, Is.EqualTo($"No value found at JSON path '$.x'."));
             ex = Assert.Throws<KeyNotFoundException>(() => jp.GetUInt32("$.y"u8));
-            Assert.AreEqual($"No value found at JSON path '$.y'.", ex!.Message);
+            Assert.That(ex!.Message, Is.EqualTo($"No value found at JSON path '$.y'."));
             ex = Assert.Throws<KeyNotFoundException>(() => jp.GetNullableValue<uint>("$.x"u8));
-            Assert.AreEqual($"No value found at JSON path '$.x'.", ex!.Message);
+            Assert.That(ex!.Message, Is.EqualTo($"No value found at JSON path '$.x'."));
             ex = Assert.Throws<KeyNotFoundException>(() => jp.GetNullableValue<uint>("$.y"u8));
-            Assert.AreEqual($"No value found at JSON path '$.y'.", ex!.Message);
+            Assert.That(ex!.Message, Is.EqualTo($"No value found at JSON path '$.y'."));
 
-            Assert.AreEqual("{}", jp.ToString("J"));
+            Assert.That(jp.ToString("J"), Is.EqualTo("{}"));
         }
 
         [Test]
@@ -661,8 +661,8 @@ namespace System.ClientModel.Tests.ModelReaderWriterTests
             Assert.IsFalse(jp.IsRemoved("$.x"u8));
             Assert.IsFalse(jp.IsRemoved("$.y"u8));
 
-            Assert.AreEqual(10000000000UL, jp.GetUInt64("$.x"u8));
-            Assert.AreEqual(20000000000UL, jp.GetUInt64("$.y"u8));
+            Assert.That(jp.GetUInt64("$.x"u8), Is.EqualTo(10000000000UL));
+            Assert.That(jp.GetUInt64("$.y"u8), Is.EqualTo(20000000000UL));
 
             jp.Remove("$.x"u8);
             jp.Remove("$.y"u8);
@@ -673,15 +673,15 @@ namespace System.ClientModel.Tests.ModelReaderWriterTests
             Assert.IsTrue(jp.IsRemoved("$.y"u8));
 
             var ex = Assert.Throws<KeyNotFoundException>(() => jp.GetUInt64("$.x"u8));
-            Assert.AreEqual($"No value found at JSON path '$.x'.", ex!.Message);
+            Assert.That(ex!.Message, Is.EqualTo($"No value found at JSON path '$.x'."));
             ex = Assert.Throws<KeyNotFoundException>(() => jp.GetUInt64("$.y"u8));
-            Assert.AreEqual($"No value found at JSON path '$.y'.", ex!.Message);
+            Assert.That(ex!.Message, Is.EqualTo($"No value found at JSON path '$.y'."));
             ex = Assert.Throws<KeyNotFoundException>(() => jp.GetNullableValue<ulong>("$.x"u8));
-            Assert.AreEqual($"No value found at JSON path '$.x'.", ex!.Message);
+            Assert.That(ex!.Message, Is.EqualTo($"No value found at JSON path '$.x'."));
             ex = Assert.Throws<KeyNotFoundException>(() => jp.GetNullableValue<ulong>("$.y"u8));
-            Assert.AreEqual($"No value found at JSON path '$.y'.", ex!.Message);
+            Assert.That(ex!.Message, Is.EqualTo($"No value found at JSON path '$.y'."));
 
-            Assert.AreEqual("{}", jp.ToString("J"));
+            Assert.That(jp.ToString("J"), Is.EqualTo("{}"));
         }
 
         [Test]
@@ -692,8 +692,8 @@ namespace System.ClientModel.Tests.ModelReaderWriterTests
             Assert.IsFalse(jp.IsRemoved("$.x"u8));
             Assert.IsFalse(jp.IsRemoved("$.y"u8));
 
-            Assert.AreEqual(10000000000UL, jp.GetUInt64("$.x"u8));
-            Assert.AreEqual(20000000000UL, jp.GetUInt64("$.y"u8));
+            Assert.That(jp.GetUInt64("$.x"u8), Is.EqualTo(10000000000UL));
+            Assert.That(jp.GetUInt64("$.y"u8), Is.EqualTo(20000000000UL));
 
             jp.Remove("$.x"u8);
             jp.Remove("$.y"u8);
@@ -704,15 +704,15 @@ namespace System.ClientModel.Tests.ModelReaderWriterTests
             Assert.IsTrue(jp.IsRemoved("$.y"u8));
 
             var ex = Assert.Throws<KeyNotFoundException>(() => jp.GetUInt64("$.x"u8));
-            Assert.AreEqual($"No value found at JSON path '$.x'.", ex!.Message);
+            Assert.That(ex!.Message, Is.EqualTo($"No value found at JSON path '$.x'."));
             ex = Assert.Throws<KeyNotFoundException>(() => jp.GetUInt64("$.y"u8));
-            Assert.AreEqual($"No value found at JSON path '$.y'.", ex!.Message);
+            Assert.That(ex!.Message, Is.EqualTo($"No value found at JSON path '$.y'."));
             ex = Assert.Throws<KeyNotFoundException>(() => jp.GetNullableValue<ulong>("$.x"u8));
-            Assert.AreEqual($"No value found at JSON path '$.x'.", ex!.Message);
+            Assert.That(ex!.Message, Is.EqualTo($"No value found at JSON path '$.x'."));
             ex = Assert.Throws<KeyNotFoundException>(() => jp.GetNullableValue<ulong>("$.y"u8));
-            Assert.AreEqual($"No value found at JSON path '$.y'.", ex!.Message);
+            Assert.That(ex!.Message, Is.EqualTo($"No value found at JSON path '$.y'."));
 
-            Assert.AreEqual("{}", jp.ToString("J"));
+            Assert.That(jp.ToString("J"), Is.EqualTo("{}"));
         }
 
         [Test]
@@ -725,8 +725,8 @@ namespace System.ClientModel.Tests.ModelReaderWriterTests
             Assert.IsFalse(jp.IsRemoved("$.x"u8));
             Assert.IsFalse(jp.IsRemoved("$.y"u8));
 
-            Assert.AreEqual((ushort)60000, jp.GetUInt16("$.x"u8));
-            Assert.AreEqual((ushort)1234, jp.GetUInt16("$.y"u8));
+            Assert.That(jp.GetUInt16("$.x"u8), Is.EqualTo((ushort)60000));
+            Assert.That(jp.GetUInt16("$.y"u8), Is.EqualTo((ushort)1234));
 
             jp.Remove("$.x"u8);
             jp.Remove("$.y"u8);
@@ -737,15 +737,15 @@ namespace System.ClientModel.Tests.ModelReaderWriterTests
             Assert.IsTrue(jp.IsRemoved("$.y"u8));
 
             var ex = Assert.Throws<KeyNotFoundException>(() => jp.GetUInt16("$.x"u8));
-            Assert.AreEqual($"No value found at JSON path '$.x'.", ex!.Message);
+            Assert.That(ex!.Message, Is.EqualTo($"No value found at JSON path '$.x'."));
             ex = Assert.Throws<KeyNotFoundException>(() => jp.GetUInt16("$.y"u8));
-            Assert.AreEqual($"No value found at JSON path '$.y'.", ex!.Message);
+            Assert.That(ex!.Message, Is.EqualTo($"No value found at JSON path '$.y'."));
             ex = Assert.Throws<KeyNotFoundException>(() => jp.GetNullableValue<ushort>("$.x"u8));
-            Assert.AreEqual($"No value found at JSON path '$.x'.", ex!.Message);
+            Assert.That(ex!.Message, Is.EqualTo($"No value found at JSON path '$.x'."));
             ex = Assert.Throws<KeyNotFoundException>(() => jp.GetNullableValue<ushort>("$.y"u8));
-            Assert.AreEqual($"No value found at JSON path '$.y'.", ex!.Message);
+            Assert.That(ex!.Message, Is.EqualTo($"No value found at JSON path '$.y'."));
 
-            Assert.AreEqual("{}", jp.ToString("J"));
+            Assert.That(jp.ToString("J"), Is.EqualTo("{}"));
         }
 
         [Test]
@@ -756,8 +756,8 @@ namespace System.ClientModel.Tests.ModelReaderWriterTests
             Assert.IsFalse(jp.IsRemoved("$.x"u8));
             Assert.IsFalse(jp.IsRemoved("$.y"u8));
 
-            Assert.AreEqual((ushort)60000, jp.GetUInt16("$.x"u8));
-            Assert.AreEqual((ushort)1234, jp.GetUInt16("$.y"u8));
+            Assert.That(jp.GetUInt16("$.x"u8), Is.EqualTo((ushort)60000));
+            Assert.That(jp.GetUInt16("$.y"u8), Is.EqualTo((ushort)1234));
 
             jp.Remove("$.x"u8);
             jp.Remove("$.y"u8);
@@ -768,15 +768,15 @@ namespace System.ClientModel.Tests.ModelReaderWriterTests
             Assert.IsTrue(jp.IsRemoved("$.y"u8));
 
             var ex = Assert.Throws<KeyNotFoundException>(() => jp.GetUInt16("$.x"u8));
-            Assert.AreEqual($"No value found at JSON path '$.x'.", ex!.Message);
+            Assert.That(ex!.Message, Is.EqualTo($"No value found at JSON path '$.x'."));
             ex = Assert.Throws<KeyNotFoundException>(() => jp.GetUInt16("$.y"u8));
-            Assert.AreEqual($"No value found at JSON path '$.y'.", ex!.Message);
+            Assert.That(ex!.Message, Is.EqualTo($"No value found at JSON path '$.y'."));
             ex = Assert.Throws<KeyNotFoundException>(() => jp.GetNullableValue<ushort>("$.x"u8));
-            Assert.AreEqual($"No value found at JSON path '$.x'.", ex!.Message);
+            Assert.That(ex!.Message, Is.EqualTo($"No value found at JSON path '$.x'."));
             ex = Assert.Throws<KeyNotFoundException>(() => jp.GetNullableValue<ushort>("$.y"u8));
-            Assert.AreEqual($"No value found at JSON path '$.y'.", ex!.Message);
+            Assert.That(ex!.Message, Is.EqualTo($"No value found at JSON path '$.y'."));
 
-            Assert.AreEqual("{}", jp.ToString("J"));
+            Assert.That(jp.ToString("J"), Is.EqualTo("{}"));
         }
 
         [Test]
@@ -789,8 +789,8 @@ namespace System.ClientModel.Tests.ModelReaderWriterTests
             Assert.IsFalse(jp.IsRemoved("$.x"u8));
             Assert.IsFalse(jp.IsRemoved("$.y"u8));
 
-            Assert.AreEqual("foo", jp.GetString("$.x"u8));
-            Assert.AreEqual("bar", jp.GetString("$.y"u8));
+            Assert.That(jp.GetString("$.x"u8), Is.EqualTo("foo"));
+            Assert.That(jp.GetString("$.y"u8), Is.EqualTo("bar"));
 
             jp.Remove("$.x"u8);
             jp.Remove("$.y"u8);
@@ -801,11 +801,11 @@ namespace System.ClientModel.Tests.ModelReaderWriterTests
             Assert.IsTrue(jp.IsRemoved("$.y"u8));
 
             var ex = Assert.Throws<KeyNotFoundException>(() => jp.GetString("$.x"u8));
-            Assert.AreEqual($"No value found at JSON path '$.x'.", ex!.Message);
+            Assert.That(ex!.Message, Is.EqualTo($"No value found at JSON path '$.x'."));
             ex = Assert.Throws<KeyNotFoundException>(() => jp.GetString("$.y"u8));
-            Assert.AreEqual($"No value found at JSON path '$.y'.", ex!.Message);
+            Assert.That(ex!.Message, Is.EqualTo($"No value found at JSON path '$.y'."));
 
-            Assert.AreEqual("{}", jp.ToString("J"));
+            Assert.That(jp.ToString("J"), Is.EqualTo("{}"));
         }
 
         [Test]
@@ -816,8 +816,8 @@ namespace System.ClientModel.Tests.ModelReaderWriterTests
             Assert.IsFalse(jp.IsRemoved("$.x"u8));
             Assert.IsFalse(jp.IsRemoved("$.y"u8));
 
-            Assert.AreEqual("foo", jp.GetString("$.x"u8));
-            Assert.AreEqual("bar", jp.GetString("$.y"u8));
+            Assert.That(jp.GetString("$.x"u8), Is.EqualTo("foo"));
+            Assert.That(jp.GetString("$.y"u8), Is.EqualTo("bar"));
 
             jp.Remove("$.x"u8);
             jp.Remove("$.y"u8);
@@ -828,11 +828,11 @@ namespace System.ClientModel.Tests.ModelReaderWriterTests
             Assert.IsTrue(jp.IsRemoved("$.y"u8));
 
             var ex = Assert.Throws<KeyNotFoundException>(() => jp.GetString("$.x"u8));
-            Assert.AreEqual($"No value found at JSON path '$.x'.", ex!.Message);
+            Assert.That(ex!.Message, Is.EqualTo($"No value found at JSON path '$.x'."));
             ex = Assert.Throws<KeyNotFoundException>(() => jp.GetString("$.y"u8));
-            Assert.AreEqual($"No value found at JSON path '$.y'.", ex!.Message);
+            Assert.That(ex!.Message, Is.EqualTo($"No value found at JSON path '$.y'."));
 
-            Assert.AreEqual("{}", jp.ToString("J"));
+            Assert.That(jp.ToString("J"), Is.EqualTo("{}"));
         }
 
         [Test]
@@ -845,8 +845,8 @@ namespace System.ClientModel.Tests.ModelReaderWriterTests
             Assert.IsFalse(jp.IsRemoved("$.x"u8));
             Assert.IsFalse(jp.IsRemoved("$.y"u8));
 
-            Assert.AreEqual("{\"a\":1}", jp.GetJson("$.x"u8).ToString());
-            Assert.AreEqual("{\"b\":2}", jp.GetJson("$.y"u8).ToString());
+            Assert.That(jp.GetJson("$.x"u8).ToString(), Is.EqualTo("{\"a\":1}"));
+            Assert.That(jp.GetJson("$.y"u8).ToString(), Is.EqualTo("{\"b\":2}"));
 
             jp.Remove("$.x"u8);
             jp.Remove("$.y"u8);
@@ -857,11 +857,11 @@ namespace System.ClientModel.Tests.ModelReaderWriterTests
             Assert.IsTrue(jp.IsRemoved("$.y"u8));
 
             var ex = Assert.Throws<KeyNotFoundException>(() => jp.GetJson("$.x"u8));
-            Assert.AreEqual($"No value found at JSON path '$.x'.", ex!.Message);
+            Assert.That(ex!.Message, Is.EqualTo($"No value found at JSON path '$.x'."));
             ex = Assert.Throws<KeyNotFoundException>(() => jp.GetJson("$.y"u8));
-            Assert.AreEqual($"No value found at JSON path '$.y'.", ex!.Message);
+            Assert.That(ex!.Message, Is.EqualTo($"No value found at JSON path '$.y'."));
 
-            Assert.AreEqual("{}", jp.ToString("J"));
+            Assert.That(jp.ToString("J"), Is.EqualTo("{}"));
         }
 
         [Test]
@@ -872,8 +872,8 @@ namespace System.ClientModel.Tests.ModelReaderWriterTests
             Assert.IsFalse(jp.IsRemoved("$.x"u8));
             Assert.IsFalse(jp.IsRemoved("$.y"u8));
 
-            Assert.AreEqual("{\"a\":1}", jp.GetJson("$.x"u8).ToString());
-            Assert.AreEqual("{\"b\":2}", jp.GetJson("$.y"u8).ToString());
+            Assert.That(jp.GetJson("$.x"u8).ToString(), Is.EqualTo("{\"a\":1}"));
+            Assert.That(jp.GetJson("$.y"u8).ToString(), Is.EqualTo("{\"b\":2}"));
 
             jp.Remove("$.x"u8);
             jp.Remove("$.y"u8);
@@ -884,11 +884,11 @@ namespace System.ClientModel.Tests.ModelReaderWriterTests
             Assert.IsTrue(jp.IsRemoved("$.y"u8));
 
             var ex = Assert.Throws<KeyNotFoundException>(() => jp.GetJson("$.x"u8));
-            Assert.AreEqual($"No value found at JSON path '$.x'.", ex!.Message);
+            Assert.That(ex!.Message, Is.EqualTo($"No value found at JSON path '$.x'."));
             ex = Assert.Throws<KeyNotFoundException>(() => jp.GetJson("$.y"u8));
-            Assert.AreEqual($"No value found at JSON path '$.y'.", ex!.Message);
+            Assert.That(ex!.Message, Is.EqualTo($"No value found at JSON path '$.y'."));
 
-            Assert.AreEqual("{}", jp.ToString("J"));
+            Assert.That(jp.ToString("J"), Is.EqualTo("{}"));
         }
 
         [Test]
@@ -904,8 +904,8 @@ namespace System.ClientModel.Tests.ModelReaderWriterTests
             Assert.IsFalse(jp.IsRemoved("$.x"u8));
             Assert.IsFalse(jp.IsRemoved("$.y"u8));
 
-            Assert.AreEqual(dt1, jp.GetDateTime("$.x"u8));
-            Assert.AreEqual(dt2, jp.GetDateTime("$.y"u8));
+            Assert.That(jp.GetDateTime("$.x"u8), Is.EqualTo(dt1));
+            Assert.That(jp.GetDateTime("$.y"u8), Is.EqualTo(dt2));
 
             jp.Remove("$.x"u8);
             jp.Remove("$.y"u8);
@@ -916,15 +916,15 @@ namespace System.ClientModel.Tests.ModelReaderWriterTests
             Assert.IsTrue(jp.IsRemoved("$.y"u8));
 
             var ex = Assert.Throws<KeyNotFoundException>(() => jp.GetDateTime("$.x"u8));
-            Assert.AreEqual($"No value found at JSON path '$.x'.", ex!.Message);
+            Assert.That(ex!.Message, Is.EqualTo($"No value found at JSON path '$.x'."));
             ex = Assert.Throws<KeyNotFoundException>(() => jp.GetDateTime("$.y"u8));
-            Assert.AreEqual($"No value found at JSON path '$.y'.", ex!.Message);
+            Assert.That(ex!.Message, Is.EqualTo($"No value found at JSON path '$.y'."));
             ex = Assert.Throws<KeyNotFoundException>(() => jp.GetNullableValue<DateTime>("$.x"u8));
-            Assert.AreEqual($"No value found at JSON path '$.x'.", ex!.Message);
+            Assert.That(ex!.Message, Is.EqualTo($"No value found at JSON path '$.x'."));
             ex = Assert.Throws<KeyNotFoundException>(() => jp.GetNullableValue<DateTime>("$.y"u8));
-            Assert.AreEqual($"No value found at JSON path '$.y'.", ex!.Message);
+            Assert.That(ex!.Message, Is.EqualTo($"No value found at JSON path '$.y'."));
 
-            Assert.AreEqual("{}", jp.ToString("J"));
+            Assert.That(jp.ToString("J"), Is.EqualTo("{}"));
         }
 
         [Test]
@@ -938,8 +938,8 @@ namespace System.ClientModel.Tests.ModelReaderWriterTests
             Assert.IsFalse(jp.IsRemoved("$.x"u8));
             Assert.IsFalse(jp.IsRemoved("$.y"u8));
 
-            Assert.AreEqual(dt1, jp.GetDateTime("$.x"u8));
-            Assert.AreEqual(dt2, jp.GetDateTime("$.y"u8));
+            Assert.That(jp.GetDateTime("$.x"u8), Is.EqualTo(dt1));
+            Assert.That(jp.GetDateTime("$.y"u8), Is.EqualTo(dt2));
 
             jp.Remove("$.x"u8);
             jp.Remove("$.y"u8);
@@ -950,15 +950,15 @@ namespace System.ClientModel.Tests.ModelReaderWriterTests
             Assert.IsTrue(jp.IsRemoved("$.y"u8));
 
             var ex = Assert.Throws<KeyNotFoundException>(() => jp.GetDateTime("$.x"u8));
-            Assert.AreEqual($"No value found at JSON path '$.x'.", ex!.Message);
+            Assert.That(ex!.Message, Is.EqualTo($"No value found at JSON path '$.x'."));
             ex = Assert.Throws<KeyNotFoundException>(() => jp.GetDateTime("$.y"u8));
-            Assert.AreEqual($"No value found at JSON path '$.y'.", ex!.Message);
+            Assert.That(ex!.Message, Is.EqualTo($"No value found at JSON path '$.y'."));
             ex = Assert.Throws<KeyNotFoundException>(() => jp.GetNullableValue<DateTime>("$.x"u8));
-            Assert.AreEqual($"No value found at JSON path '$.x'.", ex!.Message);
+            Assert.That(ex!.Message, Is.EqualTo($"No value found at JSON path '$.x'."));
             ex = Assert.Throws<KeyNotFoundException>(() => jp.GetNullableValue<DateTime>("$.y"u8));
-            Assert.AreEqual($"No value found at JSON path '$.y'.", ex!.Message);
+            Assert.That(ex!.Message, Is.EqualTo($"No value found at JSON path '$.y'."));
 
-            Assert.AreEqual("{}", jp.ToString("J"));
+            Assert.That(jp.ToString("J"), Is.EqualTo("{}"));
         }
 
         [Test]
@@ -974,8 +974,8 @@ namespace System.ClientModel.Tests.ModelReaderWriterTests
             Assert.IsFalse(jp.IsRemoved("$.x"u8));
             Assert.IsFalse(jp.IsRemoved("$.y"u8));
 
-            Assert.AreEqual(dto1, jp.GetDateTimeOffset("$.x"u8));
-            Assert.AreEqual(dto2, jp.GetDateTimeOffset("$.y"u8));
+            Assert.That(jp.GetDateTimeOffset("$.x"u8), Is.EqualTo(dto1));
+            Assert.That(jp.GetDateTimeOffset("$.y"u8), Is.EqualTo(dto2));
 
             jp.Remove("$.x"u8);
             jp.Remove("$.y"u8);
@@ -986,15 +986,15 @@ namespace System.ClientModel.Tests.ModelReaderWriterTests
             Assert.IsTrue(jp.IsRemoved("$.y"u8));
 
             var ex = Assert.Throws<KeyNotFoundException>(() => jp.GetDateTimeOffset("$.x"u8));
-            Assert.AreEqual($"No value found at JSON path '$.x'.", ex!.Message);
+            Assert.That(ex!.Message, Is.EqualTo($"No value found at JSON path '$.x'."));
             ex = Assert.Throws<KeyNotFoundException>(() => jp.GetDateTimeOffset("$.y"u8));
-            Assert.AreEqual($"No value found at JSON path '$.y'.", ex!.Message);
+            Assert.That(ex!.Message, Is.EqualTo($"No value found at JSON path '$.y'."));
             ex = Assert.Throws<KeyNotFoundException>(() => jp.GetNullableValue<DateTimeOffset>("$.x"u8));
-            Assert.AreEqual($"No value found at JSON path '$.x'.", ex!.Message);
+            Assert.That(ex!.Message, Is.EqualTo($"No value found at JSON path '$.x'."));
             ex = Assert.Throws<KeyNotFoundException>(() => jp.GetNullableValue<DateTimeOffset>("$.y"u8));
-            Assert.AreEqual($"No value found at JSON path '$.y'.", ex!.Message);
+            Assert.That(ex!.Message, Is.EqualTo($"No value found at JSON path '$.y'."));
 
-            Assert.AreEqual("{}", jp.ToString("J"));
+            Assert.That(jp.ToString("J"), Is.EqualTo("{}"));
         }
 
         [Test]
@@ -1007,8 +1007,8 @@ namespace System.ClientModel.Tests.ModelReaderWriterTests
             Assert.IsFalse(jp.IsRemoved("$.x"u8));
             Assert.IsFalse(jp.IsRemoved("$.y"u8));
 
-            Assert.AreEqual(dto1, jp.GetDateTimeOffset("$.x"u8));
-            Assert.AreEqual(dto2, jp.GetDateTimeOffset("$.y"u8));
+            Assert.That(jp.GetDateTimeOffset("$.x"u8), Is.EqualTo(dto1));
+            Assert.That(jp.GetDateTimeOffset("$.y"u8), Is.EqualTo(dto2));
 
             jp.Remove("$.x"u8);
             jp.Remove("$.y"u8);
@@ -1019,15 +1019,15 @@ namespace System.ClientModel.Tests.ModelReaderWriterTests
             Assert.IsTrue(jp.IsRemoved("$.y"u8));
 
             var ex = Assert.Throws<KeyNotFoundException>(() => jp.GetDateTimeOffset("$.x"u8));
-            Assert.AreEqual($"No value found at JSON path '$.x'.", ex!.Message);
+            Assert.That(ex!.Message, Is.EqualTo($"No value found at JSON path '$.x'."));
             ex = Assert.Throws<KeyNotFoundException>(() => jp.GetDateTimeOffset("$.y"u8));
-            Assert.AreEqual($"No value found at JSON path '$.y'.", ex!.Message);
+            Assert.That(ex!.Message, Is.EqualTo($"No value found at JSON path '$.y'."));
             ex = Assert.Throws<KeyNotFoundException>(() => jp.GetNullableValue<DateTimeOffset>("$.x"u8));
-            Assert.AreEqual($"No value found at JSON path '$.x'.", ex!.Message);
+            Assert.That(ex!.Message, Is.EqualTo($"No value found at JSON path '$.x'."));
             ex = Assert.Throws<KeyNotFoundException>(() => jp.GetNullableValue<DateTimeOffset>("$.y"u8));
-            Assert.AreEqual($"No value found at JSON path '$.y'.", ex!.Message);
+            Assert.That(ex!.Message, Is.EqualTo($"No value found at JSON path '$.y'."));
 
-            Assert.AreEqual("{}", jp.ToString("J"));
+            Assert.That(jp.ToString("J"), Is.EqualTo("{}"));
         }
 
         [Test]
@@ -1043,8 +1043,8 @@ namespace System.ClientModel.Tests.ModelReaderWriterTests
             Assert.IsFalse(jp.IsRemoved("$.x"u8));
             Assert.IsFalse(jp.IsRemoved("$.y"u8));
 
-            Assert.AreEqual(g1, jp.GetGuid("$.x"u8));
-            Assert.AreEqual(g2, jp.GetGuid("$.y"u8));
+            Assert.That(jp.GetGuid("$.x"u8), Is.EqualTo(g1));
+            Assert.That(jp.GetGuid("$.y"u8), Is.EqualTo(g2));
 
             jp.Remove("$.x"u8);
             jp.Remove("$.y"u8);
@@ -1055,15 +1055,15 @@ namespace System.ClientModel.Tests.ModelReaderWriterTests
             Assert.IsTrue(jp.IsRemoved("$.y"u8));
 
             var ex = Assert.Throws<KeyNotFoundException>(() => jp.GetGuid("$.x"u8));
-            Assert.AreEqual($"No value found at JSON path '$.x'.", ex!.Message);
+            Assert.That(ex!.Message, Is.EqualTo($"No value found at JSON path '$.x'."));
             ex = Assert.Throws<KeyNotFoundException>(() => jp.GetGuid("$.y"u8));
-            Assert.AreEqual($"No value found at JSON path '$.y'.", ex!.Message);
+            Assert.That(ex!.Message, Is.EqualTo($"No value found at JSON path '$.y'."));
             ex = Assert.Throws<KeyNotFoundException>(() => jp.GetNullableValue<Guid>("$.x"u8));
-            Assert.AreEqual($"No value found at JSON path '$.x'.", ex!.Message);
+            Assert.That(ex!.Message, Is.EqualTo($"No value found at JSON path '$.x'."));
             ex = Assert.Throws<KeyNotFoundException>(() => jp.GetNullableValue<Guid>("$.y"u8));
-            Assert.AreEqual($"No value found at JSON path '$.y'.", ex!.Message);
+            Assert.That(ex!.Message, Is.EqualTo($"No value found at JSON path '$.y'."));
 
-            Assert.AreEqual("{}", jp.ToString("J"));
+            Assert.That(jp.ToString("J"), Is.EqualTo("{}"));
         }
 
         [Test]
@@ -1076,8 +1076,8 @@ namespace System.ClientModel.Tests.ModelReaderWriterTests
             Assert.IsFalse(jp.IsRemoved("$.x"u8));
             Assert.IsFalse(jp.IsRemoved("$.y"u8));
 
-            Assert.AreEqual(g1, jp.GetGuid("$.x"u8));
-            Assert.AreEqual(g2, jp.GetGuid("$.y"u8));
+            Assert.That(jp.GetGuid("$.x"u8), Is.EqualTo(g1));
+            Assert.That(jp.GetGuid("$.y"u8), Is.EqualTo(g2));
 
             jp.Remove("$.x"u8);
             jp.Remove("$.y"u8);
@@ -1088,15 +1088,15 @@ namespace System.ClientModel.Tests.ModelReaderWriterTests
             Assert.IsTrue(jp.IsRemoved("$.y"u8));
 
             var ex = Assert.Throws<KeyNotFoundException>(() => jp.GetGuid("$.x"u8));
-            Assert.AreEqual($"No value found at JSON path '$.x'.", ex!.Message);
+            Assert.That(ex!.Message, Is.EqualTo($"No value found at JSON path '$.x'."));
             ex = Assert.Throws<KeyNotFoundException>(() => jp.GetGuid("$.y"u8));
-            Assert.AreEqual($"No value found at JSON path '$.y'.", ex!.Message);
+            Assert.That(ex!.Message, Is.EqualTo($"No value found at JSON path '$.y'."));
             ex = Assert.Throws<KeyNotFoundException>(() => jp.GetNullableValue<Guid>("$.x"u8));
-            Assert.AreEqual($"No value found at JSON path '$.x'.", ex!.Message);
+            Assert.That(ex!.Message, Is.EqualTo($"No value found at JSON path '$.x'."));
             ex = Assert.Throws<KeyNotFoundException>(() => jp.GetNullableValue<Guid>("$.y"u8));
-            Assert.AreEqual($"No value found at JSON path '$.y'.", ex!.Message);
+            Assert.That(ex!.Message, Is.EqualTo($"No value found at JSON path '$.y'."));
 
-            Assert.AreEqual("{}", jp.ToString("J"));
+            Assert.That(jp.ToString("J"), Is.EqualTo("{}"));
         }
 
         [Test]
@@ -1112,8 +1112,8 @@ namespace System.ClientModel.Tests.ModelReaderWriterTests
             Assert.IsFalse(jp.IsRemoved("$.x"u8));
             Assert.IsFalse(jp.IsRemoved("$.y"u8));
 
-            Assert.AreEqual(t1, jp.GetTimeSpan("$.x"u8));
-            Assert.AreEqual(t2, jp.GetTimeSpan("$.y"u8));
+            Assert.That(jp.GetTimeSpan("$.x"u8), Is.EqualTo(t1));
+            Assert.That(jp.GetTimeSpan("$.y"u8), Is.EqualTo(t2));
 
             jp.Remove("$.x"u8);
             jp.Remove("$.y"u8);
@@ -1124,15 +1124,15 @@ namespace System.ClientModel.Tests.ModelReaderWriterTests
             Assert.IsTrue(jp.IsRemoved("$.y"u8));
 
             var ex = Assert.Throws<KeyNotFoundException>(() => jp.GetTimeSpan("$.x"u8));
-            Assert.AreEqual($"No value found at JSON path '$.x'.", ex!.Message);
+            Assert.That(ex!.Message, Is.EqualTo($"No value found at JSON path '$.x'."));
             ex = Assert.Throws<KeyNotFoundException>(() => jp.GetTimeSpan("$.y"u8));
-            Assert.AreEqual($"No value found at JSON path '$.y'.", ex!.Message);
+            Assert.That(ex!.Message, Is.EqualTo($"No value found at JSON path '$.y'."));
             ex = Assert.Throws<KeyNotFoundException>(() => jp.GetNullableValue<TimeSpan>("$.x"u8));
-            Assert.AreEqual($"No value found at JSON path '$.x'.", ex!.Message);
+            Assert.That(ex!.Message, Is.EqualTo($"No value found at JSON path '$.x'."));
             ex = Assert.Throws<KeyNotFoundException>(() => jp.GetNullableValue<TimeSpan>("$.y"u8));
-            Assert.AreEqual($"No value found at JSON path '$.y'.", ex!.Message);
+            Assert.That(ex!.Message, Is.EqualTo($"No value found at JSON path '$.y'."));
 
-            Assert.AreEqual("{}", jp.ToString("J"));
+            Assert.That(jp.ToString("J"), Is.EqualTo("{}"));
         }
 
         [Test]
@@ -1145,8 +1145,8 @@ namespace System.ClientModel.Tests.ModelReaderWriterTests
             Assert.IsFalse(jp.IsRemoved("$.x"u8));
             Assert.IsFalse(jp.IsRemoved("$.y"u8));
 
-            Assert.AreEqual(t1, jp.GetTimeSpan("$.x"u8));
-            Assert.AreEqual(t2, jp.GetTimeSpan("$.y"u8));
+            Assert.That(jp.GetTimeSpan("$.x"u8), Is.EqualTo(t1));
+            Assert.That(jp.GetTimeSpan("$.y"u8), Is.EqualTo(t2));
 
             jp.Remove("$.x"u8);
             jp.Remove("$.y"u8);
@@ -1157,15 +1157,15 @@ namespace System.ClientModel.Tests.ModelReaderWriterTests
             Assert.IsTrue(jp.IsRemoved("$.y"u8));
 
             var ex = Assert.Throws<KeyNotFoundException>(() => jp.GetTimeSpan("$.x"u8));
-            Assert.AreEqual($"No value found at JSON path '$.x'.", ex!.Message);
+            Assert.That(ex!.Message, Is.EqualTo($"No value found at JSON path '$.x'."));
             ex = Assert.Throws<KeyNotFoundException>(() => jp.GetTimeSpan("$.y"u8));
-            Assert.AreEqual($"No value found at JSON path '$.y'.", ex!.Message);
+            Assert.That(ex!.Message, Is.EqualTo($"No value found at JSON path '$.y'."));
             ex = Assert.Throws<KeyNotFoundException>(() => jp.GetNullableValue<TimeSpan>("$.x"u8));
-            Assert.AreEqual($"No value found at JSON path '$.x'.", ex!.Message);
+            Assert.That(ex!.Message, Is.EqualTo($"No value found at JSON path '$.x'."));
             ex = Assert.Throws<KeyNotFoundException>(() => jp.GetNullableValue<TimeSpan>("$.y"u8));
-            Assert.AreEqual($"No value found at JSON path '$.y'.", ex!.Message);
+            Assert.That(ex!.Message, Is.EqualTo($"No value found at JSON path '$.y'."));
 
-            Assert.AreEqual("{}", jp.ToString("J"));
+            Assert.That(jp.ToString("J"), Is.EqualTo("{}"));
         }
 
         [Test]
@@ -1179,7 +1179,7 @@ namespace System.ClientModel.Tests.ModelReaderWriterTests
 
             Assert.IsTrue(jp.IsRemoved("$[1]"u8));
 
-            Assert.AreEqual("[1, {\"three\":3}, [4]]", jp.ToString("J"));
+            Assert.That(jp.ToString("J"), Is.EqualTo("[1, {\"three\":3}, [4]]"));
         }
 
         [Test]
@@ -1191,7 +1191,7 @@ namespace System.ClientModel.Tests.ModelReaderWriterTests
 
             jp.Remove("$[1]"u8);
 
-            Assert.AreEqual("[1, {\"three\":3}, [4]]", jp.ToString("J"));
+            Assert.That(jp.ToString("J"), Is.EqualTo("[1, {\"three\":3}, [4]]"));
         }
 
         [Test]
@@ -1204,7 +1204,7 @@ namespace System.ClientModel.Tests.ModelReaderWriterTests
             jp.Remove("$[1]"u8);
             jp.Set("$[1]"u8, "new");
 
-            Assert.AreEqual("[1,\"new\",[4]]", jp.ToString("J"));
+            Assert.That(jp.ToString("J"), Is.EqualTo("[1,\"new\",[4]]"));
         }
 
         [Test]
@@ -1219,7 +1219,7 @@ namespace System.ClientModel.Tests.ModelReaderWriterTests
 
             jp.Remove("$[1]"u8);
 
-            Assert.AreEqual("[1,{\"three\":3},[4]]", jp.ToString("J"));
+            Assert.That(jp.ToString("J"), Is.EqualTo("[1,{\"three\":3},[4]]"));
         }
 
         [Test]
@@ -1233,7 +1233,7 @@ namespace System.ClientModel.Tests.ModelReaderWriterTests
             Assert.IsTrue(jp.IsRemoved("$[0][1]"u8));
             Assert.IsTrue(jp.IsRemoved("$[1][0]"u8));
 
-            Assert.AreEqual("[[1],[[4]]]", jp.ToString("J"));
+            Assert.That(jp.ToString("J"), Is.EqualTo("[[1],[[4]]]"));
         }
     }
 }

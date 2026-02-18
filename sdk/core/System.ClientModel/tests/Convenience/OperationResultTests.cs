@@ -39,9 +39,9 @@ public class OperationResultTests : SyncAsyncTestBase
             operation.WaitForCompletion();
         }
 
-        Assert.AreEqual(updateCount, completeAfterCount);
+        Assert.That(completeAfterCount, Is.EqualTo(updateCount));
         Assert.IsTrue(operation.HasCompleted);
-        Assert.AreNotEqual(operation.GetRawResponse(), initialResponse);
+        Assert.That(initialResponse, Is.Not.EqualTo(operation.GetRawResponse()));
     }
 
     [Test]
@@ -64,10 +64,10 @@ public class OperationResultTests : SyncAsyncTestBase
 
             // Custom interval: no wait.
 
-            Assert.AreNotEqual(operation.GetRawResponse(), priorResponse);
+            Assert.That(priorResponse, Is.Not.EqualTo(operation.GetRawResponse()));
         }
 
-        Assert.AreEqual(updateCount, completeAfterCount);
+        Assert.That(completeAfterCount, Is.EqualTo(updateCount));
         Assert.IsTrue(operation.HasCompleted);
     }
 
@@ -100,7 +100,7 @@ public class OperationResultTests : SyncAsyncTestBase
 
         Assert.IsTrue(source.IsCancellationRequested);
 
-        Assert.AreEqual(updateCount, 0);
+        Assert.That(updateCount, Is.EqualTo(0));
         Assert.IsFalse(operation.HasCompleted);
     }
 
@@ -136,7 +136,7 @@ public class OperationResultTests : SyncAsyncTestBase
 
         stopwatch.Stop();
 
-        Assert.AreEqual(updateCount, completeAfterCount);
+        Assert.That(completeAfterCount, Is.EqualTo(updateCount));
         Assert.IsTrue(operation.HasCompleted);
 
         Assert.Greater(stopwatch.Elapsed, TimeSpan.FromSeconds(completeAfterCount * defaultWaitSeconds));

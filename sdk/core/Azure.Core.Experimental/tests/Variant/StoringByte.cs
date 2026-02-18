@@ -12,13 +12,13 @@ namespace Azure.Core.Experimental.Tests
         public void ByteImplicit(byte testValue)
         {
             Variant value = testValue;
-            Assert.AreEqual(testValue, value.As<byte>());
-            Assert.AreEqual(typeof(byte), value.Type);
+            Assert.That(value.As<byte>(), Is.EqualTo(testValue));
+            Assert.That(value.Type, Is.EqualTo(typeof(byte)));
 
             byte? source = testValue;
             value = source;
-            Assert.AreEqual(source, value.As<byte?>());
-            Assert.AreEqual(typeof(byte), value.Type);
+            Assert.That(value.As<byte?>(), Is.EqualTo(source));
+            Assert.That(value.Type, Is.EqualTo(typeof(byte)));
         }
 
         [TestCase(42)]
@@ -32,8 +32,8 @@ namespace Azure.Core.Experimental.Tests
                 value = Variant.Create(testValue);
             }
 
-            Assert.AreEqual(testValue, value.As<byte>());
-            Assert.AreEqual(typeof(byte), value.Type);
+            Assert.That(value.As<byte>(), Is.EqualTo(testValue));
+            Assert.That(value.Type, Is.EqualTo(typeof(byte)));
 
             byte? source = testValue;
 
@@ -42,8 +42,8 @@ namespace Azure.Core.Experimental.Tests
                 value = Variant.Create(source);
             }
 
-            Assert.AreEqual(source, value.As<byte?>());
-            Assert.AreEqual(typeof(byte), value.Type);
+            Assert.That(value.As<byte?>(), Is.EqualTo(source));
+            Assert.That(value.Type, Is.EqualTo(typeof(byte)));
         }
 
         [TestCase(42)]
@@ -54,10 +54,10 @@ namespace Azure.Core.Experimental.Tests
             Variant value = new(testValue);
             bool success = value.TryGetValue(out byte result);
             Assert.True(success);
-            Assert.AreEqual(testValue, result);
+            Assert.That(result, Is.EqualTo(testValue));
 
-            Assert.AreEqual(testValue, value.As<byte>());
-            Assert.AreEqual(testValue, (byte)value);
+            Assert.That(value.As<byte>(), Is.EqualTo(testValue));
+            Assert.That((byte)value, Is.EqualTo(testValue));
         }
 
         [TestCase(42)]
@@ -70,11 +70,11 @@ namespace Azure.Core.Experimental.Tests
 
             bool success = value.TryGetValue(out byte result);
             Assert.True(success);
-            Assert.AreEqual(testValue, result);
+            Assert.That(result, Is.EqualTo(testValue));
 
-            Assert.AreEqual(testValue, value.As<byte>());
+            Assert.That(value.As<byte>(), Is.EqualTo(testValue));
 
-            Assert.AreEqual(testValue, (byte)value);
+            Assert.That((byte)value, Is.EqualTo(testValue));
         }
 
         [TestCase(42)]
@@ -86,9 +86,9 @@ namespace Azure.Core.Experimental.Tests
             Variant value = new(source);
             bool success = value.TryGetValue(out byte? result);
             Assert.True(success);
-            Assert.AreEqual(testValue, result);
+            Assert.That(result, Is.EqualTo(testValue));
 
-            Assert.AreEqual(testValue, (byte?)value);
+            Assert.That((byte?)value, Is.EqualTo(testValue));
         }
 
         [TestCase(42)]
@@ -100,21 +100,21 @@ namespace Azure.Core.Experimental.Tests
             object o = i;
             Variant value = new(o);
 
-            Assert.AreEqual(typeof(byte), value.Type);
+            Assert.That(value.Type, Is.EqualTo(typeof(byte)));
             Assert.True(value.TryGetValue(out byte result));
-            Assert.AreEqual(testValue, result);
+            Assert.That(result, Is.EqualTo(testValue));
             Assert.True(value.TryGetValue(out byte? nullableResult));
-            Assert.AreEqual(testValue, nullableResult!.Value);
+            Assert.That(nullableResult!.Value, Is.EqualTo(testValue));
 
             byte? n = testValue;
             o = n;
             value = new(o);
 
-            Assert.AreEqual(typeof(byte), value.Type);
+            Assert.That(value.Type, Is.EqualTo(typeof(byte)));
             Assert.True(value.TryGetValue(out result));
-            Assert.AreEqual(testValue, result);
+            Assert.That(result, Is.EqualTo(testValue));
             Assert.True(value.TryGetValue(out nullableResult));
-            Assert.AreEqual(testValue, nullableResult!.Value);
+            Assert.That(nullableResult!.Value, Is.EqualTo(testValue));
         }
 
         [Test]
@@ -123,8 +123,8 @@ namespace Azure.Core.Experimental.Tests
             byte? source = null;
             Variant value = source;
             Assert.Null(value.Type);
-            Assert.AreEqual(source, value.As<byte?>());
-            Assert.False(value.As<byte?>().HasValue);
+            Assert.That(value.As<byte?>(), Is.EqualTo(source));
+            Assert.That(value.As<byte?>().HasValue, Is.False);
         }
 
         [TestCase(42)]
@@ -134,14 +134,14 @@ namespace Azure.Core.Experimental.Tests
         {
             Variant value = new(testValue);
             object o = value.As<object>();
-            Assert.AreEqual(typeof(byte), o.GetType());
-            Assert.AreEqual(testValue, (byte)o);
+            Assert.That(o.GetType(), Is.EqualTo(typeof(byte)));
+            Assert.That((byte)o, Is.EqualTo(testValue));
 
             byte? n = testValue;
             value = new(n);
             o = value.As<object>();
-            Assert.AreEqual(typeof(byte), o.GetType());
-            Assert.AreEqual(testValue, (byte)o);
+            Assert.That(o.GetType(), Is.EqualTo(typeof(byte)));
+            Assert.That((byte)o, Is.EqualTo(testValue));
         }
     }
 }

@@ -18,13 +18,13 @@ namespace Azure.Core.Experimental.Tests
         public void DecimalImplicit()
         {
             Variant value = (decimal)42.0;
-            Assert.AreEqual((decimal)42.0, value.As<decimal>());
-            Assert.AreEqual(typeof(decimal), value.Type);
+            Assert.That(value.As<decimal>(), Is.EqualTo((decimal)42.0));
+            Assert.That(value.Type, Is.EqualTo(typeof(decimal)));
 
             decimal? source = (decimal?)42.0;
             value = source;
-            Assert.AreEqual(source, value.As<decimal?>());
-            Assert.AreEqual(typeof(decimal), value.Type);
+            Assert.That(value.As<decimal?>(), Is.EqualTo(source));
+            Assert.That(value.Type, Is.EqualTo(typeof(decimal)));
         }
 
         [Test]
@@ -33,10 +33,10 @@ namespace Azure.Core.Experimental.Tests
             Variant value = new(testValue);
             bool success = value.TryGetValue(out decimal result);
             Assert.True(success);
-            Assert.AreEqual(testValue, result);
+            Assert.That(result, Is.EqualTo(testValue));
 
-            Assert.AreEqual(testValue, value.As<decimal>());
-            Assert.AreEqual(testValue, (decimal)value);
+            Assert.That(value.As<decimal>(), Is.EqualTo(testValue));
+            Assert.That((decimal)value, Is.EqualTo(testValue));
         }
 
         [Test]
@@ -47,11 +47,11 @@ namespace Azure.Core.Experimental.Tests
 
             bool success = value.TryGetValue(out decimal result);
             Assert.True(success);
-            Assert.AreEqual(testValue, result);
+            Assert.That(result, Is.EqualTo(testValue));
 
-            Assert.AreEqual(testValue, value.As<decimal>());
+            Assert.That(value.As<decimal>(), Is.EqualTo(testValue));
 
-            Assert.AreEqual(testValue, (decimal)value);
+            Assert.That((decimal)value, Is.EqualTo(testValue));
         }
 
         [Test]
@@ -61,9 +61,9 @@ namespace Azure.Core.Experimental.Tests
             Variant value = new(source);
             bool success = value.TryGetValue(out decimal? result);
             Assert.True(success);
-            Assert.AreEqual(testValue, result);
+            Assert.That(result, Is.EqualTo(testValue));
 
-            Assert.AreEqual(testValue, (decimal?)value);
+            Assert.That((decimal?)value, Is.EqualTo(testValue));
         }
 
         [Test]
@@ -72,8 +72,8 @@ namespace Azure.Core.Experimental.Tests
             decimal? source = null;
             Variant value = source;
             Assert.Null(value.Type);
-            Assert.AreEqual(source, value.As<decimal?>());
-            Assert.False(value.As<decimal?>().HasValue);
+            Assert.That(value.As<decimal?>(), Is.EqualTo(source));
+            Assert.That(value.As<decimal?>().HasValue, Is.False);
         }
 
         [Test]
@@ -81,14 +81,14 @@ namespace Azure.Core.Experimental.Tests
         {
             Variant value = new(testValue);
             object o = value.As<object>();
-            Assert.AreEqual(typeof(decimal), o.GetType());
-            Assert.AreEqual(testValue, (decimal)o);
+            Assert.That(o.GetType(), Is.EqualTo(typeof(decimal)));
+            Assert.That((decimal)o, Is.EqualTo(testValue));
 
             decimal? n = testValue;
             value = new(n);
             o = value.As<object>();
-            Assert.AreEqual(typeof(decimal), o.GetType());
-            Assert.AreEqual(testValue, (decimal)o);
+            Assert.That(o.GetType(), Is.EqualTo(typeof(decimal)));
+            Assert.That((decimal)o, Is.EqualTo(testValue));
         }
     }
 }

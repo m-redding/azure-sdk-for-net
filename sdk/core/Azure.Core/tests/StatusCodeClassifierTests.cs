@@ -48,7 +48,7 @@ namespace Azure.Core.Tests
             HttpMessage message = new HttpMessage(new MockRequest(), classifier);
 
             message.Response = new MockResponse(code);
-            Assert.AreEqual(isError, message.ResponseClassifier.IsErrorResponse(message));
+            Assert.That(message.ResponseClassifier.IsErrorResponse(message), Is.EqualTo(isError));
         }
     }
 }

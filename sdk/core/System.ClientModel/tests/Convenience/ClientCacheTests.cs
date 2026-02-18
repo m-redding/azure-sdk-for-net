@@ -26,7 +26,7 @@ public class ClientCacheTests
         var clients = clientsField?.GetValue(clientCache) as Dictionary<object, ClientEntry>;
 
         Assert.IsNotNull(clients, "The _clients field is null.");
-        Assert.AreEqual(100, clients!.Count, "Cache did not cleanup correctly.");
+        Assert.That(clients!.Count, Is.EqualTo(100), "Cache did not cleanup correctly.");
     }
 
     [Test]
@@ -45,7 +45,7 @@ public class ClientCacheTests
         var clients = clientsField?.GetValue(clientCache) as Dictionary<object, ClientEntry>;
 
         Assert.IsNotNull(clients, "The _clients field is null.");
-        Assert.AreEqual(50, clients!.Count, "Cache should not have cleaned up when under the limit.");
+        Assert.That(clients!.Count, Is.EqualTo(50), "Cache should not have cleaned up when under the limit.");
     }
 
     [Test]
@@ -69,7 +69,7 @@ public class ClientCacheTests
         var clients = clientsField?.GetValue(clientCache) as Dictionary<object, ClientEntry>;
 
         Assert.IsNotNull(clients, "The _clients field is null.");
-        Assert.AreEqual(100, clients!.Count, "Cache did not cleanup correctly.");
+        Assert.That(clients!.Count, Is.EqualTo(100), "Cache did not cleanup correctly.");
 
         // Ensure that recently accessed clients are still in the cache.
         Assert.IsTrue(clients.ContainsKey(new DummyClientKey("client0")), "Most recently accessed client 'client0' should be in the cache.");
@@ -107,7 +107,7 @@ public class ClientCacheTests
         var clients = clientsField?.GetValue(clientCache) as Dictionary<object, ClientEntry>;
 
         Assert.IsNotNull(clients, "The _clients field is null.");
-        Assert.AreEqual(100, clients!.Count, "Cache did not cleanup correctly.");
+        Assert.That(clients!.Count, Is.EqualTo(100), "Cache did not cleanup correctly.");
 
         // Ensure that recently accessed clients are still in the cache.
         Assert.IsTrue(clients.ContainsKey(new DummyClientKey("client0")), "Most recently accessed client 'client0' should be in the cache.");
@@ -200,7 +200,7 @@ public class ClientCacheTests
         var keys = clients!.Keys.Select(k => k is DummyClientKey DummyClientKey ? DummyClientKey.Key : null).ToList();
 
         // Verify that the cache contains the expected clients
-        CollectionAssert.AreEquivalent(new[] { "A", "C", "D" }, keys, "Cache should contain A, C, and D");
+        Assert.That(keys, Is.EquivalentTo(new[] { "A", "C", "D" }), "Cache should contain A, C, and D");
 
         // Ensure B was evicted as it was the least recently used
         Assert.IsFalse(keys.Contains("B"), "Client B should have been evicted.");
@@ -223,7 +223,7 @@ public class ClientCacheTests
         var client2 = clientCache.GetClient(new DummyClientKey("abc", options2), () => new object()); // Miss ✅
 
         // Assert that the two clients are distinct objects
-        Assert.AreNotSame(client1, client2, "Clients should be distinct when options are different.");
+        Assert.That(client2, Is.Not.SameAs(client1), "Clients should be distinct when options are different.");
 
         var clientsField = typeof(ClientCache).GetField("_clients", BindingFlags.NonPublic | BindingFlags.Instance);
         var clients = clientsField?.GetValue(clientCache) as Dictionary<object, ClientEntry>;

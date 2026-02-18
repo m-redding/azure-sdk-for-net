@@ -41,8 +41,8 @@ namespace System.ClientModel.Tests.ModelReaderWriterTests
         public void WriteNonJFormat()
         {
             var ex = Assert.Throws<InvalidOperationException>(() => ModelReaderWriter.Write(Instance!, ModelReaderWriterOptions.Xml));
-            Assert.IsNotNull(ex);
-            Assert.AreEqual($"Format 'X' is not supported.  Only 'J' or 'W' format can be written as collections", ex!.Message);
+            Assert.That(ex, Is.Not.Null);
+            Assert.That(ex!.Message, Is.EqualTo($"Format 'X' is not supported.  Only 'J' or 'W' format can be written as collections"));
         }
 
         protected override void RoundTripTest(string format, RoundTripStrategy<TCollection> strategy)
@@ -54,28 +54,28 @@ namespace System.ClientModel.Tests.ModelReaderWriterTests
 
             var options = new ModelReaderWriterOptions(format);
 
-            Assert.AreEqual(typeof(TCollection), Instance!.GetType());
+            Assert.That(Instance!.GetType(), Is.EqualTo(typeof(TCollection)));
 
             var collapsedPayload = format == "J" ? JsonPayload_Collapsed : WirePayload_Collapsed;
 
             BinaryData data = strategy.Write(Instance, options);
-            Assert.IsNotNull(data);
+            Assert.That(data, Is.Not.Null);
             var actualPayload = data.ToString();
-            Assert.AreEqual(actualPayload.Length, actualPayload.Length);
+            Assert.That(actualPayload.Length, Is.EqualTo(actualPayload.Length));
 
             if (IsWriteOrderDeterministic)
             {
-                Assert.AreEqual(collapsedPayload, actualPayload);
+                Assert.That(actualPayload, Is.EqualTo(collapsedPayload));
             }
 
             var actual = strategy.Read(data.ToString(), Instance!, options);
-            Assert.IsNotNull(actual);
-            Assert.AreEqual(Instance!.GetType(), actual!.GetType());
+            Assert.That(actual, Is.Not.Null);
+            Assert.That(actual!.GetType(), Is.EqualTo(Instance!.GetType()));
 
             CompareCollections(Instance!, (TCollection)actual!, format);
 
             BinaryData data2 = strategy.Write((TCollection)actual, options);
-            Assert.AreEqual(data.Length, data2.Length);
+            Assert.That(data2.Length, Is.EqualTo(data.Length));
             if (IsRoundTripOrderDeterministic)
             {
                 Assert.IsTrue(data.ToMemory().Span.SequenceEqual(data2.ToMemory().Span));
@@ -84,8 +84,8 @@ namespace System.ClientModel.Tests.ModelReaderWriterTests
 
         private void CompareEnumerable(IEnumerable expected, IEnumerable actual, string format, int layer)
         {
-            Assert.IsNotNull(expected);
-            Assert.IsNotNull(actual);
+            Assert.That(expected, Is.Not.Null);
+            Assert.That(actual, Is.Not.Null);
 
             var expectedEnumerator = GetEnumerable(expected!).GetEnumerator();
             var actualEnumerator = GetEnumerable(actual!).GetEnumerator();

@@ -19,8 +19,8 @@ namespace Azure.Core.Expressions.DataFactory.Tests
             var keyVaultSecret = new DataFactoryKeyVaultSecret(store, secretName);
 
             // Act & Assert - Test IJsonModel interface
-            Assert.IsInstanceOf<IJsonModel<DataFactoryKeyVaultSecret>>(keyVaultSecret);
-            Assert.IsInstanceOf<IPersistableModel<DataFactoryKeyVaultSecret>>(keyVaultSecret);
+            Assert.That(keyVaultSecret, Is.InstanceOf<IJsonModel<DataFactoryKeyVaultSecret>>());
+            Assert.That(keyVaultSecret, Is.InstanceOf<IPersistableModel<DataFactoryKeyVaultSecret>>());
 
             // Test serialization
             var options = new ModelReaderWriterOptions("W");
@@ -30,7 +30,7 @@ namespace Azure.Core.Expressions.DataFactory.Tests
             // Test deserialization
             var deserializedSecret = ModelReaderWriter.Read<DataFactoryKeyVaultSecret>(binaryData, options);
             Assert.IsNotNull(deserializedSecret);
-            Assert.AreEqual(keyVaultSecret.Store.ReferenceName, deserializedSecret.Store.ReferenceName);
+            Assert.That(deserializedSecret.Store.ReferenceName, Is.EqualTo(keyVaultSecret.Store.ReferenceName));
         }
 
         [Test]
@@ -40,8 +40,8 @@ namespace Azure.Core.Expressions.DataFactory.Tests
             var linkedServiceRef = new DataFactoryLinkedServiceReference(DataFactoryLinkedServiceReferenceKind.LinkedServiceReference, "testLinkedService");
 
             // Act & Assert - Test IJsonModel interface
-            Assert.IsInstanceOf<IJsonModel<DataFactoryLinkedServiceReference>>(linkedServiceRef);
-            Assert.IsInstanceOf<IPersistableModel<DataFactoryLinkedServiceReference>>(linkedServiceRef);
+            Assert.That(linkedServiceRef, Is.InstanceOf<IJsonModel<DataFactoryLinkedServiceReference>>());
+            Assert.That(linkedServiceRef, Is.InstanceOf<IPersistableModel<DataFactoryLinkedServiceReference>>());
 
             // Test serialization
             var options = new ModelReaderWriterOptions("W");
@@ -51,8 +51,8 @@ namespace Azure.Core.Expressions.DataFactory.Tests
             // Test deserialization
             var deserializedRef = ModelReaderWriter.Read<DataFactoryLinkedServiceReference>(binaryData, options);
             Assert.IsNotNull(deserializedRef);
-            Assert.AreEqual(linkedServiceRef.ReferenceName, deserializedRef.ReferenceName);
-            Assert.AreEqual(linkedServiceRef.ReferenceKind, deserializedRef.ReferenceKind);
+            Assert.That(deserializedRef.ReferenceName, Is.EqualTo(linkedServiceRef.ReferenceName));
+            Assert.That(deserializedRef.ReferenceKind, Is.EqualTo(linkedServiceRef.ReferenceKind));
         }
 
         [Test]
@@ -62,8 +62,8 @@ namespace Azure.Core.Expressions.DataFactory.Tests
             var secretString = new DataFactorySecretString("testSecret");
 
             // Act & Assert - Test IJsonModel interface
-            Assert.IsInstanceOf<IJsonModel<DataFactorySecretString>>(secretString);
-            Assert.IsInstanceOf<IPersistableModel<DataFactorySecretString>>(secretString);
+            Assert.That(secretString, Is.InstanceOf<IJsonModel<DataFactorySecretString>>());
+            Assert.That(secretString, Is.InstanceOf<IPersistableModel<DataFactorySecretString>>());
 
             // Test serialization
             var options = new ModelReaderWriterOptions("W");
@@ -73,7 +73,7 @@ namespace Azure.Core.Expressions.DataFactory.Tests
             // Test deserialization
             var deserializedSecret = ModelReaderWriter.Read<DataFactorySecretString>(binaryData, options);
             Assert.IsNotNull(deserializedSecret);
-            Assert.AreEqual(secretString.Value, deserializedSecret.Value);
+            Assert.That(deserializedSecret.Value, Is.EqualTo(secretString.Value));
         }
 
         [Test]
@@ -83,8 +83,8 @@ namespace Azure.Core.Expressions.DataFactory.Tests
             DataFactorySecret secret = new DataFactorySecretString("testSecret");
 
             // Act & Assert - Test IJsonModel interface
-            Assert.IsInstanceOf<IJsonModel<DataFactorySecret>>(secret);
-            Assert.IsInstanceOf<IPersistableModel<DataFactorySecret>>(secret);
+            Assert.That(secret, Is.InstanceOf<IJsonModel<DataFactorySecret>>());
+            Assert.That(secret, Is.InstanceOf<IPersistableModel<DataFactorySecret>>());
 
             // Test serialization
             var options = new ModelReaderWriterOptions("W");
@@ -94,8 +94,8 @@ namespace Azure.Core.Expressions.DataFactory.Tests
             // Test deserialization
             var deserializedSecret = ModelReaderWriter.Read<DataFactorySecret>(binaryData, options);
             Assert.IsNotNull(deserializedSecret);
-            Assert.IsInstanceOf<DataFactorySecretString>(deserializedSecret);
-            Assert.AreEqual(((DataFactorySecretString)secret).Value, ((DataFactorySecretString)deserializedSecret).Value);
+            Assert.That(deserializedSecret, Is.InstanceOf<DataFactorySecretString>());
+            Assert.That(((DataFactorySecretString)deserializedSecret).Value, Is.EqualTo(((DataFactorySecretString)secret).Value));
         }
 
         [Test]
@@ -118,9 +118,9 @@ namespace Azure.Core.Expressions.DataFactory.Tests
             var root = document.RootElement;
 
             Assert.IsTrue(root.TryGetProperty("value", out var valueProperty));
-            Assert.AreEqual("testSecret", valueProperty.GetString());
+            Assert.That(valueProperty.GetString(), Is.EqualTo("testSecret"));
             Assert.IsTrue(root.TryGetProperty("type", out var typeProperty));
-            Assert.AreEqual("SecureString", typeProperty.GetString());
+            Assert.That(typeProperty.GetString(), Is.EqualTo("SecureString"));
         }
 
         [Test]
@@ -138,7 +138,7 @@ namespace Azure.Core.Expressions.DataFactory.Tests
 
             // Assert
             Assert.IsNotNull(secretString);
-            Assert.AreEqual("testSecret", secretString.Value);
+            Assert.That(secretString.Value, Is.EqualTo("testSecret"));
         }
 
         [Test]
@@ -152,7 +152,7 @@ namespace Azure.Core.Expressions.DataFactory.Tests
             var format = ((IPersistableModel<DataFactorySecretString>)secretString).GetFormatFromOptions(options);
 
             // Assert
-            Assert.AreEqual("J", format);
+            Assert.That(format, Is.EqualTo("J"));
         }
 
         [Test]

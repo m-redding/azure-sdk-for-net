@@ -31,15 +31,15 @@ namespace Azure.Core.Tests
             }
             if (applicationId == null)
             {
-                Assert.AreEqual(
-                    $"azsdk-net-Core.Tests/{version} ({RuntimeInformation.FrameworkDescription}; {RuntimeInformation.OSDescription})",
-                    target.ToString());
+                Assert.That(
+                    target.ToString(),
+                    Is.EqualTo($"azsdk-net-Core.Tests/{version} ({RuntimeInformation.FrameworkDescription}; {RuntimeInformation.OSDescription})"));
             }
             else
             {
-                Assert.AreEqual(
-                    $"{applicationId} azsdk-net-Core.Tests/{version} ({RuntimeInformation.FrameworkDescription}; {RuntimeInformation.OSDescription})",
-                    target.ToString());
+                Assert.That(
+                    target.ToString(),
+                    Is.EqualTo($"{applicationId} azsdk-net-Core.Tests/{version} ({RuntimeInformation.FrameworkDescription}; {RuntimeInformation.OSDescription})"));
             }
         }
 
@@ -48,8 +48,8 @@ namespace Azure.Core.Tests
         {
             var target = new TelemetryDetails(typeof(TelemetryDetailsTests).Assembly, applicationId);
 
-            Assert.AreEqual(typeof(TelemetryDetailsTests).Assembly, target.Assembly);
-            Assert.AreEqual(applicationId, target.ApplicationId);
+            Assert.That(target.Assembly, Is.EqualTo(typeof(TelemetryDetailsTests).Assembly));
+            Assert.That(target.ApplicationId, Is.EqualTo(applicationId));
         }
 
         [Test]
@@ -68,7 +68,7 @@ namespace Azure.Core.Tests
 
             var target = new TelemetryDetails(typeof(TelemetryDetailsTests).Assembly, applicationId);
 
-            Assert.AreEqual(applicationId, target.ApplicationId);
+            Assert.That(target.ApplicationId, Is.EqualTo(applicationId));
         }
 
         [Test]
@@ -78,7 +78,7 @@ namespace Azure.Core.Tests
 
             var target = new TelemetryDetails(typeof(TelemetryDetailsTests).Assembly, longApplicationId, maxApplicationIdLength: 50);
 
-            Assert.AreEqual(longApplicationId, target.ApplicationId);
+            Assert.That(target.ApplicationId, Is.EqualTo(longApplicationId));
         }
 
         [Test]
@@ -101,7 +101,7 @@ namespace Azure.Core.Tests
             message.TryGetProperty(typeof(UserAgentValueKey), out var obj);
             string actualValue = obj as string;
 
-            Assert.AreEqual(target.ToString(), actualValue);
+            Assert.That(actualValue, Is.EqualTo(target.ToString()));
         }
 
         [Test]
@@ -131,9 +131,9 @@ namespace Azure.Core.Tests
 
             var target = new TelemetryDetails(typeof(TelemetryDetailsTests).Assembly, default, mockRuntimeInformation);
 
-            Assert.AreEqual(
-                    $"azsdk-net-Core.Tests/{version} ({mockRuntimeInformation.FrameworkDescription}; {output})",
-                    target.ToString());
+            Assert.That(
+                    target.ToString(),
+                    Is.EqualTo($"azsdk-net-Core.Tests/{version} ({mockRuntimeInformation.FrameworkDescription}; {output})"));
         }
 
         [Test]
@@ -155,9 +155,9 @@ namespace Azure.Core.Tests
 
             var target = new TelemetryDetails(typeof(TelemetryDetailsTests).Assembly, default, mockRuntimeInformation);
 
-            Assert.AreEqual(
-                    $"azsdk-net-Core.Tests/{version} ({mockRuntimeInformation.FrameworkDescription}; {output})",
-                    target.ToString());
+            Assert.That(
+                    target.ToString(),
+                    Is.EqualTo($"azsdk-net-Core.Tests/{version} ({mockRuntimeInformation.FrameworkDescription}; {output})"));
         }
 
         [Test]
@@ -177,9 +177,9 @@ namespace Azure.Core.Tests
 
             var target = new TelemetryDetails(typeof(TelemetryDetailsTests).Assembly, default, mockRuntimeInformation);
 
-            Assert.AreEqual(
-                    $"azsdk-net-Core.Tests/{version} ({mockRuntimeInformation.FrameworkDescription}; {output})",
-                    target.ToString());
+            Assert.That(
+                    target.ToString(),
+                    Is.EqualTo($"azsdk-net-Core.Tests/{version} ({mockRuntimeInformation.FrameworkDescription}; {output})"));
         }
 
         private class MockRuntimeInformation : RuntimeInformationWrapper

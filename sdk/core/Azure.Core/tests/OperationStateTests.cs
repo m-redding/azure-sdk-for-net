@@ -18,8 +18,8 @@ namespace Azure.Core.Tests
 
             Assert.True(state.HasCompleted);
             Assert.True(state.HasSucceeded);
-            Assert.AreEqual(mockResponse, state.RawResponse);
-            Assert.AreEqual(expectedValue, state.Value);
+            Assert.That(state.RawResponse, Is.EqualTo(mockResponse));
+            Assert.That(state.Value, Is.EqualTo(expectedValue));
             Assert.IsNull(state.OperationFailedException);
         }
 
@@ -40,9 +40,9 @@ namespace Azure.Core.Tests
 
             Assert.True(state.HasCompleted);
             Assert.False(state.HasSucceeded);
-            Assert.AreEqual(mockResponse, state.RawResponse);
-            Assert.AreEqual(default(int), state.Value);
-            Assert.AreEqual(expectedException, state.OperationFailedException);
+            Assert.That(state.RawResponse, Is.EqualTo(mockResponse));
+            Assert.That(state.Value, Is.EqualTo(default(int)));
+            Assert.That(state.OperationFailedException, Is.EqualTo(expectedException));
         }
 
         [Test]
@@ -57,8 +57,8 @@ namespace Azure.Core.Tests
 
             Assert.False(state.HasCompleted);
             Assert.False(state.HasSucceeded);
-            Assert.AreEqual(mockResponse, state.RawResponse);
-            Assert.AreEqual(default(int), state.Value);
+            Assert.That(state.RawResponse, Is.EqualTo(mockResponse));
+            Assert.That(state.Value, Is.EqualTo(default(int)));
             Assert.IsNull(state.OperationFailedException);
         }
 

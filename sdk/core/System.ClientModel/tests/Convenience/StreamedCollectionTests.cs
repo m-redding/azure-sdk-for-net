@@ -41,13 +41,13 @@ public class StreamedCollectionTests
         {
             PipelineResponse response = page.GetRawResponse();
 
-            Assert.AreEqual(200, response.Status);
+            Assert.That(response.Status, Is.EqualTo(200));
             Assert.IsTrue(response.Content.ToString().StartsWith("event"));
 
             pageCount++;
         }
 
-        Assert.AreEqual(1, pageCount);
+        Assert.That(pageCount, Is.EqualTo(1));
     }
 
     [Test]
@@ -62,13 +62,13 @@ public class StreamedCollectionTests
         {
             PipelineResponse response = page.GetRawResponse();
 
-            Assert.AreEqual(200, response.Status);
+            Assert.That(response.Status, Is.EqualTo(200));
             Assert.IsTrue(response.Content.ToString().StartsWith("event"));
 
             pageCount++;
         }
 
-        Assert.AreEqual(1, pageCount);
+        Assert.That(pageCount, Is.EqualTo(1));
     }
 
     [Test]
@@ -80,11 +80,11 @@ public class StreamedCollectionTests
         int count = 0;
         foreach (StreamedValue value in values)
         {
-            Assert.AreEqual(count, value.Id);
+            Assert.That(value.Id, Is.EqualTo(count));
             count++;
         }
 
-        Assert.AreEqual(MockStreamedData.TotalItemCount, count);
+        Assert.That(count, Is.EqualTo(MockStreamedData.TotalItemCount));
     }
 
     [Test]
@@ -104,7 +104,7 @@ public class StreamedCollectionTests
         int count = 0;
         foreach (StreamedValue value in values!.GetPageValues(page))
         {
-            Assert.AreEqual(count, value.Id);
+            Assert.That(value.Id, Is.EqualTo(count));
             count++;
         }
 
@@ -120,11 +120,11 @@ public class StreamedCollectionTests
         int count = 0;
         await foreach (StreamedValue value in values)
         {
-            Assert.AreEqual(count, value.Id);
+            Assert.That(value.Id, Is.EqualTo(count));
             count++;
         }
 
-        Assert.AreEqual(MockStreamedData.TotalItemCount, count);
+        Assert.That(count, Is.EqualTo(MockStreamedData.TotalItemCount));
     }
 
     [Test]
@@ -144,7 +144,7 @@ public class StreamedCollectionTests
         int count = 0;
         await foreach (StreamedValue value in values!.GetPageValuesAsync(page))
         {
-            Assert.AreEqual(count, value.Id);
+            Assert.That(value.Id, Is.EqualTo(count));
             count++;
         }
 

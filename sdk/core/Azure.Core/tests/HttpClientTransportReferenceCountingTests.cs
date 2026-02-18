@@ -110,7 +110,7 @@ namespace Azure.Core.Tests
             // Act & Assert - This should not throw even though we're not managing ref counts
             await ProcessSyncOrAsync(transport, message);
 
-            Assert.AreEqual(200, message.Response.Status);
+            Assert.That(message.Response.Status, Is.EqualTo(200));
         }
 
         [Test]
@@ -129,7 +129,7 @@ namespace Azure.Core.Tests
             await ProcessSyncOrAsync(transport, message);
 
             // Assert - Should succeed with ref counting
-            Assert.AreEqual(200, message.Response.Status);
+            Assert.That(message.Response.Status, Is.EqualTo(200));
         }
 
         [Test]
@@ -165,7 +165,7 @@ namespace Azure.Core.Tests
                     request.Uri.Reset(new Uri("https://example.com"));
                     var message = new HttpMessage(request, ResponseClassifier.Shared);
                     await ProcessSyncOrAsync(transport, message);
-                    Assert.AreEqual(200, message.Response.Status);
+                    Assert.That(message.Response.Status, Is.EqualTo(200));
                 }));
             }
 
@@ -177,7 +177,7 @@ namespace Azure.Core.Tests
             await Task.WhenAll(tasks);
 
             // Assert - All requests should complete successfully
-            Assert.AreEqual(5, responseCount, "All 5 requests should have completed");
+            Assert.That(responseCount, Is.EqualTo(5), "All 5 requests should have completed");
         }
 
         [Test]
@@ -223,7 +223,7 @@ namespace Azure.Core.Tests
             // Assert - Subsequent requests should throw
             var ex = await AssertThrowsAsync<ObjectDisposedException>(
                 async () => await ProcessSyncOrAsync(transport, message));
-            Assert.AreEqual(nameof(HttpClientTransport), ex.ObjectName);
+            Assert.That(ex.ObjectName, Is.EqualTo(nameof(HttpClientTransport)));
         }
 
         [Test]
@@ -254,7 +254,7 @@ namespace Azure.Core.Tests
                         request.Uri.Reset(new Uri("https://example.com"));
                         var message = new HttpMessage(request, ResponseClassifier.Shared);
                         await ProcessSyncOrAsync(transport, message);
-                        Assert.AreEqual(200, message.Response.Status);
+                        Assert.That(message.Response.Status, Is.EqualTo(200));
                         await Task.Delay(1); // Small delay between requests
                     }
                 }));

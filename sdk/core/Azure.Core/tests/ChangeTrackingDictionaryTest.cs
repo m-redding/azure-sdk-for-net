@@ -45,7 +45,7 @@ namespace Azure.Core.Tests
             var dictionary = new ChangeTrackingDictionary<string, string>();
             dictionary.Add("a", "b");
 
-            Assert.AreEqual("b", dictionary["a"]);
+            Assert.That(dictionary["a"], Is.EqualTo("b"));
             Assert.False(dictionary.IsUndefined);
         }
 
@@ -58,7 +58,7 @@ namespace Azure.Core.Tests
             dictionary.Remove("a");
             dictionary.Remove(new KeyValuePair<string, string>("c", "d"));
 
-            Assert.AreEqual(0, dictionary.Count);
+            Assert.That(dictionary.Count, Is.EqualTo(0));
             Assert.False(dictionary.IsUndefined);
         }
 
@@ -68,7 +68,7 @@ namespace Azure.Core.Tests
             var dictionary = new ChangeTrackingDictionary<string, string>();
             dictionary.Clear();
 
-            Assert.AreEqual(0, dictionary.Count);
+            Assert.That(dictionary.Count, Is.EqualTo(0));
             Assert.False(dictionary.IsUndefined);
         }
     }

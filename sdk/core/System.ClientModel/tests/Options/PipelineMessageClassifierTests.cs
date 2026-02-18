@@ -24,8 +24,8 @@ public class PipelineMessageClassifierTests
         MockPipelineMessage message = new MockPipelineMessage();
         message.SetResponse(new MockPipelineResponse(code));
 
-        Assert.True(classifier.TryClassify(message, exception: default, out bool isRetriable));
-        Assert.True(isRetriable);
+        Assert.That(classifier.TryClassify(message, exception: default, out bool isRetriable), Is.True);
+        Assert.That(isRetriable, Is.True);
     }
 
     [Test]
@@ -36,8 +36,8 @@ public class PipelineMessageClassifierTests
         message.SetResponse(new MockPipelineResponse(0));
 
         ClientResultException exception = new(message.Response!);
-        Assert.True(classifier.TryClassify(message, exception, out bool isRetriable));
-        Assert.True(isRetriable);
+        Assert.That(classifier.TryClassify(message, exception, out bool isRetriable), Is.True);
+        Assert.That(isRetriable, Is.True);
     }
 
     [Test]
@@ -48,7 +48,7 @@ public class PipelineMessageClassifierTests
         message.SetResponse(new MockPipelineResponse(500));
 
         ClientResultException exception = new(message.Response!);
-        Assert.True(classifier.TryClassify(message, exception, out bool isRetriable));
+        Assert.That(classifier.TryClassify(message, exception, out bool isRetriable), Is.True);
         Assert.False(isRetriable);
     }
 
@@ -58,8 +58,8 @@ public class PipelineMessageClassifierTests
         PipelineMessageClassifier classifier = PipelineMessageClassifier.Default;
         MockPipelineMessage message = new MockPipelineMessage();
 
-        Assert.True(classifier.TryClassify(message, exception: new OperationCanceledException(), out bool isRetriable));
-        Assert.True(isRetriable);
+        Assert.That(classifier.TryClassify(message, exception: new OperationCanceledException(), out bool isRetriable), Is.True);
+        Assert.That(isRetriable, Is.True);
     }
 
     [Test]
@@ -84,8 +84,8 @@ public class PipelineMessageClassifierTests
         MockPipelineMessage message = new MockPipelineMessage();
         message.SetResponse(new MockPipelineResponse(code));
 
-        Assert.True(classifier.TryClassify(message, out bool responseIsError));
-        Assert.AreEqual(isError, responseIsError);
+        Assert.That(classifier.TryClassify(message, out bool responseIsError), Is.True);
+        Assert.That(responseIsError, Is.EqualTo(isError));
     }
 
     [Test]
@@ -107,7 +107,7 @@ public class PipelineMessageClassifierTests
 
                 if (nonError == code)
                 {
-                    Assert.True(isNonError);
+                    Assert.That(isNonError, Is.True);
                 }
                 else
                 {
@@ -131,7 +131,7 @@ public class PipelineMessageClassifierTests
         message.SetResponse(new MockPipelineResponse(code));
 
         Assert.IsTrue(classifier.TryClassify(message, out bool error));
-        Assert.AreEqual(isError, error);
+        Assert.That(error, Is.EqualTo(isError));
     }
 
     [Test]

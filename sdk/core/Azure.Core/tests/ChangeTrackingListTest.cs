@@ -43,7 +43,7 @@ namespace Azure.Core.Tests
             var list = new ChangeTrackingList<string>();
             list.Add("a");
 
-            Assert.AreEqual("a", list[0]);
+            Assert.That(list[0], Is.EqualTo("a"));
             Assert.False(list.IsUndefined);
         }
 
@@ -53,7 +53,7 @@ namespace Azure.Core.Tests
             var list = new ChangeTrackingList<string>();
             list.Insert(0, "a");
 
-            Assert.AreEqual("a", list[0]);
+            Assert.That(list[0], Is.EqualTo("a"));
             Assert.False(list.IsUndefined);
         }
 
@@ -72,7 +72,7 @@ namespace Azure.Core.Tests
             var list = new ChangeTrackingList<string>();
             list.Add("a");
 
-            Assert.AreEqual(new[] { "a" }, list.ToArray());
+            Assert.That(list.ToArray(), Is.EqualTo(new[] { "a" }));
         }
 
         [Test]
@@ -82,7 +82,7 @@ namespace Azure.Core.Tests
             list.Add("a");
             list.Remove("a");
 
-            Assert.AreEqual(0, list.Count);
+            Assert.That(list.Count, Is.EqualTo(0));
             Assert.False(list.IsUndefined);
         }
 
@@ -92,7 +92,7 @@ namespace Azure.Core.Tests
             var list = new ChangeTrackingList<string>();
             list.Clear();
 
-            Assert.AreEqual(0, list.Count);
+            Assert.That(list.Count, Is.EqualTo(0));
             Assert.False(list.IsUndefined);
         }
     }

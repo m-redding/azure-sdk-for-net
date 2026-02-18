@@ -14,7 +14,7 @@ namespace Azure.Core.Tests
             var request = new MockRequest();
             request.Headers.Add("If-Match", new ETag(original));
             Assert.IsTrue(request.Headers.TryGetValue("If-Match", out string value));
-            Assert.AreEqual(expected, value);
+            Assert.That(value, Is.EqualTo(expected));
         }
 
         [TestCaseSource(nameof(ETagRequestHeaderCases))]
@@ -28,8 +28,8 @@ namespace Azure.Core.Tests
             });
             Assert.IsTrue(request.Headers.TryGetValue("If-Match", out string ifMatchValue));
             Assert.IsTrue(request.Headers.TryGetValue("If-None-Match", out string ifNoneMatchValue));
-            Assert.AreEqual(expected, ifMatchValue);
-            Assert.AreEqual(expected, ifNoneMatchValue);
+            Assert.That(ifMatchValue, Is.EqualTo(expected));
+            Assert.That(ifNoneMatchValue, Is.EqualTo(expected));
         }
 
         [TestCaseSource(nameof(ETagRequestHeaderCases))]
@@ -43,8 +43,8 @@ namespace Azure.Core.Tests
             });
             Assert.IsTrue(request.Headers.TryGetValue("If-Match", out string ifMatchValue));
             Assert.IsTrue(request.Headers.TryGetValue("If-None-Match", out string ifNoneMatchValue));
-            Assert.AreEqual(expected, ifMatchValue);
-            Assert.AreEqual(expected, ifNoneMatchValue);
+            Assert.That(ifMatchValue, Is.EqualTo(expected));
+            Assert.That(ifNoneMatchValue, Is.EqualTo(expected));
         }
 
         private static readonly object[] ETagRequestHeaderCases =

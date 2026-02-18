@@ -35,7 +35,7 @@ namespace System.ClientModel.Tests.ModelReaderWriterTests.Models.AvailabilitySet
             Assert.IsNotNull(expected);
             Assert.IsNotNull(actual);
 
-            Assert.AreEqual(expected.Count, actual.Count);
+            Assert.That(actual.Count, Is.EqualTo(expected.Count));
             foreach (var actualItem in actual)
             {
                 Assert.IsTrue(expected.TryGetValue(actualItem, out AvailabilitySetData? expectedItem));

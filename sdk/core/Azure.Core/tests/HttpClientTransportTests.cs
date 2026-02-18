@@ -64,11 +64,11 @@ namespace Azure.Core.Tests
             request.Method = RequestMethod.Get;
             request.Uri.Reset(expectedUri);
 
-            Assert.AreEqual(expectedUri.ToString(), request.Uri.ToString());
+            Assert.That(request.Uri.ToString(), Is.EqualTo(expectedUri.ToString()));
 
             await ExecuteRequest(request, transport);
 
-            Assert.AreEqual(expectedUri, requestUri);
+            Assert.That(requestUri, Is.EqualTo(expectedUri));
         }
 
         public static object[] HeadersWithValuesAndType =>
@@ -138,12 +138,12 @@ namespace Azure.Core.Tests
             Assert.True(response.Headers.Contains(headerName));
 
             Assert.True(response.Headers.TryGetValue(headerName, out var value));
-            Assert.AreEqual(headerValue, value);
+            Assert.That(value, Is.EqualTo(headerValue));
 
             Assert.True(response.Headers.TryGetValues(headerName, out IEnumerable<string> values));
-            CollectionAssert.AreEqual(new[] { headerValue }, values);
+            Assert.That(values, Is.EqualTo(new[] { headerValue }).AsCollection);
 
-            CollectionAssert.Contains(response.Headers, new HttpHeader(headerName, headerValue));
+            Assert.That(response.Headers, Has.Member(new HttpHeader(headerName, headerValue)));
         }
 
         private static Request CreateRequest(HttpClientTransport transport, byte[] bytes = null)

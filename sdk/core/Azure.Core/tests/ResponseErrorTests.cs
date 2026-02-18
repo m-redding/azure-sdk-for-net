@@ -60,22 +60,22 @@ namespace Azure.Core.Tests
                 error = JsonSerializer.Deserialize<ResponseError>(json);
             }
 
-            Assert.AreEqual("BadError", error.Code);
-            Assert.AreEqual("Something wasn't awesome", error.Message);
-            Assert.AreEqual("Error target", error.Target);
+            Assert.That(error.Code, Is.EqualTo("BadError"));
+            Assert.That(error.Message, Is.EqualTo("Something wasn't awesome"));
+            Assert.That(error.Target, Is.EqualTo("Error target"));
 
-            Assert.AreEqual("MoreDetailedBadError", error.InnerError.Code);
+            Assert.That(error.InnerError.Code, Is.EqualTo("MoreDetailedBadError"));
 
             Assert.Null(error.InnerError.InnerError);
-            Assert.AreEqual("BadError: Something wasn't awesome" + Environment.NewLine +
+            Assert.That(error.ToString(),
+                Is.EqualTo("BadError: Something wasn't awesome" + Environment.NewLine +
                             "Target: Error target" + Environment.NewLine +
                             Environment.NewLine +
                             "Inner Errors:" + Environment.NewLine +
                             "MoreDetailedBadError" + Environment.NewLine +
                             Environment.NewLine +
                             "Raw:" + Environment.NewLine +
-                            "{\"code\":\"BadError\",\"message\":\"Something wasn't awesome\",\"target\":\"Error target\",\"innererror\":{\"code\":\"MoreDetailedBadError\",\"message\":\"Inner message\"}}",
-                error.ToString());
+                            "{\"code\":\"BadError\",\"message\":\"Something wasn't awesome\",\"target\":\"Error target\",\"innererror\":{\"code\":\"MoreDetailedBadError\",\"message\":\"Inner message\"}}"));
         }
 
         [Test]

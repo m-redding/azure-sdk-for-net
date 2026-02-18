@@ -41,31 +41,31 @@ namespace Azure.Core.Amqp.Tests
             message.Properties.To = new AmqpAddress("to");
             message.Properties.UserId = Encoding.UTF8.GetBytes("userId");
 
-            Assert.AreEqual(AmqpMessageBodyType.Data, message.Body.BodyType);
+            Assert.That(message.Body.BodyType, Is.EqualTo(AmqpMessageBodyType.Data));
             Assert.IsTrue(message.Body.TryGetData(out IEnumerable<ReadOnlyMemory<byte>> body));
-            Assert.AreEqual("some data", Encoding.UTF8.GetString(body.First().ToArray()));
-            Assert.AreEqual("applicationValue", message.ApplicationProperties["applicationKey"]);
-            Assert.AreEqual("deliveryValue", message.DeliveryAnnotations["deliveryKey"]);
-            Assert.AreEqual("messageValue", message.MessageAnnotations["messageKey"]);
-            Assert.AreEqual("footerValue", message.Footer["footerKey"]);
-            Assert.AreEqual(1, message.Header.DeliveryCount);
+            Assert.That(Encoding.UTF8.GetString(body.First().ToArray()), Is.EqualTo("some data"));
+            Assert.That(message.ApplicationProperties["applicationKey"], Is.EqualTo("applicationValue"));
+            Assert.That(message.DeliveryAnnotations["deliveryKey"], Is.EqualTo("deliveryValue"));
+            Assert.That(message.MessageAnnotations["messageKey"], Is.EqualTo("messageValue"));
+            Assert.That(message.Footer["footerKey"], Is.EqualTo("footerValue"));
+            Assert.That(message.Header.DeliveryCount, Is.EqualTo(1));
             Assert.IsTrue(message.Header.Durable);
             Assert.IsTrue(message.Header.FirstAcquirer);
-            Assert.AreEqual(1, message.Header.Priority);
-            Assert.AreEqual(TimeSpan.FromSeconds(60), message.Header.TimeToLive);
-            Assert.AreEqual(time, message.Properties.AbsoluteExpiryTime);
-            Assert.AreEqual("compress", message.Properties.ContentEncoding);
-            Assert.AreEqual("application/json", message.Properties.ContentType);
-            Assert.AreEqual("correlationId", message.Properties.CorrelationId.ToString());
-            Assert.AreEqual(time, message.Properties.CreationTime);
-            Assert.AreEqual("groupId", message.Properties.GroupId);
-            Assert.AreEqual(5, message.Properties.GroupSequence);
-            Assert.AreEqual("messageId", message.Properties.MessageId.ToString());
-            Assert.AreEqual("replyTo", message.Properties.ReplyTo.ToString());
-            Assert.AreEqual("replyToGroupId", message.Properties.ReplyToGroupId);
-            Assert.AreEqual("subject", message.Properties.Subject);
-            Assert.AreEqual("to", message.Properties.To.ToString());
-            Assert.AreEqual("userId", Encoding.UTF8.GetString(message.Properties.UserId.Value.ToArray()));
+            Assert.That(message.Header.Priority, Is.EqualTo(1));
+            Assert.That(message.Header.TimeToLive, Is.EqualTo(TimeSpan.FromSeconds(60)));
+            Assert.That(message.Properties.AbsoluteExpiryTime, Is.EqualTo(time));
+            Assert.That(message.Properties.ContentEncoding, Is.EqualTo("compress"));
+            Assert.That(message.Properties.ContentType, Is.EqualTo("application/json"));
+            Assert.That(message.Properties.CorrelationId.ToString(), Is.EqualTo("correlationId"));
+            Assert.That(message.Properties.CreationTime, Is.EqualTo(time));
+            Assert.That(message.Properties.GroupId, Is.EqualTo("groupId"));
+            Assert.That(message.Properties.GroupSequence, Is.EqualTo(5));
+            Assert.That(message.Properties.MessageId.ToString(), Is.EqualTo("messageId"));
+            Assert.That(message.Properties.ReplyTo.ToString(), Is.EqualTo("replyTo"));
+            Assert.That(message.Properties.ReplyToGroupId, Is.EqualTo("replyToGroupId"));
+            Assert.That(message.Properties.Subject, Is.EqualTo("subject"));
+            Assert.That(message.Properties.To.ToString(), Is.EqualTo("to"));
+            Assert.That(Encoding.UTF8.GetString(message.Properties.UserId.Value.ToArray()), Is.EqualTo("userId"));
         }
 
         [Test]

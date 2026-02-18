@@ -115,15 +115,15 @@ namespace System.Net.Http.Tests
             Assert.NotNull(p);
 
             u = p.GetProxy(s_fooHttp);
-            Assert.AreEqual(host, u.Host);
-            Assert.AreEqual(Convert.ToInt32(port), u.Port);
+            Assert.That(u.Host, Is.EqualTo(host));
+            Assert.That(u.Port, Is.EqualTo(Convert.ToInt32(port)));
 
             if (user != null)
             {
                 NetworkCredential nc = p.Credentials.GetCredential(u, "Basic");
                 Assert.NotNull(nc);
-                Assert.AreEqual(user, nc.UserName);
-                Assert.AreEqual(password, nc.Password);
+                Assert.That(nc.UserName, Is.EqualTo(user));
+                Assert.That(nc.Password, Is.EqualTo(password));
             }
         }
 
@@ -194,7 +194,7 @@ namespace System.Net.Http.Tests
 
             Assert.True(p.IsBypassed(directUri));
             Assert.False(p.IsBypassed(thruProxyUri));
-            Assert.AreEqual(new Uri(proxy), p.GetProxy(thruProxyUri));
+            Assert.That(p.GetProxy(thruProxyUri), Is.EqualTo(new Uri(proxy)));
         }
     }
 }

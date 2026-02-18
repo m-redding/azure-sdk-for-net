@@ -46,14 +46,14 @@ namespace Azure.Core.Tests
             var options = settings.Options;
 
             Assert.IsNotNull(options);
-            Assert.AreEqual("MyApp", options.Diagnostics.ApplicationId);
+            Assert.That(options.Diagnostics.ApplicationId, Is.EqualTo("MyApp"));
             Assert.IsFalse(options.Diagnostics.IsLoggingEnabled);
             Assert.IsFalse(options.Diagnostics.IsTelemetryEnabled);
             Assert.IsFalse(options.Diagnostics.IsDistributedTracingEnabled);
             Assert.IsTrue(options.Diagnostics.IsLoggingContentEnabled);
-            Assert.AreEqual(8192, options.Diagnostics.LoggedContentSizeLimit);
-            CollectionAssert.AreEqual(new[] { "custom-header-1", "custom-header-2" }, options.Diagnostics.LoggedHeaderNames);
-            CollectionAssert.AreEqual(new[] { "param1", "param2" }, options.Diagnostics.LoggedQueryParameters);
+            Assert.That(options.Diagnostics.LoggedContentSizeLimit, Is.EqualTo(8192));
+            Assert.That(options.Diagnostics.LoggedHeaderNames, Is.EqualTo(new[] { "custom-header-1", "custom-header-2" }).AsCollection);
+            Assert.That(options.Diagnostics.LoggedQueryParameters, Is.EqualTo(new[] { "param1", "param2" }).AsCollection);
         }
 
         [Test]
@@ -77,11 +77,11 @@ namespace Azure.Core.Tests
 
             Assert.IsNotNull(options);
 
-            Assert.AreEqual(5, options.Retry.MaxRetries);
-            Assert.AreEqual(TimeSpan.FromSeconds(2), options.Retry.Delay);
-            Assert.AreEqual(TimeSpan.FromMinutes(1), options.Retry.MaxDelay);
-            Assert.AreEqual(RetryMode.Fixed, options.Retry.Mode);
-            Assert.AreEqual(TimeSpan.FromMinutes(5), options.Retry.NetworkTimeout);
+            Assert.That(options.Retry.MaxRetries, Is.EqualTo(5));
+            Assert.That(options.Retry.Delay, Is.EqualTo(TimeSpan.FromSeconds(2)));
+            Assert.That(options.Retry.MaxDelay, Is.EqualTo(TimeSpan.FromMinutes(1)));
+            Assert.That(options.Retry.Mode, Is.EqualTo(RetryMode.Fixed));
+            Assert.That(options.Retry.NetworkTimeout, Is.EqualTo(TimeSpan.FromMinutes(5)));
         }
 
         [Test]
@@ -105,11 +105,11 @@ namespace Azure.Core.Tests
 
             Assert.IsNotNull(options);
 
-            Assert.AreEqual("FullTestApp", options.Diagnostics.ApplicationId);
+            Assert.That(options.Diagnostics.ApplicationId, Is.EqualTo("FullTestApp"));
             Assert.IsFalse(options.Diagnostics.IsLoggingEnabled);
             Assert.IsTrue(options.Diagnostics.IsTelemetryEnabled);
-            Assert.AreEqual(10, options.Retry.MaxRetries);
-            Assert.AreEqual(TimeSpan.FromSeconds(1), options.Retry.Delay);
+            Assert.That(options.Retry.MaxRetries, Is.EqualTo(10));
+            Assert.That(options.Retry.Delay, Is.EqualTo(TimeSpan.FromSeconds(1)));
         }
 
         [Test]
@@ -124,7 +124,7 @@ namespace Azure.Core.Tests
             Assert.IsNotNull(options.Diagnostics);
             Assert.IsNotNull(options.Retry);
             Assert.IsTrue(options.Diagnostics.IsLoggingEnabled);
-            Assert.AreEqual(3, options.Retry.MaxRetries);
+            Assert.That(options.Retry.MaxRetries, Is.EqualTo(3));
         }
 
         [Test]
@@ -138,7 +138,7 @@ namespace Azure.Core.Tests
             Assert.IsNotNull(options.Diagnostics);
             Assert.IsNotNull(options.Retry);
             Assert.IsTrue(options.Diagnostics.IsLoggingEnabled);
-            Assert.AreEqual(3, options.Retry.MaxRetries);
+            Assert.That(options.Retry.MaxRetries, Is.EqualTo(3));
         }
 
         [Test]
@@ -156,7 +156,7 @@ namespace Azure.Core.Tests
             Assert.IsNotNull(options.Diagnostics);
             Assert.IsNotNull(options.Retry);
             Assert.IsTrue(options.Diagnostics.IsLoggingEnabled);
-            Assert.AreEqual(3, options.Retry.MaxRetries);
+            Assert.That(options.Retry.MaxRetries, Is.EqualTo(3));
         }
 
         [Test]
@@ -178,15 +178,15 @@ namespace Azure.Core.Tests
             Assert.IsNotNull(options);
 
             // Configured values
-            Assert.AreEqual("PartialApp", options.Diagnostics.ApplicationId);
-            Assert.AreEqual(7, options.Retry.MaxRetries);
+            Assert.That(options.Diagnostics.ApplicationId, Is.EqualTo("PartialApp"));
+            Assert.That(options.Retry.MaxRetries, Is.EqualTo(7));
 
             // Default values
             Assert.IsTrue(options.Diagnostics.IsLoggingEnabled);
             Assert.IsTrue(options.Diagnostics.IsTelemetryEnabled);
             Assert.IsTrue(options.Diagnostics.IsDistributedTracingEnabled);
-            Assert.AreEqual(TimeSpan.FromSeconds(0.8), options.Retry.Delay);
-            Assert.AreEqual(RetryMode.Exponential, options.Retry.Mode);
+            Assert.That(options.Retry.Delay, Is.EqualTo(TimeSpan.FromSeconds(0.8)));
+            Assert.That(options.Retry.Mode, Is.EqualTo(RetryMode.Exponential));
         }
 
         [Test]
@@ -218,16 +218,16 @@ namespace Azure.Core.Tests
             Assert.IsNotNull(settings2.Options);
 
             // Both should have the same diagnostics values from Shared section
-            Assert.AreEqual("SharedApp", settings1.Options.Diagnostics.ApplicationId);
-            Assert.AreEqual("SharedApp", settings2.Options.Diagnostics.ApplicationId);
+            Assert.That(settings1.Options.Diagnostics.ApplicationId, Is.EqualTo("SharedApp"));
+            Assert.That(settings2.Options.Diagnostics.ApplicationId, Is.EqualTo("SharedApp"));
             Assert.IsFalse(settings1.Options.Diagnostics.IsLoggingEnabled);
             Assert.IsFalse(settings2.Options.Diagnostics.IsLoggingEnabled);
-            Assert.AreEqual(4096, settings1.Options.Diagnostics.LoggedContentSizeLimit);
-            Assert.AreEqual(4096, settings2.Options.Diagnostics.LoggedContentSizeLimit);
+            Assert.That(settings1.Options.Diagnostics.LoggedContentSizeLimit, Is.EqualTo(4096));
+            Assert.That(settings2.Options.Diagnostics.LoggedContentSizeLimit, Is.EqualTo(4096));
 
             // But different retry settings
-            Assert.AreEqual(5, settings1.Options.Retry.MaxRetries);
-            Assert.AreEqual(10, settings2.Options.Retry.MaxRetries);
+            Assert.That(settings1.Options.Retry.MaxRetries, Is.EqualTo(5));
+            Assert.That(settings2.Options.Retry.MaxRetries, Is.EqualTo(10));
         }
 
         [Test]
@@ -253,8 +253,8 @@ namespace Azure.Core.Tests
             Assert.IsNotNull(options);
 
             // Null values should be filtered out
-            CollectionAssert.AreEqual(new[] { "header1", "header2" }, options.Diagnostics.LoggedHeaderNames);
-            CollectionAssert.AreEqual(new[] { "param1", "param2" }, options.Diagnostics.LoggedQueryParameters);
+            Assert.That(options.Diagnostics.LoggedHeaderNames, Is.EqualTo(new[] { "header1", "header2" }).AsCollection);
+            Assert.That(options.Diagnostics.LoggedQueryParameters, Is.EqualTo(new[] { "param1", "param2" }).AsCollection);
         }
 
         [Test]
@@ -298,7 +298,7 @@ namespace Azure.Core.Tests
             Assert.IsNotNull(options);
 
             // Invalid enum value should use default
-            Assert.AreEqual(RetryMode.Exponential, options.Retry.Mode);
+            Assert.That(options.Retry.Mode, Is.EqualTo(RetryMode.Exponential));
         }
 
         [Test]
@@ -319,7 +319,7 @@ namespace Azure.Core.Tests
             Assert.IsNotNull(options);
 
             // Invalid TimeSpan should use default
-            Assert.AreEqual(TimeSpan.FromSeconds(0.8), options.Retry.Delay);
+            Assert.That(options.Retry.Delay, Is.EqualTo(TimeSpan.FromSeconds(0.8)));
         }
 
         [Test]
@@ -340,7 +340,7 @@ namespace Azure.Core.Tests
             Assert.IsNotNull(options);
 
             // Invalid int should use default
-            Assert.AreEqual(3, options.Retry.MaxRetries);
+            Assert.That(options.Retry.MaxRetries, Is.EqualTo(3));
         }
 
         [Test]
@@ -417,8 +417,8 @@ namespace Azure.Core.Tests
             var options = settings.Options;
 
             Assert.IsNotNull(options);
-            Assert.AreEqual("NestedApp", options.Diagnostics.ApplicationId);
-            Assert.AreEqual(8, options.Retry.MaxRetries);
+            Assert.That(options.Diagnostics.ApplicationId, Is.EqualTo("NestedApp"));
+            Assert.That(options.Retry.MaxRetries, Is.EqualTo(8));
         }
 
         [Test]
@@ -449,8 +449,8 @@ namespace Azure.Core.Tests
 
             Assert.IsNotNull(options);
 
-            CollectionAssert.AreEqual(headers, options.Diagnostics.LoggedHeaderNames);
-            CollectionAssert.AreEqual(parameters, options.Diagnostics.LoggedQueryParameters);
+            Assert.That(options.Diagnostics.LoggedHeaderNames, Is.EqualTo(headers).AsCollection);
+            Assert.That(options.Diagnostics.LoggedQueryParameters, Is.EqualTo(parameters).AsCollection);
         }
 
         [TestCase("true", true)]
@@ -474,7 +474,7 @@ namespace Azure.Core.Tests
             var options = settings.Options;
 
             Assert.IsNotNull(options);
-            Assert.AreEqual(expected, options.Diagnostics.IsLoggingEnabled);
+            Assert.That(options.Diagnostics.IsLoggingEnabled, Is.EqualTo(expected));
         }
 
         [TestCase("00:00:30")]
@@ -497,7 +497,7 @@ namespace Azure.Core.Tests
             var options = settings.Options;
 
             Assert.IsNotNull(options);
-            Assert.AreEqual(expected, options.Retry.Delay);
+            Assert.That(options.Retry.Delay, Is.EqualTo(expected));
         }
 
         [TestCase("Exponential", RetryMode.Exponential)]
@@ -517,7 +517,7 @@ namespace Azure.Core.Tests
             var options = settings.Options;
 
             Assert.IsNotNull(options);
-            Assert.AreEqual(expected, options.Retry.Mode);
+            Assert.That(options.Retry.Mode, Is.EqualTo(expected));
         }
 
         [Test]
@@ -538,8 +538,8 @@ namespace Azure.Core.Tests
 
             Assert.IsNotNull(options);
             Assert.IsNotNull(options.Diagnostics);
-            Assert.AreSame(customDiagnostics, options.Diagnostics);
-            Assert.AreEqual(typeof(TestDiagnosticsOptions), options.Diagnostics.GetType());
+            Assert.That(options.Diagnostics, Is.SameAs(customDiagnostics));
+            Assert.That(options.Diagnostics.GetType(), Is.EqualTo(typeof(TestDiagnosticsOptions)));
         }
 
         [Test]
@@ -551,7 +551,7 @@ namespace Azure.Core.Tests
 
             Assert.IsNotNull(options);
             Assert.IsNotNull(options.Diagnostics);
-            Assert.AreSame(customDiagnostics, options.Diagnostics);
+            Assert.That(options.Diagnostics, Is.SameAs(customDiagnostics));
             Assert.IsInstanceOf<TestDiagnosticsOptions>(options.Diagnostics);
         }
 
@@ -571,7 +571,7 @@ namespace Azure.Core.Tests
 
             Assert.IsNotNull(options);
             Assert.IsNotNull(options.Diagnostics);
-            Assert.AreEqual("TestApp", options.Diagnostics.ApplicationId);
+            Assert.That(options.Diagnostics.ApplicationId, Is.EqualTo("TestApp"));
         }
 
         private class TestClientSettings : ClientSettings

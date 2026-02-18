@@ -20,13 +20,13 @@ namespace Azure.Core.Experimental.Tests
         public void DateTimeImplicit([ValueSource("DateTimeData")] DateTime testValue)
         {
             Variant value = testValue;
-            Assert.AreEqual(testValue, value.As<DateTime>());
-            Assert.AreEqual(typeof(DateTime), value.Type);
+            Assert.That(value.As<DateTime>(), Is.EqualTo(testValue));
+            Assert.That(value.Type, Is.EqualTo(typeof(DateTime)));
 
             DateTime? source = testValue;
             value = source;
-            Assert.AreEqual(source, value.As<DateTime?>());
-            Assert.AreEqual(typeof(DateTime), value.Type);
+            Assert.That(value.As<DateTime?>(), Is.EqualTo(source));
+            Assert.That(value.Type, Is.EqualTo(typeof(DateTime)));
         }
 
         [Test]
@@ -35,10 +35,10 @@ namespace Azure.Core.Experimental.Tests
             Variant value = new(testValue);
             bool success = value.TryGetValue(out DateTime result);
             Assert.True(success);
-            Assert.AreEqual(testValue, result);
+            Assert.That(result, Is.EqualTo(testValue));
 
-            Assert.AreEqual(testValue, value.As<DateTime>());
-            Assert.AreEqual(testValue, (DateTime)value);
+            Assert.That(value.As<DateTime>(), Is.EqualTo(testValue));
+            Assert.That((DateTime)value, Is.EqualTo(testValue));
         }
 
         [Test]
@@ -49,11 +49,11 @@ namespace Azure.Core.Experimental.Tests
 
             bool success = value.TryGetValue(out DateTime result);
             Assert.True(success);
-            Assert.AreEqual(testValue, result);
+            Assert.That(result, Is.EqualTo(testValue));
 
-            Assert.AreEqual(testValue, value.As<DateTime>());
+            Assert.That(value.As<DateTime>(), Is.EqualTo(testValue));
 
-            Assert.AreEqual(testValue, (DateTime)value);
+            Assert.That((DateTime)value, Is.EqualTo(testValue));
         }
 
         [Test]
@@ -63,9 +63,9 @@ namespace Azure.Core.Experimental.Tests
             Variant value = new(source);
             bool success = value.TryGetValue(out DateTime? result);
             Assert.True(success);
-            Assert.AreEqual(testValue, result);
+            Assert.That(result, Is.EqualTo(testValue));
 
-            Assert.AreEqual(testValue, (DateTime?)value);
+            Assert.That((DateTime?)value, Is.EqualTo(testValue));
         }
 
         [Test]
@@ -74,8 +74,8 @@ namespace Azure.Core.Experimental.Tests
             DateTime? source = null;
             Variant value = source;
             Assert.Null(value.Type);
-            Assert.AreEqual(source, value.As<DateTime?>());
-            Assert.False(value.As<DateTime?>().HasValue);
+            Assert.That(value.As<DateTime?>(), Is.EqualTo(source));
+            Assert.That(value.As<DateTime?>().HasValue, Is.False);
         }
 
         [Test]
@@ -83,14 +83,14 @@ namespace Azure.Core.Experimental.Tests
         {
             Variant value = new(testValue);
             object o = value.As<object>();
-            Assert.AreEqual(typeof(DateTime), o.GetType());
-            Assert.AreEqual(testValue, (DateTime)o);
+            Assert.That(o.GetType(), Is.EqualTo(typeof(DateTime)));
+            Assert.That((DateTime)o, Is.EqualTo(testValue));
 
             DateTime? n = testValue;
             value = new(n);
             o = value.As<object>();
-            Assert.AreEqual(typeof(DateTime), o.GetType());
-            Assert.AreEqual(testValue, (DateTime)o);
+            Assert.That(o.GetType(), Is.EqualTo(typeof(DateTime)));
+            Assert.That((DateTime)o, Is.EqualTo(testValue));
         }
     }
 }

@@ -16,16 +16,16 @@ namespace Azure.Core.Experimental.Tests
                 value = testValue;
             }
 
-            Assert.AreEqual(testValue, value.As<bool>());
-            Assert.AreEqual(typeof(bool), value.Type);
+            Assert.That(value.As<bool>(), Is.EqualTo(testValue));
+            Assert.That(value.Type, Is.EqualTo(typeof(bool)));
 
             bool? source = testValue;
             using (MemoryWatch.Create())
             {
                 value = source;
             }
-            Assert.AreEqual(source, value.As<bool?>());
-            Assert.AreEqual(typeof(bool), value.Type);
+            Assert.That(value.As<bool?>(), Is.EqualTo(source));
+            Assert.That(value.Type, Is.EqualTo(typeof(bool)));
         }
 
         [TestCase(true)]
@@ -38,8 +38,8 @@ namespace Azure.Core.Experimental.Tests
                 value = Variant.Create(testValue);
             }
 
-            Assert.AreEqual(testValue, value.As<bool>());
-            Assert.AreEqual(typeof(bool), value.Type);
+            Assert.That(value.As<bool>(), Is.EqualTo(testValue));
+            Assert.That(value.Type, Is.EqualTo(typeof(bool)));
 
             bool? source = testValue;
 
@@ -48,8 +48,8 @@ namespace Azure.Core.Experimental.Tests
                 value = Variant.Create(source);
             }
 
-            Assert.AreEqual(source, value.As<bool?>());
-            Assert.AreEqual(typeof(bool), value.Type);
+            Assert.That(value.As<bool?>(), Is.EqualTo(source));
+            Assert.That(value.Type, Is.EqualTo(typeof(bool)));
         }
 
         [TestCase(true)]
@@ -67,10 +67,10 @@ namespace Azure.Core.Experimental.Tests
             }
 
             Assert.True(success);
-            Assert.AreEqual(testValue, result);
+            Assert.That(result, Is.EqualTo(testValue));
 
-            Assert.AreEqual(testValue, value.As<bool>());
-            Assert.AreEqual(testValue, (bool)value);
+            Assert.That(value.As<bool>(), Is.EqualTo(testValue));
+            Assert.That((bool)value, Is.EqualTo(testValue));
         }
 
         [TestCase(true)]
@@ -89,11 +89,11 @@ namespace Azure.Core.Experimental.Tests
             }
 
             Assert.True(success);
-            Assert.AreEqual(testValue, result);
+            Assert.That(result, Is.EqualTo(testValue));
 
-            Assert.AreEqual(testValue, value.As<bool>());
+            Assert.That(value.As<bool>(), Is.EqualTo(testValue));
 
-            Assert.AreEqual(testValue, (bool)value);
+            Assert.That((bool)value, Is.EqualTo(testValue));
         }
 
         [TestCase(true)]
@@ -104,9 +104,9 @@ namespace Azure.Core.Experimental.Tests
             Variant value = new(source);
             bool success = value.TryGetValue(out bool? result);
             Assert.True(success);
-            Assert.AreEqual(testValue, result);
+            Assert.That(result, Is.EqualTo(testValue));
 
-            Assert.AreEqual(testValue, (bool?)value);
+            Assert.That((bool?)value, Is.EqualTo(testValue));
         }
 
         [TestCase(true)]
@@ -117,21 +117,21 @@ namespace Azure.Core.Experimental.Tests
             object o = i;
             Variant value = new(o);
 
-            Assert.AreEqual(typeof(bool), value.Type);
+            Assert.That(value.Type, Is.EqualTo(typeof(bool)));
             Assert.True(value.TryGetValue(out bool result));
-            Assert.AreEqual(testValue, result);
+            Assert.That(result, Is.EqualTo(testValue));
             Assert.True(value.TryGetValue(out bool? nullableResult));
-            Assert.AreEqual(testValue, nullableResult!.Value);
+            Assert.That(nullableResult!.Value, Is.EqualTo(testValue));
 
             bool? n = testValue;
             o = n;
             value = new(o);
 
-            Assert.AreEqual(typeof(bool), value.Type);
+            Assert.That(value.Type, Is.EqualTo(typeof(bool)));
             Assert.True(value.TryGetValue(out result));
-            Assert.AreEqual(testValue, result);
+            Assert.That(result, Is.EqualTo(testValue));
             Assert.True(value.TryGetValue(out nullableResult));
-            Assert.AreEqual(testValue, nullableResult!.Value);
+            Assert.That(nullableResult!.Value, Is.EqualTo(testValue));
         }
 
         [Test]
@@ -146,8 +146,8 @@ namespace Azure.Core.Experimental.Tests
             }
 
             Assert.Null(value.Type);
-            Assert.AreEqual(source, value.As<bool?>());
-            Assert.False(value.As<bool?>().HasValue);
+            Assert.That(value.As<bool?>(), Is.EqualTo(source));
+            Assert.That(value.As<bool?>().HasValue, Is.False);
         }
 
         [TestCase(true)]
@@ -156,14 +156,14 @@ namespace Azure.Core.Experimental.Tests
         {
             Variant value = new(testValue);
             object o = value.As<object>();
-            Assert.AreEqual(typeof(bool), o.GetType());
-            Assert.AreEqual(testValue, (bool)o);
+            Assert.That(o.GetType(), Is.EqualTo(typeof(bool)));
+            Assert.That((bool)o, Is.EqualTo(testValue));
 
             bool? n = testValue;
             value = new(n);
             o = value.As<object>();
-            Assert.AreEqual(typeof(bool), o.GetType());
-            Assert.AreEqual(testValue, (bool)o);
+            Assert.That(o.GetType(), Is.EqualTo(typeof(bool)));
+            Assert.That((bool)o, Is.EqualTo(testValue));
         }
     }
 }

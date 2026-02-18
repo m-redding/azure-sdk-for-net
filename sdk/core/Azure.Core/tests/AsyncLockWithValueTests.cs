@@ -18,11 +18,11 @@ namespace Azure.Core.Tests
 
             Assert.IsTrue(alwv.HasValue);
             Assert.IsTrue(alwv.TryGetValue(out var value));
-            Assert.AreEqual(42, value);
+            Assert.That(value, Is.EqualTo(42));
 
             using var asyncLock = await alwv.GetLockOrValueAsync(async).ConfigureAwait(false);
             Assert.IsTrue(asyncLock.HasValue);
-            Assert.AreEqual(42, asyncLock.Value);
+            Assert.That(asyncLock.Value, Is.EqualTo(42));
         }
 
         [Test]
@@ -41,11 +41,11 @@ namespace Azure.Core.Tests
 
             Assert.IsTrue(alwv.HasValue);
             Assert.IsTrue(alwv.TryGetValue(out var value));
-            Assert.AreEqual(42, value);
+            Assert.That(value, Is.EqualTo(42));
             using (asyncLock = await alwv.GetLockOrValueAsync(async).ConfigureAwait(false))
             {
                 Assert.IsTrue(asyncLock.HasValue);
-                Assert.AreEqual(42, asyncLock.Value);
+                Assert.That(asyncLock.Value, Is.EqualTo(42));
             }
         }
 
@@ -65,7 +65,7 @@ namespace Azure.Core.Tests
 
             Assert.IsTrue(alwv.HasValue);
             Assert.IsTrue(alwv.TryGetValue(out var value));
-            Assert.AreEqual(42, value);
+            Assert.That(value, Is.EqualTo(42));
             using (asyncLock = await alwv.GetLockOrValueAsync(async).ConfigureAwait(false))
             {
                 Assert.IsTrue(asyncLock.HasValue);
@@ -123,7 +123,7 @@ namespace Azure.Core.Tests
 
             using var lock3 = await alwv.GetLockOrValueAsync(async).ConfigureAwait(false);
             Assert.IsTrue(lock3.HasValue);
-            Assert.AreEqual(42, lock3.Value);
+            Assert.That(lock3.Value, Is.EqualTo(42));
         }
 
         [Test]
@@ -167,7 +167,7 @@ namespace Azure.Core.Tests
 
             var lock4 = await alwv.GetLockOrValueAsync(async, default);
             Assert.IsTrue(lock4.HasValue);
-            Assert.AreEqual(42, lock4.Value);
+            Assert.That(lock4.Value, Is.EqualTo(42));
         }
 
         [Test]
@@ -237,7 +237,7 @@ namespace Azure.Core.Tests
                 {
                     using var asyncLock = await alwv.GetLockOrValueAsync(async);
                     Assert.IsTrue(asyncLock.HasValue);
-                    Assert.AreEqual(asyncLock.Value, 42);
+                    Assert.That(asyncLock.Value, Is.EqualTo(42));
                 }));
             }
 
@@ -258,7 +258,7 @@ namespace Azure.Core.Tests
                     using var asyncLock = await alwv.GetLockOrValueAsync(async);
                     if (asyncLock.HasValue)
                     {
-                        Assert.AreEqual(asyncLock.Value, 42);
+                        Assert.That(asyncLock.Value, Is.EqualTo(42));
                     }
                 }));
             }
