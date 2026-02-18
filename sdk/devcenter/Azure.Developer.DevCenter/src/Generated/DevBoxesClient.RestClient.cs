@@ -20,15 +20,15 @@ namespace Azure.Developer.DevCenter
         private static ResponseClassifier _pipelineMessageClassifier202204;
         private static ResponseClassifier _pipelineMessageClassifier204;
 
-        private static ResponseClassifier PipelineMessageClassifier200 => _pipelineMessageClassifier200 = new StatusCodeClassifier(stackalloc ushort[] { 200 });
+        private static ResponseClassifier PipelineMessageClassifier200 => _pipelineMessageClassifier200 ??= new StatusCodeClassifier(stackalloc ushort[] { 200 });
 
-        private static ResponseClassifier PipelineMessageClassifier200201 => _pipelineMessageClassifier200201 = new StatusCodeClassifier(stackalloc ushort[] { 200, 201 });
+        private static ResponseClassifier PipelineMessageClassifier200201 => _pipelineMessageClassifier200201 ??= new StatusCodeClassifier(stackalloc ushort[] { 200, 201 });
 
-        private static ResponseClassifier PipelineMessageClassifier202 => _pipelineMessageClassifier202 = new StatusCodeClassifier(stackalloc ushort[] { 202 });
+        private static ResponseClassifier PipelineMessageClassifier202 => _pipelineMessageClassifier202 ??= new StatusCodeClassifier(stackalloc ushort[] { 202 });
 
-        private static ResponseClassifier PipelineMessageClassifier202204 => _pipelineMessageClassifier202204 = new StatusCodeClassifier(stackalloc ushort[] { 202, 204 });
+        private static ResponseClassifier PipelineMessageClassifier202204 => _pipelineMessageClassifier202204 ??= new StatusCodeClassifier(stackalloc ushort[] { 202, 204 });
 
-        private static ResponseClassifier PipelineMessageClassifier204 => _pipelineMessageClassifier204 = new StatusCodeClassifier(stackalloc ushort[] { 204 });
+        private static ResponseClassifier PipelineMessageClassifier204 => _pipelineMessageClassifier204 ??= new StatusCodeClassifier(stackalloc ushort[] { 204 });
 
         internal HttpMessage CreateGetPoolsRequest(string projectName, RequestContext context)
         {
@@ -49,7 +49,15 @@ namespace Azure.Developer.DevCenter
         internal HttpMessage CreateNextGetPoolsRequest(Uri nextPage, string projectName, RequestContext context)
         {
             RawRequestUriBuilder uri = new RawRequestUriBuilder();
-            uri.Reset(nextPage);
+            if (nextPage.IsAbsoluteUri)
+            {
+                uri.Reset(nextPage);
+            }
+            else
+            {
+                uri.Reset(new Uri(_endpoint, nextPage));
+            }
+            uri.UpdateQuery("api-version", _apiVersion);
             HttpMessage message = Pipeline.CreateMessage(context, PipelineMessageClassifier200);
             Request request = message.Request;
             request.Uri = uri;
@@ -96,7 +104,15 @@ namespace Azure.Developer.DevCenter
         internal HttpMessage CreateNextGetSchedulesRequest(Uri nextPage, string projectName, string poolName, RequestContext context)
         {
             RawRequestUriBuilder uri = new RawRequestUriBuilder();
-            uri.Reset(nextPage);
+            if (nextPage.IsAbsoluteUri)
+            {
+                uri.Reset(nextPage);
+            }
+            else
+            {
+                uri.Reset(new Uri(_endpoint, nextPage));
+            }
+            uri.UpdateQuery("api-version", _apiVersion);
             HttpMessage message = Pipeline.CreateMessage(context, PipelineMessageClassifier200);
             Request request = message.Request;
             request.Uri = uri;
@@ -141,7 +157,15 @@ namespace Azure.Developer.DevCenter
         internal HttpMessage CreateNextGetAllDevBoxesRequest(Uri nextPage, RequestContext context)
         {
             RawRequestUriBuilder uri = new RawRequestUriBuilder();
-            uri.Reset(nextPage);
+            if (nextPage.IsAbsoluteUri)
+            {
+                uri.Reset(nextPage);
+            }
+            else
+            {
+                uri.Reset(new Uri(_endpoint, nextPage));
+            }
+            uri.UpdateQuery("api-version", _apiVersion);
             HttpMessage message = Pipeline.CreateMessage(context, PipelineMessageClassifier200);
             Request request = message.Request;
             request.Uri = uri;
@@ -169,7 +193,15 @@ namespace Azure.Developer.DevCenter
         internal HttpMessage CreateNextGetAllDevBoxesByUserRequest(Uri nextPage, string userId, RequestContext context)
         {
             RawRequestUriBuilder uri = new RawRequestUriBuilder();
-            uri.Reset(nextPage);
+            if (nextPage.IsAbsoluteUri)
+            {
+                uri.Reset(nextPage);
+            }
+            else
+            {
+                uri.Reset(new Uri(_endpoint, nextPage));
+            }
+            uri.UpdateQuery("api-version", _apiVersion);
             HttpMessage message = Pipeline.CreateMessage(context, PipelineMessageClassifier200);
             Request request = message.Request;
             request.Uri = uri;
@@ -199,7 +231,15 @@ namespace Azure.Developer.DevCenter
         internal HttpMessage CreateNextGetDevBoxesRequest(Uri nextPage, string projectName, string userId, RequestContext context)
         {
             RawRequestUriBuilder uri = new RawRequestUriBuilder();
-            uri.Reset(nextPage);
+            if (nextPage.IsAbsoluteUri)
+            {
+                uri.Reset(nextPage);
+            }
+            else
+            {
+                uri.Reset(new Uri(_endpoint, nextPage));
+            }
+            uri.UpdateQuery("api-version", _apiVersion);
             HttpMessage message = Pipeline.CreateMessage(context, PipelineMessageClassifier200);
             Request request = message.Request;
             request.Uri = uri;
@@ -374,7 +414,15 @@ namespace Azure.Developer.DevCenter
         internal HttpMessage CreateNextGetDevBoxActionsRequest(Uri nextPage, string projectName, string userId, string devBoxName, RequestContext context)
         {
             RawRequestUriBuilder uri = new RawRequestUriBuilder();
-            uri.Reset(nextPage);
+            if (nextPage.IsAbsoluteUri)
+            {
+                uri.Reset(nextPage);
+            }
+            else
+            {
+                uri.Reset(new Uri(_endpoint, nextPage));
+            }
+            uri.UpdateQuery("api-version", _apiVersion);
             HttpMessage message = Pipeline.CreateMessage(context, PipelineMessageClassifier200);
             Request request = message.Request;
             request.Uri = uri;
@@ -472,7 +520,15 @@ namespace Azure.Developer.DevCenter
         internal HttpMessage CreateNextDelayAllActionsRequest(Uri nextPage, string projectName, string userId, string devBoxName, DateTimeOffset delayUntil, RequestContext context)
         {
             RawRequestUriBuilder uri = new RawRequestUriBuilder();
-            uri.Reset(nextPage);
+            if (nextPage.IsAbsoluteUri)
+            {
+                uri.Reset(nextPage);
+            }
+            else
+            {
+                uri.Reset(new Uri(_endpoint, nextPage));
+            }
+            uri.UpdateQuery("api-version", _apiVersion);
             HttpMessage message = Pipeline.CreateMessage(context, PipelineMessageClassifier200);
             Request request = message.Request;
             request.Uri = uri;

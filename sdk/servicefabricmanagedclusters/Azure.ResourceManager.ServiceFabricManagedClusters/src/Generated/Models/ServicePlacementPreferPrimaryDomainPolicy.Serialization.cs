@@ -16,7 +16,6 @@ namespace Azure.ResourceManager.ServiceFabricManagedClusters.Models
     /// <summary>
     /// Describes the policy to be used for placement of a Service Fabric service where the service's
     /// Primary replicas should optimally be placed in a particular domain.
-    /// 
     /// This placement policy is usually used with fault domains in scenarios where the Service Fabric
     /// cluster is geographically distributed in order to indicate that a service's primary replica should
     /// be located in a particular fault domain, which in geo-distributed scenarios usually aligns with regional
@@ -28,6 +27,23 @@ namespace Azure.ResourceManager.ServiceFabricManagedClusters.Models
         /// <summary> Initializes a new instance of <see cref="ServicePlacementPreferPrimaryDomainPolicy"/> for deserialization. </summary>
         internal ServicePlacementPreferPrimaryDomainPolicy()
         {
+        }
+
+        /// <param name="data"> The data to parse. </param>
+        /// <param name="options"> The client options for reading and writing models. </param>
+        protected override ManagedServicePlacementPolicy PersistableModelCreateCore(BinaryData data, ModelReaderWriterOptions options)
+        {
+            string format = options.Format == "W" ? ((IPersistableModel<ServicePlacementPreferPrimaryDomainPolicy>)this).GetFormatFromOptions(options) : options.Format;
+            switch (format)
+            {
+                case "J":
+                    using (JsonDocument document = JsonDocument.Parse(data, ModelSerializationExtensions.JsonDocumentOptions))
+                    {
+                        return DeserializeServicePlacementPreferPrimaryDomainPolicy(document.RootElement, options);
+                    }
+                default:
+                    throw new FormatException($"The model {nameof(ServicePlacementPreferPrimaryDomainPolicy)} does not support reading '{options.Format}' format.");
+            }
         }
 
         /// <param name="writer"> The JSON writer. </param>
@@ -120,23 +136,6 @@ namespace Azure.ResourceManager.ServiceFabricManagedClusters.Models
         /// <param name="data"> The data to parse. </param>
         /// <param name="options"> The client options for reading and writing models. </param>
         ServicePlacementPreferPrimaryDomainPolicy IPersistableModel<ServicePlacementPreferPrimaryDomainPolicy>.Create(BinaryData data, ModelReaderWriterOptions options) => (ServicePlacementPreferPrimaryDomainPolicy)PersistableModelCreateCore(data, options);
-
-        /// <param name="data"> The data to parse. </param>
-        /// <param name="options"> The client options for reading and writing models. </param>
-        protected override ManagedServicePlacementPolicy PersistableModelCreateCore(BinaryData data, ModelReaderWriterOptions options)
-        {
-            string format = options.Format == "W" ? ((IPersistableModel<ServicePlacementPreferPrimaryDomainPolicy>)this).GetFormatFromOptions(options) : options.Format;
-            switch (format)
-            {
-                case "J":
-                    using (JsonDocument document = JsonDocument.Parse(data, ModelSerializationExtensions.JsonDocumentOptions))
-                    {
-                        return DeserializeServicePlacementPreferPrimaryDomainPolicy(document.RootElement, options);
-                    }
-                default:
-                    throw new FormatException($"The model {nameof(ServicePlacementPreferPrimaryDomainPolicy)} does not support reading '{options.Format}' format.");
-            }
-        }
 
         /// <param name="options"> The client options for reading and writing models. </param>
         string IPersistableModel<ServicePlacementPreferPrimaryDomainPolicy>.GetFormatFromOptions(ModelReaderWriterOptions options) => "J";
