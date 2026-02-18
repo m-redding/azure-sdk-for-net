@@ -62,8 +62,6 @@ $overrideBlock = @"
   <!-- NUnit 4 migration: $serviceLabel -->
   <ItemGroup Condition="$conditionExpr">
     <PackageReference Update="NUnit" Version="4.4.0" />
-    <PackageReference Update="NUnit3TestAdapter" Version="4.6.0" />
-    <PackageReference Update="NUnit.Analyzers" Version="4.5.0" />
   </ItemGroup>
 "@
 
