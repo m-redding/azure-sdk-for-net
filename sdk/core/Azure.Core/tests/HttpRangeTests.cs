@@ -29,13 +29,12 @@ namespace Azure.Core.Tests
             var r5_10 = new HttpRange(5, 10);
             var r5_10_copy = new HttpRange(5, 10);
 
-            Assert.That(r5_10_copy, Is.EqualTo(r5_10));
-            Assert.That(r5_10, Is.EqualTo(r5_10_copy));
+            Assert.That(r5_10 == r5_10_copy, Is.True);
             Assert.That(r5_10 == nullRange, Is.False);
             Assert.That(r5_10 == nullStart, Is.False);
             Assert.That(r5_10 == nullEnd, Is.False);
 
-            Assert.That(r5_10, Is.EqualTo(r5_10_copy));
+            Assert.That(r5_10 != r5_10_copy, Is.False);
             Assert.That(r5_10 != nullRange, Is.True);
             Assert.That(r5_10 != nullStart, Is.True);
             Assert.That(r5_10 != nullEnd, Is.True);

@@ -4,12 +4,15 @@ This guide provides precise, self-contained instructions for migrating the azure
 
 ## Background
 
-NUnit 4.0 has two breaking changes vs NUnit 3.14.0:
+NUnit 4.0 has several breaking changes vs NUnit 3.14.0:
 
 1. **Classic Assert methods removed from `Assert`** — methods like `Assert.AreEqual`, `Assert.IsTrue`, `Assert.IsNull` etc. have been moved to `ClassicAssert` in `NUnit.Framework.Legacy`. The preferred path is to convert them to the constraint model (`Assert.That(...)`).
-2. **`Assert.That` format specification and `params` overloads removed** — calls like `Assert.That(x, Is.EqualTo(y), "msg {0}", arg)` must become `Assert.That(x, Is.EqualTo(y), $"msg {arg}")`.
+2. **Shorthand Assert methods removed** — `Assert.True`, `Assert.False`, `Assert.Null`, `Assert.NotNull` (without the `Is` prefix) are also removed and must be converted.
+3. **`StringAssert` removed** — `StringAssert.Contains`, `StringAssert.StartsWith`, `StringAssert.EndsWith`, `StringAssert.IsMatch`, etc. must be converted to `Assert.That(str, Does.Contain(...))` style.
+4. **`CollectionAssert` removed** — `CollectionAssert.AreEqual`, `CollectionAssert.Contains`, `CollectionAssert.IsEmpty`, etc. must be converted to `Assert.That(collection, Is.EqualTo(...))` style.
+5. **`Assert.That` format specification and `params` overloads removed** — calls like `Assert.That(x, Is.EqualTo(y), "msg {0}", arg)` must become `Assert.That(x, Is.EqualTo(y), $"msg {arg}")`.
 
-Both changes are handled automatically by NUnit.Analyzers code fixes (diagnostics NUnit2001–NUnit2050) via `dotnet format`.
+The NUnit.Analyzers code fixes (diagnostics NUnit2001–NUnit2050) via `dotnet format` automate a significant portion of these conversions. For complex projects with many shared/linked source files (like `core`), coverage may be as low as ~50%; for typical service directories with straightforward test projects, expect **80-90%** coverage. The remaining assertions are fixed manually by the delegated agent guided by build errors.
 
 Reference: https://docs.nunit.org/articles/nunit/release-notes/Nunit4.0-MigrationGuide.html
 
@@ -26,9 +29,9 @@ All migration scripts live under `eng/scripts/nunitmigration/`:
 | Script | Purpose |
 |--------|---------|
 | `setup.ps1` | One-time setup: adds `NUnit.Analyzers` to `eng/Packages.Data.props` and `eng/Directory.Build.Common.targets`, commits |
-| `run-migration.ps1` | Core migration: finds test projects in given service dirs, temporarily adds `NUnit.Analyzers` to data plane projects, runs `dotnet format analyzers` with NUnit2xxx diagnostics, reverts `.csproj` changes |
-| `post-migration.ps1` | Finalization: adds NUnit 4 conditional version overrides to `eng/Packages.Data.props` for migrated services, removes temporary `NUnit.Analyzers` from central files, verifies no `.csproj` drift |
-| `test-run-builds.ps1` | Validation: builds all `.sln` files in given service dirs, parses and reports errors organized by project |
+| `run-migration.ps1` | Automated migration: finds test projects in given service dirs, temporarily adds `NUnit.Analyzers` to data plane projects, runs `dotnet format analyzers` with NUnit2xxx diagnostics, reverts `.csproj` changes |
+| `post-migration.ps1` | Finalization: adds NUnit 4 conditional version override (NUnit 4.4.0 **only**) to `eng/Packages.Data.props` for migrated services, removes temporary `NUnit.Analyzers` from central files, verifies no `.csproj` drift |
+| `test-run-builds.ps1` | Validation: builds all `.sln` files in given service dirs with retry-on-restore-failure logic, parses and reports errors organized by project |
 
 ## Migration Process (Per PR)
 
@@ -43,7 +46,7 @@ git checkout -b nunit4-migration-<batch-name> main
 
 The setup script adds `NUnit.Analyzers` to the central package files so that both data plane and management plane test projects can use the analyzer during migration. This creates a commit automatically.
 
-### Step 2: Run the Migration Script
+### Step 2: Run the Analyzer-Based Migration Script
 
 Pass all service directories for this batch in a single invocation:
 
@@ -56,6 +59,8 @@ This script will:
 2. For data plane projects (those with an explicit `<PackageReference Include="NUnit" />`), temporarily add `NUnit.Analyzers` to the `.csproj`
 3. Run `dotnet restore` then `dotnet format analyzers --diagnostics NUnit2001 NUnit2002 ... NUnit2050 --severity info --no-restore` on each test project
 4. Revert all `.csproj` changes via `git checkout HEAD` to avoid whitespace-only diffs
+
+> **⚠️ Important:** This step only processes test projects (`*Tests.csproj`) — it does **not** touch `src/` projects or shared/linked source files that may also contain Assert calls. For typical service directories, expect **80-90%** automated coverage. For complex projects like `core` with many shared files, coverage may be lower (~50%). All remaining assertions are fixed manually in Step 4.
 
 Commit the code changes:
 ```powershell
@@ -70,13 +75,23 @@ git commit -m "Migrate test assertions to NUnit 4 constraint model: <service-lis
 ```
 
 This script will:
-1. Add a conditional `ItemGroup` to `eng/Packages.Data.props` that overrides NUnit to 4.4.0, NUnit3TestAdapter to 4.6.0, and NUnit.Analyzers to 4.5.0 for the migrated service directories
+1. Add a conditional `ItemGroup` to `eng/Packages.Data.props` that overrides **only NUnit to 4.4.0** for the migrated service directories
 2. Remove the temporary `NUnit.Analyzers` property and `PackageReference` from `eng/Packages.Data.props`
 3. Remove the temporary `NUnit.Analyzers` from the management plane `ItemGroup` in `eng/Directory.Build.Common.targets`
 4. Verify no `.csproj` files were accidentally modified; revert any that were
 5. Commit the changes automatically
 
-### Step 4: Build, Test, and Manual Fixup
+> **⚠️ Critical:** The conditional override must contain **only** the NUnit 4.4.0 `PackageReference`. Do **not** include `NUnit3TestAdapter` (already at 4.6.0 centrally and compatible with both NUnit 3 and 4) or `NUnit.Analyzers` (including it in the override causes analyzer diagnostics to surface as build errors, breaking the build).
+
+Correct override format:
+```xml
+<!-- NUnit 4 migration: <service-list> -->
+<ItemGroup Condition="$(MSBuildProjectDirectory.Contains('\sdk\<service>\'))">
+  <PackageReference Update="NUnit" Version="4.4.0" />
+</ItemGroup>
+```
+
+### Step 4: Build, Fix Remaining Errors, Iterate
 
 Build all solutions for the migrated services:
 
@@ -84,7 +99,9 @@ Build all solutions for the migrated services:
 .\eng\scripts\nunitmigration\test-run-builds.ps1 -ServiceDirectories <service1>, <service2>, ...
 ```
 
-This script builds each `.sln` file and reports errors organized by project. For any failures, apply manual fixes per the checklist below, then re-run until builds are clean.
+This script builds each `.sln` file (first with `--no-restore` for speed, retrying with full restore on failure) and reports errors organized by project.
+
+The build errors are your TODO list. Fix each one manually (or delegate to a subagent), then rebuild. **Iterate**: fix errors → rebuild → repeat until all solutions build cleanly.
 
 To run tests manually:
 ```powershell
@@ -92,42 +109,88 @@ To run tests manually:
 dotnet test <test-project.csproj>
 ```
 
-#### Manual Fixup Checklist
+#### Conversion Reference
 
-The automated `dotnet format` pass handles ~95% of assertions. The following patterns require manual intervention:
+The build errors from `test-run-builds.ps1` tell you exactly which assertions still need converting. Use this reference for the correct conversions:
 
-1. **`FileAssert` and `DirectoryAssert`**: NUnit.Analyzers has no code fixer for these. Convert manually:
-   ```csharp
-   // Before (NUnit 3)
-   FileAssert.Exists(path);
-   DirectoryAssert.Exists(path);
-   // After (NUnit 4)
-   Assert.That(File.Exists(path), Is.True);
-   Assert.That(Directory.Exists(path), Is.True);
-   ```
+**Classic Assert → Assert.That:**
+| Before | After |
+|--------|-------|
+| `Assert.AreEqual(expected, actual)` | `Assert.That(actual, Is.EqualTo(expected))` |
+| `Assert.AreNotEqual(expected, actual)` | `Assert.That(actual, Is.Not.EqualTo(expected))` |
+| `Assert.IsTrue(expr)` / `Assert.True(expr)` | `Assert.That(expr, Is.True)` |
+| `Assert.IsFalse(expr)` / `Assert.False(expr)` | `Assert.That(expr, Is.False)` |
+| `Assert.IsNull(expr)` / `Assert.Null(expr)` | `Assert.That(expr, Is.Null)` |
+| `Assert.IsNotNull(expr)` / `Assert.NotNull(expr)` | `Assert.That(expr, Is.Not.Null)` |
+| `Assert.IsEmpty(expr)` | `Assert.That(expr, Is.Empty)` |
+| `Assert.IsNotEmpty(expr)` | `Assert.That(expr, Is.Not.Empty)` |
+| `Assert.Greater(a, b)` | `Assert.That(a, Is.GreaterThan(b))` |
+| `Assert.Less(a, b)` | `Assert.That(a, Is.LessThan(b))` |
+| `Assert.GreaterOrEqual(a, b)` | `Assert.That(a, Is.GreaterThanOrEqualTo(b))` |
+| `Assert.LessOrEqual(a, b)` | `Assert.That(a, Is.LessThanOrEqualTo(b))` |
+| `Assert.Contains(expected, collection)` | `Assert.That(collection, Does.Contain(expected))` |
+| `Assert.AreSame(expected, actual)` | `Assert.That(actual, Is.SameAs(expected))` |
+| `Assert.AreNotSame(expected, actual)` | `Assert.That(actual, Is.Not.SameAs(expected))` |
+| `Assert.IsInstanceOf<T>(expr)` | `Assert.That(expr, Is.InstanceOf<T>())` |
 
-2. **`StringAssert` edge cases**: Most are auto-fixed, but review any complex `StringAssert` calls with custom messages.
+**StringAssert → Assert.That:**
+| Before | After |
+|--------|-------|
+| `StringAssert.Contains(expected, actual)` | `Assert.That(actual, Does.Contain(expected))` |
+| `StringAssert.StartsWith(expected, actual)` | `Assert.That(actual, Does.StartWith(expected))` |
+| `StringAssert.EndsWith(expected, actual)` | `Assert.That(actual, Does.EndWith(expected))` |
+| `StringAssert.IsMatch(pattern, actual)` | `Assert.That(actual, Does.Match(pattern))` |
+| `StringAssert.DoesNotContain(expected, actual)` | `Assert.That(actual, Does.Not.Contain(expected))` |
+| `StringAssert.DoesNotMatch(pattern, actual)` | `Assert.That(actual, Does.Not.Match(pattern))` |
 
-3. **`CollectionAssert` edge cases**: Most are auto-fixed. Watch for `CollectionAssert.AreEquivalent` with custom comparers — these may need manual `Assert.That(collection, Is.EquivalentTo(...).Using(...))`.
+**CollectionAssert → Assert.That:**
+| Before | After |
+|--------|-------|
+| `CollectionAssert.AreEqual(expected, actual)` | `Assert.That(actual, Is.EqualTo(expected))` |
+| `CollectionAssert.AreEquivalent(expected, actual)` | `Assert.That(actual, Is.EquivalentTo(expected))` |
+| `CollectionAssert.Contains(collection, item)` | `Assert.That(collection, Does.Contain(item))` |
+| `CollectionAssert.DoesNotContain(collection, item)` | `Assert.That(collection, Does.Not.Contain(item))` |
+| `CollectionAssert.IsEmpty(collection)` | `Assert.That(collection, Is.Empty)` |
+| `CollectionAssert.IsNotEmpty(collection)` | `Assert.That(collection, Is.Not.Empty)` |
+| `CollectionAssert.AllItemsAreNotNull(collection)` | `Assert.That(collection, Has.None.Null)` |
+| `CollectionAssert.AllItemsAreUnique(collection)` | `Assert.That(collection, Is.Unique)` |
+| `CollectionAssert.IsOrdered(collection)` | `Assert.That(collection, Is.Ordered)` |
+| `CollectionAssert.IsSubsetOf(subset, superset)` | `Assert.That(subset, Is.SubsetOf(superset))` |
 
-4. **`TestContext.CurrentContext.Result`**: The `Result` property was removed in NUnit 4. Search for usages:
+**Other patterns:**
+| Before | After |
+|--------|-------|
+| `FileAssert.Exists(path)` | `Assert.That(File.Exists(path), Is.True)` |
+| `DirectoryAssert.Exists(path)` | `Assert.That(Directory.Exists(path), Is.True)` |
+| `Assert.That(x, constraint, "msg {0}", arg)` | `Assert.That(x, constraint, $"msg {arg}")` |
+| `Assert.That(val, Is.EqualTo(null))` *(ambiguous)* | `Assert.That(val, Is.EqualTo((string?)null))` |
+
+> **Note on `Assert.That` message arguments:** Any assertion with `params`-style format strings like `"Expected {0}", arg` must be converted to interpolated strings `$"Expected {arg}"`. The `params` overload was removed in NUnit 4.
+
+#### Additional Patterns to Watch For
+
+1. **`Assert.True(x == y)` converted to `Assert.That(x, Is.EqualTo(y))`** — `dotnet format` sometimes decomposes `Assert.True(x == y)` into `Assert.That(x, Is.EqualTo(y))`. This silently changes the semantics: `Is.EqualTo` calls `.Equals()`, NOT the `==` operator. For types that define custom `==` (e.g., `ETag`, `HttpRange`, `DynamicData`), the test is no longer testing what it was intended to test. The correct conversion is `Assert.That(x == y, Is.True)`. **After each migration, grep for this pattern:**
    ```powershell
-   Get-ChildItem -Recurse -Filter "*.cs" sdk/<service-name> | Select-String "TestContext.CurrentContext.Result"
+   # Find Is.EqualTo lines that may have been == operator tests
+   git diff main -- "sdk/<service>/**/*.cs" | Select-String "Assert\.(True|IsTrue|False|IsFalse)\s*\(.*(==|!=)" -Context 0,3
    ```
 
-5. **`Assert.That` with `params` format strings not caught by the fixer**: Search for remaining format-style messages:
+2. **`src/` projects containing Assert calls** — Some source projects (not test projects) contain NUnit assertions (e.g., `TestActivitySourceListener.cs` in `Azure.Core`). These are not processed by `run-migration.ps1`. Search:
    ```powershell
-   Get-ChildItem -Recurse -Filter "*.cs" sdk/<service-name> | Select-String 'Assert\.That\(.*,\s*"[^"]*\{[0-9]'
+   Get-ChildItem -Recurse -Filter "*.cs" sdk/<service>/*/src | Select-String 'Assert\.|StringAssert\.|CollectionAssert\.'
    ```
 
-6. **Custom assertion helpers / extension methods**: If the service has wrapper methods around classic asserts, those wrappers need manual updates. Check for any methods that call `Assert.AreEqual`, etc. internally.
+3. **`TestContext.CurrentContext.Result`** — Removed in NUnit 4. Search and remove or replace:
+   ```powershell
+   Get-ChildItem -Recurse -Filter "*.cs" sdk/<service> | Select-String "TestContext.CurrentContext.Result"
+   ```
 
-7. **Assertion message format changes**: NUnit 4 may format failure messages differently. Tests that assert on exception messages or test output strings may need adjustment.
+3. **Custom assertion helpers / extension methods** — If the service has wrapper methods around classic asserts, those wrappers need updates too.
 
 After fixing, commit:
 ```powershell
 git add .
-git commit -m "Fix build/test issues for <service-list>"
+git commit -m "Fix remaining assertion patterns for <service-list>"
 ```
 
 ### Step 5: Submit PR
@@ -143,373 +206,46 @@ Create a PR targeting `main`. The PR description should list:
 
 ---
 
-## Ordering Constraint
+## Lessons Learned (PR 1.1 Trial Run)
 
-**PR 1.1 (Core Libraries) MUST be merged first.** The `Azure.Core.TestFramework` project in `sdk/core/` is referenced by nearly all test projects via `$(AzureCoreTestFramework)`. It must compile cleanly against NUnit 4 before downstream services are migrated. All other PRs are independent and can be submitted in parallel.
+The following findings were discovered during the PR 1.1 trial run (core + template, 13 projects, 230 files changed, ~7,500 assertions converted):
 
-## Repository Upgrade Plan
+### Key Findings
 
-The following plan breaks down the migration into manageable PRs. Each PR is independent (except PR 1.1 which must merge first) and can be delegated to a separate agent or contributor.
+1. **`dotnet format` effectiveness varies by project complexity.** For `core` — which has many shared/linked source files and src/ projects containing assertions — coverage was ~50%. For typical service directories with self-contained test projects, expect **80-90%** coverage. The remainder must be fixed manually.
 
-**For each PR below, follow the complete "Migration Process (Per PR)" workflow above:**
-1. Create a branch and run `setup.ps1`
-2. Run `run-migration.ps1` with the listed service directories
-3. Commit the code changes, then run `post-migration.ps1` with the same service directories
-4. Build with `test-run-builds.ps1`, apply manual fixups
-5. Submit PR
+2. **The post-migration override must contain only `NUnit 4.4.0`.** Including `NUnit.Analyzers` in the override causes every analyzer suggestion to become a build error. `NUnit3TestAdapter` is already at a compatible version (4.6.0) centrally and doesn't need overriding.
 
-The service directories for each batch are listed below.
+3. **`StringAssert` and `CollectionAssert` are completely removed**, not just deprecated. `dotnet format` does not always catch these. They affected 96 call sites in core alone.
 
-### Phase 1: Core Infrastructure (3 PRs) ⚠️ PR 1.1 must merge before all others
+4. **Shorthand Assert methods (`True`, `False`, `Null`, `NotNull`)** are separate API entries from `IsTrue`, `IsFalse`, etc. and are also removed. They must be handled as a distinct pattern.
 
-**PR 1.1 - Core Libraries** (MUST BE FIRST — other PRs depend on this)
-```powershell
-.\eng\scripts\nunitmigration\run-migration.ps1 -ServiceDirectories core, template
-```
+5. **`--no-restore` builds can fail with CS1705 version mismatches** when the NuGet cache has stale NUnit 3 assemblies. The `test-run-builds.ps1` script handles this with automatic retry-with-restore logic.
 
-**PR 1.2 - Storage**
-```powershell
-.\eng\scripts\nunitmigration\run-migration.ps1 -ServiceDirectories storage, storagecache, storageactions, storagemover, storagepool, storagesync, storagediscovery
-```
+6. **`src/` projects can contain Assert calls** (e.g., `TestActivitySourceListener.cs` in `Azure.Core`). These are not processed by `run-migration.ps1` and will show up as build errors.
 
-**PR 1.3 - Identity & Key Vault**
-```powershell
-.\eng\scripts\nunitmigration\run-migration.ps1 -ServiceDirectories identity, keyvault, entra
-```
+7. **`Is.EqualTo(null)` can become ambiguous** after conversion — add an explicit cast like `(string?)null` or `(object?)null`.
 
-### Phase 2: Messaging & Events (2 PRs)
+8. **Format string message args (`"msg {0}", arg`)** must be converted to interpolated strings (`$"msg {arg}"`). The `params` overload was removed in NUnit 4.
 
-**PR 2.1 - Event & Service Bus**
-```powershell
-.\eng\scripts\nunitmigration\run-migration.ps1 -ServiceDirectories eventhub, servicebus, eventgrid, relay
-```
+### Recommended Workflow for Delegated Agents
 
-**PR 2.2 - Messaging Extensions**
-```powershell
-.\eng\scripts\nunitmigration\run-migration.ps1 -ServiceDirectories schemaregistry, signalr, webpubsub, notificationhubs
-```
+When delegating a PR to a subagent or coding agent, provide these explicit instructions:
 
-### Phase 3: AI & Cognitive Services (3 PRs)
-
-**PR 3.1 - AI Core**
-```powershell
-.\eng\scripts\nunitmigration\run-migration.ps1 -ServiceDirectories ai, openai, cognitiveservices
-```
-
-**PR 3.2 - AI Language & Vision**
-```powershell
-.\eng\scripts\nunitmigration\run-migration.ps1 -ServiceDirectories cognitivelanguage, textanalytics, vision, face, formrecognizer, documentintelligence
-```
-
-**PR 3.3 - AI Specialized**
-```powershell
-.\eng\scripts\nunitmigration\run-migration.ps1 -ServiceDirectories anomalydetector, personalizer, metricsadvisor, healthinsights, contentsafety, contentunderstanding
-```
-
-### Phase 4: Data & Analytics (3 PRs)
-
-**PR 4.1 - Cosmos DB & Search**
-```powershell
-.\eng\scripts\nunitmigration\run-migration.ps1 -ServiceDirectories cosmosdb, cosmosdbforpostgresql, search, tables
-```
-
-**PR 4.2 - SQL & Database Services**
-```powershell
-.\eng\scripts\nunitmigration\run-migration.ps1 -ServiceDirectories sqlmanagement, sqlvirtualmachine, mysql, postgresql, databasewatcher
-```
-
-**PR 4.3 - Analytics & Monitoring**
-```powershell
-.\eng\scripts\nunitmigration\run-migration.ps1 -ServiceDirectories monitor, operationalinsights, applicationinsights, streamanalytics, synapse, kusto
-```
-
-### Phase 5: Compute & Containers (3 PRs)
-
-**PR 5.1 - Compute**
-```powershell
-.\eng\scripts\nunitmigration\run-migration.ps1 -ServiceDirectories compute, computefleet, computelimit, computerecommender, computeschedule, batch
-```
-
-**PR 5.2 - Container Services**
-```powershell
-.\eng\scripts\nunitmigration\run-migration.ps1 -ServiceDirectories containerregistry, containerservice, containerapps, containerinstance, containerorchestratorruntime
-```
-
-**PR 5.3 - Kubernetes & Orchestration**
-```powershell
-.\eng\scripts\nunitmigration\run-migration.ps1 -ServiceDirectories kubernetesconfiguration, hybridkubernetes, hybridaks, fleet
-```
-
-### Phase 6: Networking (2 PRs)
-
-**PR 6.1 - Core Networking**
-```powershell
-.\eng\scripts\nunitmigration\run-migration.ps1 -ServiceDirectories network, frontdoor, cdn, trafficmanager, dns, privatedns, dnsresolver
-```
-
-**PR 6.2 - Advanced Networking**
-```powershell
-.\eng\scripts\nunitmigration\run-migration.ps1 -ServiceDirectories networkanalytics, networkcloud, networkfunction, servicenetworking, managednetwork, managednetworkfabric, peering
-```
-
-### Phase 7: IoT & Edge (2 PRs)
-
-**PR 7.1 - IoT Core**
-```powershell
-.\eng\scripts\nunitmigration\run-migration.ps1 -ServiceDirectories iot, iothub, iotcentral, iotoperations, deviceprovisioningservices, deviceupdate, deviceregistry
-```
-
-**PR 7.2 - Edge Services**
-```powershell
-.\eng\scripts\nunitmigration\run-migration.ps1 -ServiceDirectories edgeactions, edgeorder, edgezones, databox, databoxedge
-```
-
-### Phase 8: Security & Governance (2 PRs)
-
-**PR 8.1 - Security Services**
-```powershell
-.\eng\scripts\nunitmigration\run-migration.ps1 -ServiceDirectories securitycenter, securityinsights, securitydevops, attestation, confidentialledger, hardwaresecuritymodules, trustedsigning
-```
-
-**PR 8.2 - Governance & Compliance**
-```powershell
-.\eng\scripts\nunitmigration\run-migration.ps1 -ServiceDirectories policyinsights, authorization, blueprint, appcomplianceautomation, guestconfiguration
-```
-
-### Phase 9: Management & Operations (3 PRs)
-
-**PR 9.1 - Resource Management**
-```powershell
-.\eng\scripts\nunitmigration\run-migration.ps1 -ServiceDirectories resourcemanager, resources, resourcegraph, resourcehealth, resourcemover, resourceconnector
-```
-
-**PR 9.2 - Recovery & Backup**
-```powershell
-.\eng\scripts\nunitmigration\run-migration.ps1 -ServiceDirectories recoveryservices, recoveryservices-backup, recoveryservices-datareplication, recoveryservices-siterecovery, dataprotection
-```
-
-**PR 9.3 - Management Tools**
-```powershell
-.\eng\scripts\nunitmigration\run-migration.ps1 -ServiceDirectories automation, automanage, maintenance, changeanalysis, chaos, selfhelp, support
-```
-
-### Phase 10: Application Services (3 PRs)
-
-**PR 10.1 - App Platform & Functions**
-```powershell
-.\eng\scripts\nunitmigration\run-migration.ps1 -ServiceDirectories appplatform, appconfiguration, websites, extension-wcf, extensions
-```
-
-**PR 10.2 - Integration & Messaging**
-```powershell
-.\eng\scripts\nunitmigration\run-migration.ps1 -ServiceDirectories logic, apimanagement, servicelinker, servicefabric, servicefabricmanagedclusters
-```
-
-**PR 10.3 - Dev Services**
-```powershell
-.\eng\scripts\nunitmigration\run-migration.ps1 -ServiceDirectories devcenter, devopsinfrastructure, devspaces, devtestlabs, labservices
-```
-
-### Phase 11: Communication & Media (2 PRs)
-
-**PR 11.1 - Communication Services**
-```powershell
-.\eng\scripts\nunitmigration\run-migration.ps1 -ServiceDirectories communication, voiceservices, botservice
-```
-
-**PR 11.2 - Media & Mixed Reality**
-```powershell
-.\eng\scripts\nunitmigration\run-migration.ps1 -ServiceDirectories mediaservices, videoanalyzer, mixedreality, objectanchors, remoterendering, digitaltwins
-```
-
-### Phase 12: Data Services (2 PRs)
-
-**PR 12.1 - Data Lake & Migration**
-```powershell
-.\eng\scripts\nunitmigration\run-migration.ps1 -ServiceDirectories datalake-analytics, datalake-store, datamigration, datashare, datafactory
-```
-
-**PR 12.2 - Data Platform Services**
-```powershell
-.\eng\scripts\nunitmigration\run-migration.ps1 -ServiceDirectories purview, openenergyplatform, modelsrepository, healthdataaiservices
-```
-
-### Phase 13: Hybrid & Arc (2 PRs)
-
-**PR 13.1 - Hybrid Services**
-```powershell
-.\eng\scripts\nunitmigration\run-migration.ps1 -ServiceDirectories hybridcompute, hybridconnectivity, hybridnetwork, extendedlocation
-```
-
-**PR 13.2 - Arc Services**
-```powershell
-.\eng\scripts\nunitmigration\run-migration.ps1 -ServiceDirectories arc-scvmm, connectedvmwarevsphere, azurestackhci
-```
-
-### Phase 14: Specialized Services A (3 PRs)
-
-**PR 14.1 - Healthcare & Life Sciences**
-```powershell
-.\eng\scripts\nunitmigration\run-migration.ps1 -ServiceDirectories healthcareapis, healthbot, agrifood, agricultureplatform
-```
-
-**PR 14.2 - Desktop & Gaming**
-```powershell
-.\eng\scripts\nunitmigration\run-migration.ps1 -ServiceDirectories desktopvirtualization, playwright, loadtestservice, onlineexperimentation
-```
-
-**PR 14.3 - Machine Learning**
-```powershell
-.\eng\scripts\nunitmigration\run-migration.ps1 -ServiceDirectories machinelearningservices, machinelearningcompute, quantum
-```
-
-### Phase 15: Specialized Services B (3 PRs)
-
-**PR 15.1 - Observability**
-```powershell
-.\eng\scripts\nunitmigration\run-migration.ps1 -ServiceDirectories grafana, dynatrace, elastic, datadog, newrelicobservability
-```
-
-**PR 15.2 - Marketplace & Billing**
-```powershell
-.\eng\scripts\nunitmigration\run-migration.ps1 -ServiceDirectories marketplace, marketplaceordering, billing, billingbenefits, costmanagement, consumption, reservations, quota
-```
-
-**PR 15.3 - Partner Services**
-```powershell
-.\eng\scripts\nunitmigration\run-migration.ps1 -ServiceDirectories confluent, oracle, informaticadatamanagement, qumulo, dellstorage, purestorageblock, paloaltonetworks.ngfw
-```
-
-### Phase 16: Specialized Services C (3 PRs)
-
-**PR 16.1 - Maps & Spatial**
-```powershell
-.\eng\scripts\nunitmigration\run-migration.ps1 -ServiceDirectories maps, orbital, planetarycomputer, sphere
-```
-
-**PR 16.2 - Specialized Databases**
-```powershell
-.\eng\scripts\nunitmigration\run-migration.ps1 -ServiceDirectories redis, redisenterprise, mongocluster, mongodbatlas, neonpostgres, pineconevectordb
-```
-
-**PR 16.3 - Infrastructure Services**
-```powershell
-.\eng\scripts\nunitmigration\run-migration.ps1 -ServiceDirectories netapp, elasticsan, fileshares, fluidrelay, standbypool
-```
-
-### Phase 17: Remaining SDK Services (3 PRs)
-
-**PR 17.1 - Migration & Discovery**
-```powershell
-.\eng\scripts\nunitmigration\run-migration.ps1 -ServiceDirectories migrationassessment, migrationdiscoverysap, springappdiscovery, dependencymap
-```
-
-**PR 17.2 - Workload Services**
-```powershell
-.\eng\scripts\nunitmigration\run-migration.ps1 -ServiceDirectories workloadmonitor, workloadorchestration, workloads, workloadssapvirtualinstance, sitemanager
-```
-
-**PR 17.3 - Miscellaneous A**
-```powershell
-.\eng\scripts\nunitmigration\run-migration.ps1 -ServiceDirectories advisor, alertsmanagement, analysisservices, apicenter, astronomer, avs, azurelargeinstance
-```
-
-### Phase 18: Final SDK Services (3 PRs)
-
-**PR 18.1 - Miscellaneous B**
-```powershell
-.\eng\scripts\nunitmigration\run-migration.ps1 -ServiceDirectories carbon, cloudhealth, cloudmachine, connectedcache, customer-insights, defendereasm, disconnectedoperations, durabletask, easm
-```
-
-**PR 18.2 - Miscellaneous C**
-```powershell
-.\eng\scripts\nunitmigration\run-migration.ps1 -ServiceDirectories fabric, graphrbac, graphservices, impactreporting, lambdatesthyperexecute, managementpartner, managedserviceidentity, managedservices, mobilenetwork
-```
-
-**PR 18.3 - Miscellaneous D**
-```powershell
-.\eng\scripts\nunitmigration\run-migration.ps1 -ServiceDirectories nginx, portalservices, powerbidedicated, providerhub, provisioning, secretsstoreextension, subscription, terraform, timeseriesinsights, translation, virtualenclaves, weightsandbiases
-```
-
-### Phase 19: Agent Server (1 PR)
-
-**PR 19.1 - Agent Server**
-```powershell
-.\eng\scripts\nunitmigration\run-migration.ps1 -ServiceDirectories agentserver, arizeaiobservabilityeval
-```
-
-### Phase 20: Generator Projects (1 PR)
-
-**PR 20.1 - Azure Generator**
-
-The generator projects are outside `sdk/` and cannot use `run-migration.ps1`. Migrate manually:
-
-1. **Find test projects**:
-   ```powershell
-   Get-ChildItem -Recurse -Filter "*.csproj" eng\packages\http-client-csharp | Select-String "NUnit" | Select-Object -ExpandProperty Path -Unique
-   Get-ChildItem -Recurse -Filter "*.csproj" eng\packages\http-client-csharp-mgmt | Select-String "NUnit" | Select-Object -ExpandProperty Path -Unique
-   ```
-
-2. **Temporarily add NUnit.Analyzers** to each test `.csproj`:
-   ```xml
-   <PackageReference Include="NUnit.Analyzers" Version="4.5.0" PrivateAssets="All" />
-   ```
-
-3. **Run dotnet format** for each test project:
-   ```powershell
-   dotnet restore <test-project.csproj>
-   dotnet format analyzers <test-project.csproj> --diagnostics NUnit2001 NUnit2002 NUnit2003 NUnit2004 NUnit2005 NUnit2006 NUnit2007 NUnit2008 NUnit2009 NUnit2010 NUnit2011 NUnit2012 NUnit2013 NUnit2014 NUnit2015 NUnit2016 NUnit2017 NUnit2018 NUnit2019 NUnit2020 NUnit2021 NUnit2022 NUnit2023 NUnit2024 NUnit2025 NUnit2026 NUnit2027 NUnit2028 NUnit2029 NUnit2030 NUnit2031 NUnit2032 NUnit2033 NUnit2034 NUnit2035 NUnit2036 NUnit2037 NUnit2038 NUnit2039 NUnit2040 NUnit2041 NUnit2042 NUnit2043 NUnit2044 NUnit2045 NUnit2046 NUnit2047 NUnit2048 NUnit2049 NUnit2050 --severity info --no-restore
-   ```
-
-4. **Remove the temporary NUnit.Analyzers reference** from each `.csproj`
-
-5. **Add NUnit 4 override** to `eng/Packages.Data.props`:
-   ```xml
-   <!-- NUnit 4 migration: Azure Generator -->
-   <ItemGroup Condition="$(MSBuildProjectDirectory.Contains('\eng\packages\http-client-csharp\'))">
-     <PackageReference Update="NUnit" Version="4.4.0" />
-     <PackageReference Update="NUnit3TestAdapter" Version="4.6.0" />
-     <PackageReference Update="NUnit.Analyzers" Version="4.5.0" />
-   </ItemGroup>
-   ```
-
-6. **Build and test**:
-   ```powershell
-   dotnet build eng\packages\http-client-csharp\Azure.Generator.sln
-   dotnet test eng\packages\http-client-csharp\Azure.Generator.sln
-   ```
-
-7. **Apply manual fixups** per the checklist in Step 4 of the Migration Process
-
-### Phase 21: Other Common Test Projects (1 PR)
-
-**PR 21.1 - Common Test Infrastructure**
-
-These projects are outside `sdk/` and cannot use `run-migration.ps1`. Follow the same manual process as PR 20.1:
-
-Directories to check for test projects:
-- `common/ManagementTestShared`
-- `common/Perf`
-- `common/SmokeTests`
-
-For each directory:
-1. Find `.csproj` files that reference NUnit: `Get-ChildItem -Recurse -Filter "*.csproj" <dir> | Select-String "NUnit"`
-2. If found, temporarily add `NUnit.Analyzers`, run `dotnet format analyzers`, and remove the temporary reference
-3. Add a conditional `ItemGroup` override to `eng/Packages.Data.props` for the path
-4. Build and test
+1. Run `setup.ps1` (creates a commit)
+2. Run `run-migration.ps1 -ServiceDirectories <list>`
+3. Commit code changes
+4. Run `post-migration.ps1 -ServiceDirectories <list>` (creates a commit)
+5. Run `test-run-builds.ps1 -ServiceDirectories <list>`
+6. Fix all remaining build errors manually using the Conversion Reference in Step 4
+7. Commit fixes and re-run `test-run-builds.ps1` until clean
+8. Push and create PR
 
 ---
 
-## Final Cleanup PR
+## Repository Upgrade Plan
 
-After **all** phase PRs are merged, submit one final PR:
-
-1. **Update the central NUnit version** in `eng/Packages.Data.props`: change `<NUnitVersion>3.14.0</NUnitVersion>` to `<NUnitVersion>4.4.0</NUnitVersion>` (around line 24)
-2. **Remove all conditional NUnit 4 override `ItemGroup` blocks** added during migration (they are no longer needed since the central version is now 4.4.0)
-3. **Remove the existing NUnit 4 override** for `Microsoft.ClientModel.TestFramework` (around line 595 — this was the early adopter and will now use the central version)
-4. **Delete the migration scripts**: `eng/scripts/nunitmigration/`
-5. **Build the full repo** to verify: `dotnet build eng/service.proj`
-6. Commit and submit PR
+The full list of PR batches (Phases 1–21) and the Final Cleanup PR are in **[migration-phases.md](migration-phases.md)**.
 
 ---
 
@@ -536,11 +272,16 @@ The conditional `ItemGroup` pattern in `eng/Packages.Data.props` allows migrated
 
 | Symptom | Cause | Fix |
 |---------|-------|-----|
-| `Assert.AreEqual` does not exist | Migration script missed this file, or file was not compiled when analyzers ran | Re-run `dotnet format analyzers` on the specific project, or manually convert to `Assert.That(x, Is.EqualTo(y))` |
-| `FileAssert` / `DirectoryAssert` does not exist | No code fixer exists for these | Manually convert (see Manual Fixup Checklist) |
-| `StringAssert` does not exist | Code fixer missed this call | Manually convert to `Assert.That(str, Does.StartWith(...))` etc. |
-| `Assert.That` overload not found (params) | Format spec overload was removed in NUnit 4 | Convert `Assert.That(x, constraint, "msg {0}", arg)` to `Assert.That(x, constraint, $"msg {arg}")` |
-| `TestContext.CurrentContext.Result` does not exist | Removed in NUnit 4 | Remove or replace with alternative test introspection |
+| CS0117: `Assert` does not contain `AreEqual` / `IsTrue` / etc. | `dotnet format` missed this file (shared file, src/ project, or complex expression) | Manually convert to `Assert.That(...)` using the Conversion Reference |
+| CS0117: `StringAssert` does not exist | `StringAssert` was completely removed in NUnit 4; `dotnet format` doesn't always catch these | Convert to `Assert.That(str, Does.Contain(...))` / `Does.StartWith(...)` / etc. |
+| CS0117: `CollectionAssert` does not exist | `CollectionAssert` was completely removed in NUnit 4; `dotnet format` doesn't always catch these | Convert to `Assert.That(collection, Is.EqualTo(...))` / `Is.Empty` / etc. |
+| CS0117: `Assert.True` / `Assert.False` / `Assert.Null` / `Assert.NotNull` | Shorthand forms (without `Is` prefix) are also removed in NUnit 4 | Convert to `Assert.That(x, Is.True)` / `Is.False` / `Is.Null` / `Is.Not.Null` |
+| CS0117: `Assert.IsInstanceOf` | `dotnet format` doesn't always handle the generic form | Manually convert `Assert.IsInstanceOf<T>(x)` → `Assert.That(x, Is.InstanceOf<T>())` |
+| CS0121: Ambiguous call `Is.EqualTo(null)` | NUnit 4 has multiple `Is.EqualTo` overloads that both accept `null` | Add explicit cast: `Is.EqualTo((string?)null)` or `Is.EqualTo((object?)null)` |
+| CS1501: No overload for `Assert.That` takes N arguments | Format string message args (`"msg {0}", arg`) — the `params` overload was removed | Convert to interpolated string: `$"msg {arg}"` |
+| CS1705: Assembly version mismatch (NUnit 3 vs 4) | Stale NuGet cache from `--no-restore` builds | Run `dotnet restore` explicitly, or use `test-run-builds.ps1` which retries with full restore |
+| Hundreds of analyzer warnings as errors | `NUnit.Analyzers` was included in the post-migration override | **Remove** `NUnit.Analyzers` from the override `ItemGroup`. Only `NUnit 4.4.0` should be in the override. |
+| `FileAssert` / `DirectoryAssert` does not exist | No code fixer or regex rule exists for these | Manually convert: `Assert.That(File.Exists(path), Is.True)` |
 | Conditional ItemGroup not taking effect | Path condition doesn't match | Verify `MSBuildProjectDirectory` path uses backslashes and matches the actual directory structure |
 
 ### Test Failures After Migration

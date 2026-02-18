@@ -699,22 +699,22 @@ namespace Azure.Core.Tests
 
             // Get from parsed JSON
             Assert.That((Guid)json.Foo, Is.EqualTo(guid));
-            Assert.That(guid, Is.EqualTo((Guid)json.Foo));
-            Assert.That((Guid)json.Foo, Is.EqualTo(guid));
+            Assert.That(guid == (Guid)json.Foo, Is.True);
+            Assert.That((Guid)json.Foo == guid, Is.True);
 
             // Get from assigned existing value
             Guid fooValue = Guid.NewGuid();
             json.Foo = fooValue;
             Assert.That((Guid)json.Foo, Is.EqualTo(fooValue));
-            Assert.That(fooValue, Is.EqualTo((Guid)json.Foo));
-            Assert.That((Guid)json.Foo, Is.EqualTo(fooValue));
+            Assert.That(fooValue == (Guid)json.Foo, Is.True);
+            Assert.That((Guid)json.Foo == fooValue, Is.True);
 
             // Get from added value
             Guid barValue = Guid.NewGuid();
             json.Bar = barValue;
             Assert.That((Guid)json.Bar, Is.EqualTo(barValue));
-            Assert.That(barValue, Is.EqualTo((Guid)json.Bar));
-            Assert.That((Guid)json.Bar, Is.EqualTo(barValue));
+            Assert.That(barValue == (Guid)json.Bar, Is.True);
+            Assert.That((Guid)json.Bar == barValue, Is.True);
 
             // Also works as a string
             Assert.That((string)json.Foo, Is.EqualTo(fooValue.ToString()));
@@ -740,22 +740,22 @@ namespace Azure.Core.Tests
 
             // Get from parsed JSON
             Assert.That((DateTime)json.Foo, Is.EqualTo(dateTime));
-            Assert.That(dateTime, Is.EqualTo((DateTime)json.Foo));
-            Assert.That((DateTime)json.Foo, Is.EqualTo(dateTime));
+            Assert.That(dateTime == (DateTime)json.Foo, Is.True);
+            Assert.That((DateTime)json.Foo == dateTime, Is.True);
 
             // Get from assigned existing value
             DateTime fooValue = DateTime.UtcNow.AddDays(1);
             json.Foo = fooValue;
             Assert.That((DateTime)json.Foo, Is.EqualTo(fooValue));
-            Assert.That(fooValue, Is.EqualTo((DateTime)json.Foo));
-            Assert.That((DateTime)json.Foo, Is.EqualTo(fooValue));
+            Assert.That(fooValue == (DateTime)json.Foo, Is.True);
+            Assert.That((DateTime)json.Foo == fooValue, Is.True);
 
             // Get from added value
             DateTime barValue = DateTime.UtcNow.AddDays(2);
             json.Bar = barValue;
             Assert.That((DateTime)json.Bar, Is.EqualTo(barValue));
-            Assert.That(barValue, Is.EqualTo((DateTime)json.Bar));
-            Assert.That((DateTime)json.Bar, Is.EqualTo(barValue));
+            Assert.That(barValue == (DateTime)json.Bar, Is.True);
+            Assert.That((DateTime)json.Bar == barValue, Is.True);
 
             // Also works as a string
             string fooValueString = FormatDateTime(fooValue);
@@ -783,22 +783,22 @@ namespace Azure.Core.Tests
 
             // Get from parsed JSON
             Assert.That((DateTimeOffset)json.Foo, Is.EqualTo(dateTime));
-            Assert.That(dateTime, Is.EqualTo((DateTimeOffset)json.Foo));
-            Assert.That((DateTimeOffset)json.Foo, Is.EqualTo(dateTime));
+            Assert.That(dateTime == (DateTimeOffset)json.Foo, Is.True);
+            Assert.That((DateTimeOffset)json.Foo == dateTime, Is.True);
 
             // Get from assigned existing value
             DateTimeOffset fooValue = DateTimeOffset.UtcNow.AddDays(1);
             json.Foo = fooValue;
             Assert.That((DateTimeOffset)json.Foo, Is.EqualTo(fooValue));
-            Assert.That(fooValue, Is.EqualTo((DateTimeOffset)json.Foo));
-            Assert.That((DateTimeOffset)json.Foo, Is.EqualTo(fooValue));
+            Assert.That(fooValue == (DateTimeOffset)json.Foo, Is.True);
+            Assert.That((DateTimeOffset)json.Foo == fooValue, Is.True);
 
             // Get from added value
             DateTimeOffset barValue = DateTimeOffset.UtcNow.AddDays(2);
             json.Bar = barValue;
             Assert.That((DateTimeOffset)json.Bar, Is.EqualTo(barValue));
-            Assert.That(barValue, Is.EqualTo((DateTimeOffset)json.Bar));
-            Assert.That((DateTimeOffset)json.Bar, Is.EqualTo(barValue));
+            Assert.That(barValue == (DateTimeOffset)json.Bar, Is.True);
+            Assert.That((DateTimeOffset)json.Bar == barValue, Is.True);
 
             // Also works as a string
             string fooValueString = FormatDateTimeOffset(fooValue);

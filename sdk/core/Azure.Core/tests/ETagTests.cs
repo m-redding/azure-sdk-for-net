@@ -41,10 +41,10 @@ namespace Azure.Core.Tests
         {
             var eTag = new ETag("a");
 
-            Assert.That(eTag, Is.EqualTo(new ETag("a")));
+            Assert.That(eTag == new ETag("a"), Is.True);
             Assert.That(eTag == new ETag("A"), Is.False);
 
-            Assert.That(eTag, Is.EqualTo(new ETag("a")));
+            Assert.That(eTag != new ETag("a"), Is.False);
             Assert.That(eTag != new ETag("A"), Is.True);
         }
 
@@ -53,8 +53,8 @@ namespace Azure.Core.Tests
         {
             ETag eTag = default;
 
-            Assert.That(eTag, Is.EqualTo(new ETag(null)));
-            Assert.That(eTag, Is.EqualTo(default(ETag)));
+            Assert.That(eTag == new ETag(null), Is.True);
+            Assert.That(eTag == default, Is.True);
         }
 
         [Test]
