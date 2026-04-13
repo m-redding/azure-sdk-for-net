@@ -1,5 +1,37 @@
 # List of diagnostics produced by Azure.SdkAnalyzers
 
+## Unsuppressible Rules (Error severity)
+
+These rules enforce internal implementation correctness and cannot be disabled via `#pragma`, `<NoWarn>`, or `.editorconfig`. They exist to prevent deadlocks, threading issues, and other runtime problems in Azure SDK libraries.
+
+### AZC0109
+
+**Misuse of 'async' parameter**
+
+| Property | Value |
+|----------|-------|
+| **Severity** | Error |
+| **Suppressible** | No |
+
+#### Cause
+
+The `bool async` parameter is assigned, read into a variable, or combined with other conditions instead of being used as an exclusive branch condition.
+
+#### How to fix violation
+
+Use `async` only as the sole condition in `if`/`else` or `? :`:
+
+```diff
+- if (async && someCondition) { ... }
++ if (async) { ... }
+```
+
+See [AZC0109 documentation](AZC0109.md) for details.
+
+---
+
+## Suppressible Rules (Warning severity)
+
 ## AZC0012
 
 ### Cause
