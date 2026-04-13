@@ -1,5 +1,36 @@
 # List of diagnostics produced by Azure.SdkAnalyzers
 
+## Unsuppressible Rules (Error severity)
+
+These rules enforce internal implementation correctness and cannot be disabled via `#pragma`, `<NoWarn>`, or `.editorconfig`. They exist to prevent deadlocks, threading issues, and other runtime problems in Azure SDK libraries.
+
+### AZC0013
+
+**Use TaskCreationOptions.RunContinuationsAsynchronously when instantiating TaskCompletionSource**
+
+| Property | Value |
+|----------|-------|
+| **Severity** | Error |
+| **Suppressible** | No |
+| **Code fix** | Yes |
+
+#### Cause
+
+A `TaskCompletionSource<T>` is created without `TaskCreationOptions.RunContinuationsAsynchronously`, which can cause deadlocks and thread starvation.
+
+#### How to fix violation
+
+```diff
+- var tcs = new TaskCompletionSource<string>();
++ var tcs = new TaskCompletionSource<string>(TaskCreationOptions.RunContinuationsAsynchronously);
+```
+
+See [AZC0013 documentation](AZC0013.md) for details.
+
+---
+
+## Suppressible Rules (Warning severity)
+
 ## AZC0012
 
 ### Cause
