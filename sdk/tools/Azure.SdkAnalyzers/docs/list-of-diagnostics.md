@@ -1,5 +1,38 @@
 # List of diagnostics produced by Azure.SdkAnalyzers
 
+## Unsuppressible Rules (Error severity)
+
+These rules enforce internal implementation correctness and cannot be disabled via `#pragma`, `<NoWarn>`, or `.editorconfig`. They exist to prevent deadlocks, threading issues, and other runtime problems in Azure SDK libraries.
+
+### AZC0111
+
+**Do not use EnsureCompleted in possibly asynchronous scope**
+
+| Property | Value |
+|----------|-------|
+| **Severity** | Error |
+| **Suppressible** | No |
+
+#### Cause
+
+`EnsureCompleted()` is called in a method with `bool async` parameter outside of a guaranteed sync scope (`if (!async) { ... }`).
+
+#### How to fix violation
+
+Move the call inside a sync-guarded block:
+
+```diff
+- task.EnsureCompleted();
++ if (!async) { task.EnsureCompleted(); }
++ else { await task.ConfigureAwait(false); }
+```
+
+See [AZC0111 documentation](AZC0111.md) for details.
+
+---
+
+## Suppressible Rules (Warning severity)
+
 ## AZC0012
 
 ### Cause
