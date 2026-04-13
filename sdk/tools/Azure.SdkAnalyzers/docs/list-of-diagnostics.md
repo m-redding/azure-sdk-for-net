@@ -69,7 +69,7 @@ A method that accepts a `CancellationToken` parameter calls an Azure SDK API wit
 
 ### How to fix violation
 
-Set the `CancellationToken` property on the `RequestContext` object to the incoming cancellation token.
+A **code fix** is available that automatically propagates the cancellation token. Set the `CancellationToken` property on the `RequestContext` object to the incoming cancellation token.
 
 ### Example of a violation
 
